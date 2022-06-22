@@ -8,6 +8,21 @@ class RoomsController < ApplicationController
 
     @room_types = Room.all.pluck(:room_type).uniq.sort
 
+    if params[:need_attention]
+      attention_rooms = []
+      @rooms.each do |room|
+        devices = Device.where(room_id: room.id).where.not(name: 'Room')
+        devices.each do |device|
+          DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state|
+            if (state.key == "Online" && state.value == "false") || ( state.key == "Error State" && state.value == "false")
+              attention_rooms << room
+            end
+          end
+        end
+        @rooms = attention_rooms
+      end
+    end
+
     unless params[:q].nil?
       render turbo_stream: turbo_stream.replace(
       :roomListing,
