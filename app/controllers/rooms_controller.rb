@@ -6,7 +6,7 @@ class RoomsController < ApplicationController
     @q = Room.ransack(params[:q])
     @rooms = @q.result
 
-    @room_types = Room.all.pluck(:room_type).sort
+    @room_types = Room.all.pluck(:room_type).uniq.sort
 
     unless params[:q].nil?
       render turbo_stream: turbo_stream.replace(

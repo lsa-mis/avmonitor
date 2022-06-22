@@ -36,12 +36,14 @@
             <hr>
             <div class="px-1 pb-2">
               <label for="room_type">Search Room Type</label>
-              <% @room_types.each do |room_type| %>
-                <%= room_type %>
-                <%#= check_box_tag 'q[room_type]', room_type, nil, data: { action: "input->autosubmit#search" } %>
-                <%= form.check_box(:room_type_in, {multiple: true}, room_type, nil) %>
-                <br>
-              <% end %>
+              <div>
+                <% @room_types.each do |room_type| %>
+                  <%= room_type %>
+                  <%#= check_box_tag 'q[room_type]', room_type, nil, data: { action: "input->autosubmit#search" } %>
+                  <%= form.check_box(:room_type_in, {multiple: true}, room_type, nil) %>
+                  <br>
+                <% end %>
+              </div>
             </div>
           </div>
           <br>
