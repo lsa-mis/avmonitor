@@ -1,9 +1,15 @@
 <div class="text-xs px-2">
+  
   <% devices.all.each do |device| %>
-    <%= device.name %>
+    <span class="font-bold"><%= device.name %></span>
     <%# device.device_states.each do |state| %>
     <% DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state| %>
-      <div>
+        <% if (state.key == "Online" && state.value == "false") || ( state.key == "Error State" && state.value == "false") %>
+          <% @attention = true %>
+            <div class="text-red-500">
+          <% else %>
+            <div>
+        <% end %>
         <%= "#{state.key} - #{state.value}" %>
       </div>
     <% end %>
