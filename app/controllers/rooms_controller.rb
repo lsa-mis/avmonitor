@@ -3,7 +3,17 @@ class RoomsController < ApplicationController
 
   # GET /rooms or /rooms.json
   def index
-    @rooms = Room.all
+    @q = Room.ransack(params[:q])
+    @rooms = @q.result
+
+    @room_types = Room.all.pluck(:room_type).sort
+
+    unless params[:q].nil?
+      render turbo_stream: turbo_stream.replace(
+      :roomListing,
+      partial: "rooms/listing"
+    )
+    end
   end
 
   # GET /rooms/1 or /rooms/1.json
