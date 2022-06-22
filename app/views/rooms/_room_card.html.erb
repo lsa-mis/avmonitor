@@ -1,14 +1,24 @@
 <%= turbo_frame_tag dom_id(room) do  %>
   <h2 class="sr-only">room</h2>
-  <div class="mt-2 mb-3 px-2 sm:px-0">
+  <div id="room" class="mt-2 mb-3 px-2 sm:px-0">
     <div>
       <div class="text-xs px-2 font-bold hover:underline">
         <%= link_to room.facility_id, room, data: { "turbo-frame": "_top" } %>
         
       </div>
       <div class="text-xs px-2 font-bold hover:underline">
-        <%= room.building %>
+        <%= room.building_nickname %>
       </div>
+    </div>
+    <hr>
+    <div id="room_state" class="text-xs px-2">
+      <%= render 'room_state', { device: Device.find_by(name: "Room", room_id: room.id) } %>
+    </div>
+    <hr>
+    <div id="assets" class="text-xs px-2">
+      <%= render 'room_assets', { devices: Device.where(room_id: room.id).where.not(name: 'Room') } %>
+    </div>
+    <hr>
 
   </div>
   

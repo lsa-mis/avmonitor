@@ -1,0 +1,11 @@
+<div class="text-xs px-2">
+  <% devices.all.each do |device| %>
+    <%= device.name %>
+    <% device.device_states.each do |state| %>
+      <div>
+        <%= "#{state.key} - #{state.value}" %>
+      </div>
+      <hr>
+    <% end %>
+  <% end %>
+<div>
