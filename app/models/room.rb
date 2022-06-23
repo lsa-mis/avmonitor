@@ -12,5 +12,8 @@
 #  updated_at     :datetime         not null
 #
 class Room < ApplicationRecord
-    has_many :devices
+  has_many :devices
+
+  scope :active, -> { Room.where.associated(:devices).distinct }
+
 end
