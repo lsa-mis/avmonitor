@@ -1,5 +1,6 @@
 class RoomsController < ApplicationController
   before_action :set_room, only: %i[ show edit update destroy ]
+  include ApplicationHelper
 
   # GET /rooms or /rooms.json
   def index
@@ -12,15 +13,19 @@ class RoomsController < ApplicationController
       attention_rooms = []
       @rooms.each do |room|
         devices = Device.where(room_id: room.id).where.not(name: 'Room')
-        devices.each do |device|
-          DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state|
-            if (state.key == "Online" && state.value == "false") || ( state.key == "Error State" && state.value == "false")
-              attention_rooms << room
+        catch :attention do
+          devices.each do |device|
+            DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state|
+              if need_attention?(state)
+                attention_rooms << room
+                throw :attention 
+              end
             end
           end
         end
-        @rooms = attention_rooms
+        
       end
+      @rooms = attention_rooms
     end
 
     unless params[:q].nil?
