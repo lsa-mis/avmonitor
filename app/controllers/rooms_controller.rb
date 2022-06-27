@@ -16,7 +16,7 @@ class RoomsController < ApplicationController
         catch :attention do
           devices.each do |device|
             DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state|
-              if need_attention?(state)
+              if state_need_attention?(state)
                 attention_rooms << room
                 throw :attention 
               end

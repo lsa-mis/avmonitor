@@ -14,8 +14,25 @@ module ApplicationHelper
 		Device.where(room_id: room.id).where.not(name: 'Room')
 	end
 
-	def need_attention?(state)
+	def state_need_attention?(state)
 		(state.key == "Online" && state.value == "false") || ( state.key == "Error State" && state.value == "true")
+	end
+
+	def room_need_attention?(room)
+		devices = get_room_asset_devices(room)
+		att = false
+		catch :attention do
+			devices.each do |device|
+				DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state|
+					if state_need_attention?(state)
+						att = true
+						throw :attention 
+					end
+				end
+			end
+		end
+		return att
+
 	end
 	
 	def source_volume(room)
@@ -95,5 +112,5 @@ module ApplicationHelper
 	def video_source_device?(device)
 		device.device_states.pluck(:key).include?("Power Is On")
 	end
-	
+
 end
