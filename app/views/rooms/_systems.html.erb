@@ -1,0 +1,64 @@
+<!-- This example requires Tailwind CSS v2.0+ -->
+<div class="px-4 sm:px-6 lg:px-8">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-xl font-semibold text-gray-900">Systems</h1>
+    </div>
+  </div>
+  <div class="-mx-4 mt-10 ring-1 ring-gray-300 sm:-mx-6 md:mx-0 md:rounded-lg">
+    <table class="min-w-full divide-y divide-gray-300">
+      <thead>
+        <tr>
+          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Equip</th>
+					<th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Online</th>
+
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Power</th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Source</th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Time On</th>
+        </tr>
+      </thead>
+      <tbody>
+				<% devices.all.each do |device| %>
+					<tr class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm border-b border-red-500">
+						<td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm>
+							<div class="font-medium text-gray-900">
+								<%= device.name %></div>
+							<div>
+						<td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
+							<% if device.device_states.pluck(:key).include?("Online") %>
+								<%= device.device_states.where(key: "Online").last.value %>
+							<% else %>
+								-
+							<% end %>
+						</td>
+						<% if device.device_states.pluck(:key).include?("Power Is On") %>
+							<td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
+								<%= device.device_states.where(key: "Power Is On").last.value %>
+							</td>
+							<td>
+								<% source = room_device.device_states.where(key: "Current Source").last.value %>
+								<% if source != "0" %>
+									<%= room_device.device_states.where("key LIKE 'VideoSource%' AND key LIKE '%" + "#{source}'").last.value %>
+								<% end %>
+							</td>
+							<td>
+								<%= device.device_states.where(key: "Lamp Hours").last.value %>
+							</td>
+						<% else %>
+							<td>
+								-
+							</td>
+							<td>
+								-
+							</td>
+							<td>
+								-
+							</td>
+						<% end %>
+					
+					</tr>
+				<% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

@@ -16,4 +16,8 @@ class Room < ApplicationRecord
 
   scope :active, -> { Room.where.associated(:devices).distinct }
 
+  def display_name
+    "#{self.facility_id}"
+  end
+
 end
