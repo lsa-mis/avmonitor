@@ -44,20 +44,6 @@ module ApplicationHelper
 		end
 	end
 
-	def current_source(room)
-		room_device = get_room_device(room)
-		if room_device.device_states.where(key: "Current Source").last.present?
-			source = room_device.device_states.where(key: "Current Source").last.value
-			if source != "0"
-				return room_device.device_states.where("key LIKE 'VideoSource%' AND key LIKE '%" + "#{source}'").last.value
-			else
-				return "not selected"
-			end
-		else 
-			return "not available"
-		end
-	end
-
 	def ceiling_mic(room)
 		room_device = get_room_device(room)
 		if room_device.device_states.where(key: "Ceiling Mic Signal").last.present?
@@ -110,7 +96,24 @@ module ApplicationHelper
 	end
 
 	def video_source_device?(device)
+		# check if a divece in not a Touch panel. Tauch Panel doesn't have "Power Is On" key
 		device.device_states.pluck(:key).include?("Power Is On")
+	end
+
+	def current_source(room, device)
+		room_device = get_room_device(room)
+		device_number = device.name.split(" ").last
+		source_key = "Current Source " + device_number
+		if room_device.device_states.where(key: source_key).last.present?
+			source = room_device.device_states.where(key: source_key).last.value
+			if source != "0"
+				return room_device.device_states.where("key LIKE 'VideoSource%' AND key LIKE '%" + "#{source}'").last.value
+			else
+				return "not selected"
+			end
+		else 
+			return "not available"
+		end
 	end
 
 end
