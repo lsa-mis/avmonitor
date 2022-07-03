@@ -1,5 +1,8 @@
 <div class="container px-1 mb-20 pl-4" data-controller='autosubmit'>
   <h1 class="text-xl font-semibold text-gray-900 p-2">Rooms with Crestron devices</h1>
+  <% if notice.present? %>
+    <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
+  <% end %>
   <div class="grid grid-cols-2 pb-2">
     <div>
       
@@ -21,6 +24,11 @@
             <div class="px-1 pb-2">
               <%= label_tag(:need_attention, "Rooms need attention") %>
               <%= check_box_tag(:need_attention) %>
+            </div>
+            <hr>
+            <div class="px-1 pb-2">
+              <%= label_tag(:need_attention, "Rooms with no crestron devices") %>
+              <%= check_box_tag(:no_device) %>
             </div>
             <hr>
             <div class="px-1">

@@ -16,6 +16,7 @@ class Room < ApplicationRecord
   has_many :devices
 
   scope :active, -> { Room.where.associated(:devices).distinct }
+  scope :no_device, -> { Room.where.missing(:devices) }
 
   def display_name
     "#{self.facility_id}"

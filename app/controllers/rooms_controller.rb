@@ -4,8 +4,13 @@ class RoomsController < ApplicationController
 
   # GET /rooms or /rooms.json
   def index
-    @q = Room.active.ransack(params[:q])
-    @rooms = @q.result.order(:facility_id)
+
+    if params[:no_device]
+      @rooms = Room.no_device
+    else
+      @q = Room.active.ransack(params[:q])
+      @rooms = @q.result.order(:facility_id)
+    end
 
     @room_types = Room.all.pluck(:room_type).uniq.sort
 

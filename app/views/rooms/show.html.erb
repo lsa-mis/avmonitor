@@ -1,5 +1,5 @@
 <%= turbo_frame_tag "room" do  %>
-  <div class="container rounded-lg shadow-lg px-auto">
+  <div class="container rounded-lg shadow-lg px-auto pl-2">
     <div class="flex-col w-full px-2">
       <div class="mx-auto">
         <% if notice.present? %>
@@ -24,7 +24,13 @@
       <p class="my-5">
         <%= @room.websocket_port %>
       </p>
+      <% if room_has_device_states?(@room) %>
         <%= render @room %>
+      <% end %>
+      <%= link_to 'Edit this room', edit_room_path(@room), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
+      <div class="inline-block ml-2">
+        <%= button_to 'Delete this room', room_path(@room), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium", data: { "turbo-frame": "_top" } %>
+      </div>
         <%= link_to 'Back to rooms', rooms_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
     </div>
   </div>
