@@ -15,8 +15,13 @@
           <% end %>
         </div>
         <div class="hidden sm:ml-6 sm:flex sm:space-x-4 pl-2">
-          <div class="border-transparent text-blue-50 hover:border-blue-300 hover:text-white inline-flex items-center pl-1 pt-1 border-b-2 text-base font-normal">
-            <%= link_to "Find a Room", rooms_path %>
+          <div class="border-transparent text-blue-50 inline-flex items-center justify-between space-x-4 pl-1 pt-1 border-b-2 text-base font-normal">
+            <div class="hover:underline">
+              <%= link_to "Find a Room", rooms_path %>
+            </div>
+            <div class="hover:underline">
+              <%= link_to 'New room', new_room_path %>
+            </div>
           </div>
         </div>
       </div>

@@ -18,6 +18,12 @@
       <p class="my-5">
         <%= @room.room_type %>
       </p>
+      <p class="my-5">
+      <%= @room.websocket_ip %>
+      </p>
+      <p class="my-5">
+        <%= @room.websocket_port %>
+      </p>
         <%= render @room %>
         <%= link_to 'Back to rooms', rooms_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
     </div>

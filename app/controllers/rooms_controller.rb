@@ -53,6 +53,27 @@ class RoomsController < ApplicationController
   def create
     @room = Room.new(room_params)
 
+    oracle_database = OCI8.new("#{Rails.application.credentials.oracle_db[:username]}", "#{Rails.application.credentials.oracle_db[:password]}", "#{Rails.application.credentials.oracle_db[:database]}")
+    
+    facility_id = room_params[:facility_id]
+    sql = "SELECT f.RMTYP_DESCR, f.BLD_DESCR, f.FACILITY_DESCR
+    FROM M_SRDW1.FACILITY_TBL f
+    WHERE f.facility_effdt = (SELECT MAX(f1.facility_effdt)
+                              FROM m_srdw1.facility_tbl f1
+                              WHERE f1.facility_id = f.facility_id
+                                AND f1.facility_effdt <= SYSDATE)
+      AND f.FACILITY_ID = " + "'#{facility_id}'"
+
+    room_data = []
+    cursor = oracle_database.parse(sql)
+
+    cursor.exec
+    room_data = cursor.fetch
+
+    @room.room_type = room_data[0]
+    @room.building = room_data[1]
+    @room.building_nickname = room_data[2].split[1]
+
     respond_to do |format|
       if @room.save
         format.html { redirect_to room_url(@room), notice: "Room was successfully created." }
@@ -66,6 +87,27 @@ class RoomsController < ApplicationController
 
   # PATCH/PUT /rooms/1 or /rooms/1.json
   def update
+    oracle_database = OCI8.new("#{Rails.application.credentials.oracle_db[:username]}", "#{Rails.application.credentials.oracle_db[:password]}", "#{Rails.application.credentials.oracle_db[:database]}")
+    
+    facility_id = room_params[:facility_id]
+    sql = "SELECT f.RMTYP_DESCR, f.BLD_DESCR, f.FACILITY_DESCR
+    FROM M_SRDW1.FACILITY_TBL f
+    WHERE f.facility_effdt = (SELECT MAX(f1.facility_effdt)
+                              FROM m_srdw1.facility_tbl f1
+                              WHERE f1.facility_id = f.facility_id
+                                AND f1.facility_effdt <= SYSDATE)
+      AND f.FACILITY_ID = " + "'#{facility_id}'"
+
+    room_data = []
+    cursor = oracle_database.parse(sql)
+
+    cursor.exec
+    room_data = cursor.fetch
+
+    @room.room_type = room_data[0]
+    @room.building = room_data[1]
+    @room.building_nickname = room_data[2].split[1]
+    
     respond_to do |format|
       if @room.update(room_params)
         format.html { redirect_to room_url(@room), notice: "Room was successfully updated." }
