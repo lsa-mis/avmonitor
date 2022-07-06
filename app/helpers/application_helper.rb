@@ -1,7 +1,7 @@
 module ApplicationHelper
 
   def svg(svg)
-    file_path = "app/packs/images/svgs/#{svg}.svg"
+    file_path = "app/assets/images/svg/#{svg}.svg"
     return File.read(file_path).html_safe if File.exist?(file_path)
     file_path
   end
@@ -32,7 +32,6 @@ module ApplicationHelper
       end
     end
     return att
-
   end
   
   def source_volume(room)
@@ -115,5 +114,5 @@ module ApplicationHelper
       return "not available"
     end
   end
-
+  
 end
