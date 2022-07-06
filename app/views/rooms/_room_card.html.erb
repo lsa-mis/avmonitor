@@ -1,0 +1,26 @@
+<%= turbo_frame_tag dom_id(room) do  %>
+  <% @attention = false %>
+  <h2 class="sr-only">room</h2>
+  <div id="room" class="mt-2 mb-3 px-2 sm:px-0">
+    <div>
+      <div class="text-xs px-2 font-bold hover:underline">
+        <%= link_to room.facility_id, room, data: { "turbo-frame": "_top" } %>
+      </div>
+      <div class="text-xs px-2 font-bold hover:underline">
+        <%= room.building %>
+      </div>
+    </div>
+    <hr>
+    <div id="room_state" class="text-xs px-2">
+      <%= render 'room_state', { device: get_room_device(room) } %>
+    </div>
+    <hr>
+    <div id="assets" class="text-xs px-2">
+      <%= render 'room_assets', { devices: get_room_asset_devices(room) } %>
+    </div>
+    <hr>
+    <% if @attention %>
+      <span class="text-red-500">Needs attention</span>
+    <% end %>
+  </div>
+<% end %>

@@ -1,0 +1,16 @@
+<div class="text-xs px-2">
+  <% devices.all.each do |device| %>
+    <span class="font-bold"><%= device.name %></span>
+    <% DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state| %>
+        <% if state_need_attention?(state) %>
+          <% @attention = true %>
+            <div class="text-red-500">
+          <% else %>
+            <div>
+        <% end %>
+        <%= "#{state.key} - #{state.value}" %>
+      </div>
+    <% end %>
+    <hr>
+  <% end %>
+<div>

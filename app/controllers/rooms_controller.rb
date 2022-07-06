@@ -1,9 +1,37 @@
 class RoomsController < ApplicationController
   before_action :set_room, only: %i[ show edit update destroy ]
+  include ApplicationHelper
 
   # GET /rooms or /rooms.json
   def index
-    @rooms = Room.all
+    @q = Room.active.ransack(params[:q])
+    @rooms = @q.result.order(:facility_id)
+    @room_types = Room.all.pluck(:room_type).uniq.sort
+
+    if params[:need_attention]
+      attention_rooms = []
+      @rooms.each do |room|
+        devices = Device.where(room_id: room.id).where.not(name: 'Room')
+        catch :attention do
+          devices.each do |device|
+            DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state|
+              if state_need_attention?(state)
+                attention_rooms << room
+                throw :attention 
+              end
+            end
+          end
+        end
+      end
+      @rooms = attention_rooms
+    end
+
+    unless params[:q].nil?
+      render turbo_stream: turbo_stream.replace(
+      :roomListing,
+      partial: "rooms/listing"
+    )
+    end
   end
 
   # GET /rooms/1 or /rooms/1.json
