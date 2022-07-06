@@ -2,13 +2,8 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ['form', 'status', 'sidebar', 'min_capacity', 'max_capacity', 'capacity_error']
 
-  connect() {
-    console.log("Hello World!")
-  }
-
   search() {
     clearTimeout(this.timeout)
-
     this.timeout = setTimeout(() => {
       this.statusTarget.textContent = 'Updating...'
       Turbo.navigator.submitForm(this.formTarget)
