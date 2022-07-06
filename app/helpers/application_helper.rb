@@ -1,7 +1,7 @@
 module ApplicationHelper
 
   def svg(svg)
-    file_path = "app/packs/images/svgs/#{svg}.svg"
+    file_path = "app/assets/images/svg/#{svg}.svg"
     return File.read(file_path).html_safe if File.exist?(file_path)
     file_path
   end
@@ -54,7 +54,6 @@ module ApplicationHelper
       end
     end
     return att
-
   end
   
   def source_volume(room)
@@ -118,7 +117,7 @@ module ApplicationHelper
   end
 
   def video_source_device?(device)
-    # check if a divece in not a Touch panel. Tauch Panel doesn't have "Power Is On" key
+    # check if a device in not a Touch panel. Tauch Panel doesn't have "Power Is On" key
     device.device_states.pluck(:key).include?("Power Is On")
   end
 
@@ -137,5 +136,4 @@ module ApplicationHelper
       return "not available"
     end
   end
-
 end

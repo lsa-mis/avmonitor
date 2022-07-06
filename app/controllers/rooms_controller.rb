@@ -28,7 +28,6 @@ class RoomsController < ApplicationController
             end
           end
         end
-        
       end
       @rooms = attention_rooms
     end
