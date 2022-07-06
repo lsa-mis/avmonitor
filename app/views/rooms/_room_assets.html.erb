@@ -1,8 +1,6 @@
 <div class="text-xs px-2">
-  
   <% devices.all.each do |device| %>
     <span class="font-bold"><%= device.name %></span>
-    <%# device.device_states.each do |state| %>
     <% DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state| %>
         <% if state_need_attention?(state) %>
           <% @attention = true %>
