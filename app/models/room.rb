@@ -25,7 +25,7 @@ class Room < ApplicationRecord
   validates :facility_id, :uniqueness => { message: "is taken" }
 
   HUMANIZED_ATTRIBUTES = {
-    :facility_id => "Name/Facility ID ",
+    :facility_id => "Name/Facility ID",
   }
 
   def self.human_attribute_name(attr, options={})
