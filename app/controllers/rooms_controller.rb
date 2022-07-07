@@ -82,19 +82,23 @@ class RoomsController < ApplicationController
   def update
     room_data = get_room_data_from_oracle(room_params[:facility_id])
 
-    unless room_data.nil?
+    if room_data.nil?
+      flash.now[:alert] =  "No data for this room in MPathways"
+      render turbo_stream: turbo_stream.update("flash", partial: "layouts/notification")
+    else
+      
       @room.room_type = room_data[0]
       @room.building = room_data[1]
       @room.building_nickname = room_data[2].split[1]
-    end
     
-    respond_to do |format|
-      if @room.update(room_params)
-        format.html { redirect_to room_url(@room), notice: "Room was successfully updated." }
-        format.json { render :show, status: :ok, location: @room }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @room.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        if @room.update(room_params)
+          format.html { redirect_to room_url(@room), notice: "Room was successfully updated." }
+          format.json { render :show, status: :ok, location: @room }
+        else
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: @room.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
