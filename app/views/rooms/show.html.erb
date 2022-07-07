@@ -28,10 +28,7 @@
         <%= render @room %>
       <% end %>
       <%= link_to 'Edit this room', edit_room_path(@room), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
-      <div class="inline-block ml-2">
-        <%= button_to 'Delete this room', room_path(@room), method: :delete, class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 font-medium", data: { "turbo-frame": "_top" } %>
-      </div>
-        <%= link_to 'Back to rooms', rooms_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
+      <%= link_to 'Back to rooms', rooms_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
     </div>
   </div>
 <% end %>
