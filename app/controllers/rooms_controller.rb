@@ -57,63 +57,41 @@ class RoomsController < ApplicationController
   def create
     @room = Room.new(room_params)
 
-    oracle_database = OCI8.new("#{Rails.application.credentials.oracle_db[:username]}", "#{Rails.application.credentials.oracle_db[:password]}", "#{Rails.application.credentials.oracle_db[:database]}")
+    room_data = get_room_data_from_oracle(room_params[:facility_id])
+
+    if room_data.nil?
+      flash.now[:error] = "No data for this room in MPathways"
+    else
+      @room.room_type = room_data[0]
+      @room.building = room_data[1]
+      @room.building_nickname = room_data[2].split[1]
     
-    facility_id = room_params[:facility_id]
-    sql = "SELECT f.RMTYP_DESCR, f.BLD_DESCR, f.FACILITY_DESCR
-    FROM M_SRDW1.FACILITY_TBL f
-    WHERE f.facility_effdt = (SELECT MAX(f1.facility_effdt)
-                              FROM m_srdw1.facility_tbl f1
-                              WHERE f1.facility_id = f.facility_id
-                                AND f1.facility_effdt <= SYSDATE)
-      AND f.FACILITY_ID = " + "'#{facility_id}'"
-
-    room_data = []
-    cursor = oracle_database.parse(sql)
-
-    cursor.exec
-    room_data = cursor.fetch
-
-    @room.room_type = room_data[0]
-    @room.building = room_data[1]
-    @room.building_nickname = room_data[2].split[1]
-
-    respond_to do |format|
-      if @room.save
-        format.html { redirect_to room_url(@room), notice: "Room was successfully created." }
-        format.json { render :show, status: :created, location: @room }
-      else
-        format.html { render :new, status: :unprocessable_entity }
-        format.json { render json: @room.errors, status: :unprocessable_entity }
+      respond_to do |format|
+        if @room.save
+          format.turbo_stream 
+          format.html { redirect_to room_url(@room), notice: "Room was successfully created." }
+          format.json { render :show, status: :created, location: @room }
+        else
+          format.html { render :new, status: :unprocessable_entity }
+          format.json { render json: @room.errors, status: :unprocessable_entity }
+        end
       end
     end
   end
 
   # PATCH/PUT /rooms/1 or /rooms/1.json
   def update
-    oracle_database = OCI8.new("#{Rails.application.credentials.oracle_db[:username]}", "#{Rails.application.credentials.oracle_db[:password]}", "#{Rails.application.credentials.oracle_db[:database]}")
-    
-    facility_id = room_params[:facility_id]
-    sql = "SELECT f.RMTYP_DESCR, f.BLD_DESCR, f.FACILITY_DESCR
-    FROM M_SRDW1.FACILITY_TBL f
-    WHERE f.facility_effdt = (SELECT MAX(f1.facility_effdt)
-                              FROM m_srdw1.facility_tbl f1
-                              WHERE f1.facility_id = f.facility_id
-                                AND f1.facility_effdt <= SYSDATE)
-      AND f.FACILITY_ID = " + "'#{facility_id}'"
+    room_data = get_room_data_from_oracle(room_params[:facility_id])
 
-    room_data = []
-    cursor = oracle_database.parse(sql)
-
-    cursor.exec
-    room_data = cursor.fetch
-
-    @room.room_type = room_data[0]
-    @room.building = room_data[1]
-    @room.building_nickname = room_data[2].split[1]
+    unless room_data.nil?
+      @room.room_type = room_data[0]
+      @room.building = room_data[1]
+      @room.building_nickname = room_data[2].split[1]
+    end
     
     respond_to do |format|
       if @room.update(room_params)
+        format.turbo_stream
         format.html { redirect_to room_url(@room), notice: "Room was successfully updated." }
         format.json { render :show, status: :ok, location: @room }
       else
@@ -137,6 +115,22 @@ class RoomsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_room
       @room = Room.find(params[:id])
+    end
+
+    def get_room_data_from_oracle(facility_id)
+      oracle_database = OCI8.new("#{Rails.application.credentials.oracle_db[:username]}", "#{Rails.application.credentials.oracle_db[:password]}", "#{Rails.application.credentials.oracle_db[:database]}")
+
+      sql = "SELECT f.RMTYP_DESCR, f.BLD_DESCR, f.FACILITY_DESCR
+        FROM M_SRDW1.FACILITY_TBL f
+        WHERE f.facility_effdt = (SELECT MAX(f1.facility_effdt)
+                                FROM m_srdw1.facility_tbl f1
+                                WHERE f1.facility_id = f.facility_id
+                                  AND f1.facility_effdt <= SYSDATE)
+        AND f.FACILITY_ID = " + "'#{facility_id}'"
+
+      cursor = oracle_database.parse(sql)
+      cursor.exec
+      return cursor.fetch
     end
 
     # Only allow a list of trusted parameters through.
