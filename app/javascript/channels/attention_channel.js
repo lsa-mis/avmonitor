@@ -10,7 +10,7 @@ consumer.subscriptions.create("AttentionChannel", {
   },
 
   received(message) {
-    var divid = document.getElementById('attention');
+    var divid = document.getElementById('attention_message');
 
     divid.innerHTML =
       "<p>" + message.message + "</p>";
