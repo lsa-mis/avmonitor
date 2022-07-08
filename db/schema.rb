@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_06_22_145226) do
+ActiveRecord::Schema[7.0].define(version: 2022_06_30_145251) do
   create_table "device_states", force: :cascade do |t|
     t.string "key", null: false
     t.string "value"

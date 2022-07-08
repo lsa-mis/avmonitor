@@ -10,42 +10,37 @@
       <thead>
         <tr>
           <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Equip</th>
-					<th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Online</th>
-
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Online</th>
           <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Power</th>
           <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Source</th>
-					<th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Volume</th>
           <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Time On</th>
         </tr>
       </thead>
       <tbody>
-				<% get_room_asset_devices(room).each do |device| %>
-					<tr class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm border-t border-grey"-200>
-						<td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm>
-							<div class="font-medium text-gray-900">
-								<%= device.name %></div>
-							<div>
-						<td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-								<%= device_online(device) %>
-						</td>
-						<td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-							<%= device_power_is_on(device) %>
-						</td>
-						<% if video_source_device?(device) %>
-							<td>
-								<%= current_source(room) %>
-							</td>
-							<td>
-								<%= source_volume(room) %>
-							</td>
-							<td>
-								<%= lamp_hour(device) %>
-							</td>
-						<% else %>
-							<td>-</td><td>-</td><td>-</td>
-						<% end %>
-					</tr>
-				<% end %>
+        <% get_room_asset_devices(room).each do |device| %>
+          <tr class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm border-t border-grey"-200>
+            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm>
+              <div class="font-medium text-gray-900">
+                <%= device.name %></div>
+              <div>
+            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
+              <%= device_online(device) %>
+            </td>
+            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
+              <%= device_power_is_on(device) %>
+            </td>
+            <% if video_source_device?(device) %>
+              <td>
+                <%= current_source(room, device) %>
+              </td>
+              <td>
+                <%= lamp_hour(device) %>
+              </td>
+            <% else %>
+              <td>-</td><td>-</td>
+            <% end %>
+          </tr>
+        <% end %>
       </tbody>
     </table>
   </div>

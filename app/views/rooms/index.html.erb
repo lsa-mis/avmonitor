@@ -1,8 +1,6 @@
-<div class="container px-1 mb-20" data-controller='autosubmit'>
+<div class="container px-1 mb-20 pl-4" data-controller='autosubmit'>
+  <h1 class="text-xl font-semibold text-gray-900 p-2">Rooms with Crestron devices</h1>
   <div class="grid grid-cols-2 pb-2">
-    <div>
-      <h1>Rooms with Crestron devices</h1>
-    </div>
     <div class="justify-self-end lg:hidden mr-4">
       <!--  Mobile menu button -->
       <button class="mobile-menu-button rounded h-10 w-10 bg-blue-900 text-white focus:outline-none focus:bg-blue-800 ">
@@ -47,7 +45,6 @@
             </div>
           </div>
           <br>
-
           <div class="flex-1 mx-2">
             <div class="grid grid-cols-3">
               <div class="mb-2">
@@ -65,6 +62,5 @@
       </div>
     <% end %>
   </div>
-
 </div>
 <%= javascript_include_tag 'mobile_menu', async: true %>
