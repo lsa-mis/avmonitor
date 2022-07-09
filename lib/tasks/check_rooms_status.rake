@@ -4,7 +4,6 @@ task check_rooms_status: :environment do
 
   attention = false
   Room.all.each do |room|
-    
     devices = Device.where(room_id: room.id).where.not(name: 'Room')
     catch :attention do
       devices.each do |device|
@@ -16,17 +15,14 @@ task check_rooms_status: :environment do
         end
       end
     end
-    
-      
   end
-  if attention 
+  if attention
     puts "Attention needed"
     ActionCable.server.broadcast("attention_channel", { message: "Attention needed"})
   else
     puts "status is OK"
-    ActionCable.server.broadcast("attention_channel", { message: ""})
+    ActionCable.server.broadcast("attention_channel", { message: "ok"})
   end
-
   
   
 end
