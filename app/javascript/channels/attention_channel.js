@@ -10,10 +10,16 @@ consumer.subscriptions.create("AttentionChannel", {
   },
 
   received(message) {
-    var divid = document.getElementById('attention_message');
 
-    divid.innerHTML =
-      "<p>" + message.message + "</p>";
+    // if (message.message.length > 1) {
+    location.reload()
+    console.log("reload")
+    // }
+
+    // var divid = document.getElementById('attention_message');
+
+    // divid.innerHTML =
+    //   "<p>" + message.message + "</p>";
     // Called when there's incoming data on the websocket for this channel
   }
-});
+})

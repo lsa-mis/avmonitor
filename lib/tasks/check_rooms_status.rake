@@ -18,11 +18,20 @@ task check_rooms_status: :environment do
   end
   if attention
     puts "Attention needed"
-    ActionCable.server.broadcast("attention_channel", { message: "Attention needed"})
+    if Attention.last.message == ''
+      puts "change from Ok to Attention"
+      Attention.create(message: "Attention needed")
+    end
+    puts "change Attention again"
+      ActionCable.server.broadcast("attention_channel", { message: "Attention needed"})
   else
     puts "status is OK"
-    ActionCable.server.broadcast("attention_channel", { message: "ok"})
+    if Attention.last.message == "Attention needed"
+      puts "change from Attention to Ok"
+      Attention.create(message: "")
+      ActionCable.server.broadcast("attention_channel", { message: ""})
+    end
+    puts "don't change"
   end
-  
   
 end
