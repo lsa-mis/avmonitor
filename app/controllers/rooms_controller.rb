@@ -58,9 +58,9 @@ class RoomsController < ApplicationController
     @room = Room.new(room_params)
 
     room_data = get_room_data_from_oracle(room_params[:facility_id])
-
     if room_data.nil?
-      flash.now[:error] = "No data for this room in MPathways"
+      flash.now[:alert] = "No data for this room in MPathways"
+      render turbo_stream: turbo_stream.update("flash", partial: "layouts/notification")
     else
       @room.room_type = room_data[0]
       @room.building = room_data[1]
