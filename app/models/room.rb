@@ -16,6 +16,20 @@ class Room < ApplicationRecord
   has_many :devices
 
   scope :active, -> { Room.where.associated(:devices).distinct }
+  scope :no_device, -> { Room.where.missing(:devices) }
+
+  validates :websocket_ip, :presence => true, :uniqueness => true,
+  :format => { :with => Resolv::AddressRegex }
+  validates :websocket_port, :presence => true
+  validates :facility_id, :uniqueness => { message: "is taken" }
+
+  HUMANIZED_ATTRIBUTES = {
+    :facility_id => "Name/Facility ID",
+  }
+
+  def self.human_attribute_name(attr, options={})
+    HUMANIZED_ATTRIBUTES[attr.to_sym] || super
+  end
 
   def display_name
     "#{self.facility_id}"
