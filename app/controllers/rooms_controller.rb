@@ -57,7 +57,7 @@ class RoomsController < ApplicationController
   def create
     @room = Room.new(room_params)
 
-    room_data = get_room_data_from_oracle(room_params[:facility_id])
+    room_data = get_room_data_from_oracle(room_params[:facility_id].upcase)
     if room_data.nil?
       flash.now[:alert] = "No data for this room in MPathways"
       render turbo_stream: turbo_stream.update("flash", partial: "layouts/notification")
@@ -80,7 +80,7 @@ class RoomsController < ApplicationController
 
   # PATCH/PUT /rooms/1 or /rooms/1.json
   def update
-    room_data = get_room_data_from_oracle(room_params[:facility_id])
+    room_data = get_room_data_from_oracle(room_params[:facility_id].upcase)
 
     if room_data.nil?
       flash.now[:alert] =  "No data for this room in MPathways"
