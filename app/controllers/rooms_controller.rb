@@ -65,6 +65,7 @@ class RoomsController < ApplicationController
       @room.room_type = room_data[0]
       @room.building = room_data[1]
       @room.building_nickname = room_data[2].split[1]
+      @room.facility_id = room_params[:facility_id].upcase
     
       respond_to do |format|
         if @room.save
@@ -90,6 +91,7 @@ class RoomsController < ApplicationController
       @room.room_type = room_data[0]
       @room.building = room_data[1]
       @room.building_nickname = room_data[2].split[1]
+      @room.facility_id = room_params[:facility_id].upcase
     
       respond_to do |format|
         if @room.update(room_params)
