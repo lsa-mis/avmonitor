@@ -1,11 +1,7 @@
 <%= turbo_frame_tag "room" do  %>
-  <div class="container rounded-lg shadow-lg px-auto">
+  <div class="container rounded-lg shadow-lg px-auto pl-2">
     <div class="flex-col w-full px-2">
       <div class="mx-auto">
-        <% if notice.present? %>
-          <p class="py-2 px-3 bg-green-50 mb-5 text-green-500 font-medium rounded-lg inline-block" id="notice"><%= notice %></p>
-        <% end %>
-       </div>
         <h1 class="text-3xl mb-2">
         <%= @room.display_name %>
         <% if room_need_attention?(@room) %>
@@ -18,8 +14,17 @@
       <p class="my-5">
         <%= @room.room_type %>
       </p>
+      <p class="my-5">
+      <%= @room.websocket_ip %>
+      </p>
+      <p class="my-5">
+        <%= @room.websocket_port %>
+      </p>
+      <% if room_has_device_states?(@room) %>
         <%= render @room %>
-        <%= link_to 'Back to rooms', rooms_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
+      <% end %>
+      <%= link_to 'Edit this room', edit_room_path(@room), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
+      <%= link_to 'Back to rooms', rooms_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
     </div>
   </div>
 <% end %>

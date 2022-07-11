@@ -6,8 +6,30 @@ module ApplicationHelper
     file_path
   end
 
+  def room_state?(room)
+    Device.find_by(name: "Room", room_id: room.id).present?
+  end
+
   def get_room_device(room)
     Device.find_by(name: "Room", room_id: room.id)
+  end
+
+  def room_assets?(room)
+    Device.where(room_id: room.id).where.not(name: 'Room').present?
+  end
+
+  def room_has_device_states?(room)
+    devices = Device.where(room_id: room.id)
+    state_exist = false
+    catch :state do
+      devices.each do |device|
+        if device.device_states.present?
+          state_exist = true
+          throw :state
+        end
+      end
+    end
+    return state_exist
   end
 
   def get_room_asset_devices(room)
@@ -95,7 +117,7 @@ module ApplicationHelper
   end
 
   def video_source_device?(device)
-    # check if a divece in not a Touch panel. Tauch Panel doesn't have "Power Is On" key
+    # check if a device in not a Touch panel. Tauch Panel doesn't have "Power Is On" key
     device.device_states.pluck(:key).include?("Power Is On")
   end
 
@@ -114,5 +136,4 @@ module ApplicationHelper
       return "not available"
     end
   end
-  
 end

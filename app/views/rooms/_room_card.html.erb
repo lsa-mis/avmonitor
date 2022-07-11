@@ -6,17 +6,17 @@
       <div class="text-xs px-2 font-bold hover:underline">
         <%= link_to room.facility_id, room, data: { "turbo-frame": "_top" } %>
       </div>
-      <div class="text-xs px-2 font-bold hover:underline">
+      <div class="text-xs px-2 font-bold">
         <%= room.building %>
       </div>
     </div>
     <hr>
     <div id="room_state" class="text-xs px-2">
-      <%= render 'room_state', { device: get_room_device(room) } %>
+      <%= render 'room_state', { device: get_room_device(room) } if room_state?(room) %>
     </div>
     <hr>
     <div id="assets" class="text-xs px-2">
-      <%= render 'room_assets', { devices: get_room_asset_devices(room) } %>
+      <%= render 'room_assets', { devices: get_room_asset_devices(room) } if room_assets?(room) %>
     </div>
     <hr>
     <% if @attention %>

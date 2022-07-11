@@ -53,6 +53,11 @@ gem "bootsnap", require: false
 
 gem 'ransack', '~> 3.2', '>= 3.2.1'
 
+gem 'ruby-oci8', '~> 2.2', '>= 2.2.11'
+gem 'activerecord-oracle_enhanced-adapter', '~> 7.0', '>= 7.0.2'
+
+gem 'resolv', '~> 0.2.1'
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
