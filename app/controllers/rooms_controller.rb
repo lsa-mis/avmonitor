@@ -103,16 +103,6 @@ class RoomsController < ApplicationController
     end
   end
 
-  # DELETE /rooms/1 or /rooms/1.json
-  # def destroy
-  #   @room.destroy
-
-  #   respond_to do |format|
-  #     format.html { redirect_to rooms_url, notice: "Room was successfully destroyed." }
-  #     format.json { head :no_content }
-  #   end
-  # end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_room
