@@ -13,7 +13,6 @@
 #  building_nickname :string
 #
 class Room < ApplicationRecord
-  require 'resolv'
   has_many :devices
 
   scope :active, -> { Room.where.associated(:devices).distinct }

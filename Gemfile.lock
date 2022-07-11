@@ -161,6 +161,7 @@ GEM
     redis (4.7.0)
     reline (0.3.1)
       io-console (~> 0.5)
+    resolv (0.2.1)
     ruby-oci8 (2.2.11)
     ruby-plsql (0.8.0)
     sprockets (4.1.1)
@@ -208,6 +209,7 @@ DEPENDENCIES
   rails (~> 7.0.3)
   ransack (~> 3.2, >= 3.2.1)
   redis (~> 4.0)
+  resolv (~> 0.2.1)
   ruby-oci8 (~> 2.2, >= 2.2.11)
   sprockets-rails
   sqlite3 (~> 1.4)
