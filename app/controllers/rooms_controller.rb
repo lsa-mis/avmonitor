@@ -4,9 +4,19 @@ class RoomsController < ApplicationController
 
   # GET /rooms or /rooms.json
   def index
-
+    min = params[:min_lamp_hour].to_i
+    max = params[:max_lamp_hour].to_i
     if params[:no_device]
       @rooms = Room.no_device
+    elsif (min != 0 && min >= 2 || max != 0 && max <= 1000)
+      device_ids = []
+      DeviceState.where(key: "Lamp Hours").select(:device_id, :key, :value, 'MAX(created_at)').group(:key, :device_id).each do |state|
+        if (state.value.to_i >= min && state.value.to_i <= max)
+          device_ids << state.device_id
+        end
+      end
+      room_ids = Device.where(id: device_ids).pluck(:room_id)
+      @rooms = Room.where(id: room_ids)
     else
       @q = Room.active.ransack(params[:q])
       @rooms = @q.result.order(:facility_id)
@@ -129,6 +139,6 @@ class RoomsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def room_params
-      params.require(:room).permit(:websocket_ip, :websocket_port, :facility_id, :building, :room_type)
+      params.require(:room).permit(:websocket_ip, :websocket_port, :facility_id, :building, :room_type, min_lamp_hour, max_lamp_hour)
     end
 end
