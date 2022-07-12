@@ -25,21 +25,7 @@ class RoomsController < ApplicationController
     @room_types = Room.all.pluck(:room_type).uniq.sort
 
     if params[:need_attention]
-      attention_rooms = []
-      @rooms.each do |room|
-        devices = Device.where(room_id: room.id).where.not(name: 'Room')
-        catch :attention do
-          devices.each do |device|
-            DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state|
-              if state_need_attention?(state)
-                attention_rooms << room
-                throw :attention 
-              end
-            end
-          end
-        end
-      end
-      @rooms = attention_rooms
+      @rooms = rooms_need_attention(@rooms)
     end
 
     unless params[:q].nil?
