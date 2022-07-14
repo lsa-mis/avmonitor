@@ -6,24 +6,23 @@ class RoomsController < ApplicationController
   def index
     min = params[:min_lamp_hour].to_i
     max = params[:max_lamp_hour].to_i
-   
+
     if params[:no_device]
       @rooms = Room.no_device
-    elsif (min != 0 && min >= 1 || max != 0 && max <= 1000)
-      if max == 0
-        max = 1000
-      end
-      device_ids = []
-      DeviceState.where(key: "Lamp Hours").select(:device_id, :key, :value, 'MAX(created_at)').group(:key, :device_id).each do |state|
-        if (state.value.to_i >= min && state.value.to_i <= max)
-          device_ids << state.device_id
-        end
-      end
-      room_ids = Device.where(id: device_ids).pluck(:room_id)
-      @rooms = Room.where(id: room_ids)
     else
       @q = Room.active.ransack(params[:q])
       @rooms = @q.result.order(:facility_id)
+      if (min != 0 && min > MIN_LAMP_HOURS || max != 0 && max < MAX_LAMP_HOURS)
+        device_ids = []        
+        DeviceState.where(key: "Lamp Hours").select(:device_id, :key, :value, 'MAX(created_at)').group(:key, :device_id).each do |state|
+          if (state.value.to_i >= min && state.value.to_i <= max)
+            device_ids << state.device_id
+          end
+        end
+        room_ids = Device.where(id: device_ids, room_id: @rooms.pluck(:id)).pluck(:room_id)
+        @rooms = Room.where(id: room_ids)
+      end
+      
     end
 
     @room_types = Room.all.pluck(:room_type).uniq.sort
