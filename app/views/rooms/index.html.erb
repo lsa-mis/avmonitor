@@ -43,14 +43,15 @@
             <label>Lamp Hour</label>
             <div class="flex mt-2 mb-2">
               <div class="w-1/2 ml-2 mr-2">
-                <label class="block text-sm font-medium text-gray-700" for="min_capacity">Min</label>
-                <%= number_field_tag 'min_lamp_hour', nil, min: 1, class: 'w-full block rounded sm:text-sm border-gray-300' %>
+                <label class="block text-sm font-medium text-gray-700" for="min_lamp_hour">Min</label>
+                <%= number_field_tag 'min_lamp_hour', nil, min: 1, :"data-autosubmit-target" => "min_lamp_hour", class: 'w-full block rounded sm:text-sm border-gray-300' %>
               </div>
               <div class="ml-1 mr-2 w-1/2">
-                <label class="block text-sm font-medium text-gray-700" for="max_capacity">Max</label>
-                  <%= number_field_tag 'max_lamp_hour', nil, max: 1000, class: 'w-full block rounded sm:text-sm border-gray-300' %>
+                <label class="block text-sm font-medium text-gray-700" for="max_lamp_hour">Max</label>
+                  <%= number_field_tag 'max_lamp_hour', nil, max: 1000, :"data-autosubmit-target" => "max_lamp_hour", class: 'w-full block rounded sm:text-sm border-gray-300' %>
               </div>
             </div>
+            <span class="lamp_hour-error--hide text-red-700 text-sm mt-2 -mb-2" data-autosubmit-target="lamp_hour_error"></span>
             <hr>
             <div class="px-1 pb-2">
               <label for="room_type">Search Room Type</label>

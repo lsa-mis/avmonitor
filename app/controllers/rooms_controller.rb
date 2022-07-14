@@ -6,9 +6,13 @@ class RoomsController < ApplicationController
   def index
     min = params[:min_lamp_hour].to_i
     max = params[:max_lamp_hour].to_i
+   
     if params[:no_device]
       @rooms = Room.no_device
-    elsif (min != 0 && min >= 2 || max != 0 && max <= 1000)
+    elsif (min != 0 && min >= 1 || max != 0 && max <= 1000)
+      if max == 0
+        max = 1000
+      end
       device_ids = []
       DeviceState.where(key: "Lamp Hours").select(:device_id, :key, :value, 'MAX(created_at)').group(:key, :device_id).each do |state|
         if (state.value.to_i >= min && state.value.to_i <= max)
@@ -125,6 +129,6 @@ class RoomsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def room_params
-      params.require(:room).permit(:websocket_ip, :websocket_port, :facility_id, :building, :room_type, min_lamp_hour, max_lamp_hour)
+      params.require(:room).permit(:websocket_ip, :websocket_port, :facility_id, :building, :room_type)
     end
 end
