@@ -15,7 +15,6 @@ export default class extends Controller {
       if (Number.isNaN(min_lamp_hour)) { min_lamp_hour = 0 }
       if (Number.isNaN(max_lamp_hour)) { max_lamp_hour = 0 }
 
-      // if (min_lamp_hour != 0 && min_lamp_hour > MIN || max_lamp_hour != 0 && max_lamp_hour < MAX) {
       if (min_lamp_hour != 0 || max_lamp_hour != MAX) {
 
         if (min_lamp_hour < 0) {
