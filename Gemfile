@@ -74,3 +74,7 @@ group :development do
   # gem "spring"
 end
 
+
+gem "devise", "~> 4.8"
+gem "omniauth-saml"
+gem "omniauth-rails_csrf_protection"
