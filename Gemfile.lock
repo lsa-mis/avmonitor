@@ -142,6 +142,8 @@ GEM
     orm_adapter (0.5.0)
     puma (5.6.4)
       nio4r (~> 2.0)
+    pundit (2.2.0)
+      activesupport (>= 3.0.0)
     racc (1.6.0)
     rack (2.2.4)
     rack-protection (2.2.1)
@@ -226,6 +228,7 @@ GEM
     zeitwerk (2.6.0)
 
 PLATFORMS
+  x86_64-darwin-19
   x86_64-darwin-20
 
 DEPENDENCIES
@@ -238,6 +241,7 @@ DEPENDENCIES
   omniauth-rails_csrf_protection
   omniauth-saml
   puma (~> 5.0)
+  pundit (~> 2.2)
   rails (~> 7.0.3.1)
   ransack (~> 3.2, >= 3.2.1)
   redis (~> 4.0)
@@ -252,7 +256,7 @@ DEPENDENCIES
   web-console
 
 RUBY VERSION
-   ruby 3.0.2p107
+   ruby 3.1.0p0
 
 BUNDLED WITH
    2.2.29
