@@ -24,7 +24,7 @@
             </div>
             <div>
               <% if user_signed_in? %>
-                <div>
+                <div class="text-yellow-400">
                   <%= current_user.email %>
                 </div>
                 <%= button_to destroy_user_session_path, method: :delete, tabindex: "-1", data: {turbo: "false"} do %>
