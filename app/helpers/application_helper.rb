@@ -136,4 +136,40 @@ module ApplicationHelper
       return "not available"
     end
   end
+
+  def room_is_off?(room)
+    device = Device.find_by(name: "Room", room_id: room.id)
+    if device.present? && DeviceState.where(device_id: device.id).present?
+      if DeviceState.where(device_id: device.id).last.key == "Room Is On" && device.device_states.last.value == "false"
+        return true
+      else
+        return false
+      end
+    else 
+      return true
+    end
+  end
+
+  def rooms_need_attention(rooms)
+    attention_rooms = []
+    rooms.each do |room|
+      if room_is_off?(room)
+        attention_rooms << room
+      else
+        devices = Device.where(room_id: room.id).where.not(name: 'Room')
+        catch :attention do
+          devices.each do |device|
+            DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state|
+              if state_need_attention?(state)
+                attention_rooms << room
+                throw :attention 
+              end
+            end
+          end
+        end
+      end
+    end
+    return attention_rooms
+  end
+
 end

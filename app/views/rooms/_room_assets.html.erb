@@ -1,15 +1,29 @@
 <div class="text-xs px-2">
   <% devices.all.each do |device| %>
-    <span class="font-bold"><%= device.name %></span>
-    <% DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state| %>
+    <% if device.name == "Touch Panel" %>
+      <% DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state| %>
+        <% if state_need_attention?(state) %>
+          <div class="font-bold"><%= device.name %></div>
+          <% @attention = true %>
+          <div class="text-red-500 pl-2">
+            <%= "#{state.key} - #{state.value}" %>
+          </div>
+        <% end %>
+      <% end %>
+    <% else %>
+      <div class="font-bold"><%= device.name %></div>
+      <% DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state| %>
         <% if state_need_attention?(state) %>
           <% @attention = true %>
-            <div class="text-red-500">
-          <% else %>
-            <div>
+          <div class="text-red-500 pl-2">
+            <%= "#{state.key} - #{state.value}" %>
+          </div>
+        <% else %>
+          <div class="pl-2">
+            <%= "#{state.key} - #{state.value}" unless state.key == "Error State" %>
+          </div>
         <% end %>
-        <%= "#{state.key} - #{state.value}" %>
-      </div>
+      <% end %>
     <% end %>
     <hr>
   <% end %>

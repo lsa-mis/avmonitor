@@ -11,16 +11,16 @@
       </div>
     </div>
     <hr>
-    <div id="room_state" class="text-xs px-2">
-      <%= render 'room_state', { device: get_room_device(room) } if room_state?(room) %>
-    </div>
-    <hr>
-    <div id="assets" class="text-xs px-2">
-      <%= render 'room_assets', { devices: get_room_asset_devices(room) } if room_assets?(room) %>
-    </div>
-    <hr>
-    <% if @attention %>
-      <span class="text-red-500">Needs attention</span>
+    <% if room_is_off?(room) %>
+      <span class="text-red-500">Room Is Offline</span>
+    <% else %>
+      <div id="assets" class="text-xs px-2">
+        <%= render 'rooms/room_assets', { devices: get_room_asset_devices(room) } %>
+      </div>
+      <hr>
+      <% if @attention %>
+        <span class="text-red-500">Needs attention</span>
+      <% end %>
     <% end %>
   </div>
 <% end %>

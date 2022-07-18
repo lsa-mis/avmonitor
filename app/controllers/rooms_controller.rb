@@ -4,32 +4,31 @@ class RoomsController < ApplicationController
 
   # GET /rooms or /rooms.json
   def index
+    min = params[:min_lamp_hour].to_i
+    max = params[:max_lamp_hour].to_i
 
     if params[:no_device]
       @rooms = Room.no_device
     else
       @q = Room.active.ransack(params[:q])
       @rooms = @q.result.order(:facility_id)
+      if (min != 0 && min > MIN_LAMP_HOURS || max != 0 && max < MAX_LAMP_HOURS)
+        device_ids = []        
+        DeviceState.where(key: "Lamp Hours").select(:device_id, :key, :value, 'MAX(created_at)').group(:key, :device_id).each do |state|
+          if (state.value.to_i >= min && state.value.to_i <= max)
+            device_ids << state.device_id
+          end
+        end
+        room_ids = Device.where(id: device_ids, room_id: @rooms.pluck(:id)).pluck(:room_id)
+        @rooms = Room.where(id: room_ids)
+      end
+      
     end
 
     @room_types = Room.all.pluck(:room_type).uniq.sort
 
     if params[:need_attention]
-      attention_rooms = []
-      @rooms.each do |room|
-        devices = Device.where(room_id: room.id).where.not(name: 'Room')
-        catch :attention do
-          devices.each do |device|
-            DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state|
-              if state_need_attention?(state)
-                attention_rooms << room
-                throw :attention 
-              end
-            end
-          end
-        end
-      end
-      @rooms = attention_rooms
+      @rooms = rooms_need_attention(@rooms)
     end
 
     unless params[:q].nil?

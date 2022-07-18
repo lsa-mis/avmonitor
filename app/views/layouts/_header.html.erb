@@ -17,6 +17,9 @@
         <div class="hidden sm:ml-6 sm:flex sm:space-x-4 pl-2">
           <div class="border-transparent text-blue-50 inline-flex items-center justify-between space-x-4 pl-1 pt-1 border-b-2 text-base font-normal">
             <div class="hover:underline">
+               <%= link_to "Dashboard", dashboard_path %>
+            </div>
+            <div class="hover:underline">
               <%= link_to "Find a Room", rooms_path %>
             </div>
             <div class="hover:underline">
@@ -40,5 +43,9 @@
         </div>
       </div>
     </div>
+  </div>
+  <%= turbo_stream_from "attention_channel" %>
+  <div id="attention_message" class="flex flex-row bg-red-800 text-red-100 text-sm place-content-center">
+    <%= render 'attentions/attention' %>
   </div>
 </nav>
