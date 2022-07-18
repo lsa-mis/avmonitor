@@ -10,13 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_09_200551) do
-  create_table "attentions", force: :cascade do |t|
-    t.string "message"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
+ActiveRecord::Schema[7.0].define(version: 2022_07_15_164334) do
   create_table "device_states", force: :cascade do |t|
     t.string "key", null: false
     t.string "value"
@@ -49,11 +43,16 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_09_200551) do
 
   create_table "users", force: :cascade do |t|
     t.string "email", default: "", null: false
-    t.string "uniqname", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
+    t.string "provider"
+    t.string "uid"
+    t.string "uniqname"
+    t.string "principal_name"
+    t.string "display_name"
+    t.string "person_affiliation"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
