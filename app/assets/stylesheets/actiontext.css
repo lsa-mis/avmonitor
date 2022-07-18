@@ -38,3 +38,19 @@
 .trix-button-group--file-tools {
   display: none !important;
 }
+
+.trix-content ol {
+  list-style: auto !important;
+}
+
+.trix-content ul {
+  list-style: disc !important;
+}
+
+.trix-content a {
+  color: blue !important;
+}
+
+.trix-content a:hover {
+  text-decoration: underline;
+}
