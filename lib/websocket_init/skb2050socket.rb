@@ -3,14 +3,11 @@ require 'eventmachine'
 require "rack"
 require "thin"
 require 'em-redis'
-require "../websocket"
 
 appskb2050 = lambda do |env|
   EM.run {
     wssName = 'SKB2050'
     wssUri = 'wss://10.211.250.52:32123'
-    wssIp = '10.211.250.52'
-    wssPort = '32123'
 
     redis = EM::Protocols::Redis.connect
     redis.errback do |code|
@@ -27,13 +24,6 @@ appskb2050 = lambda do |env|
   
     ws.on :message do |event|
       p "#{wssName} socket is responding - #{Time.now}"
-      websocket = Websocket.new(wssIp, wssPort, wssName)
-      unless websocket
-        # room with this websocket doesn't exist in the db - do something
-      end
-
-      websocket.process_payload(event_data)
-
       redis.set wssName, event.data do |response|
         redis.get wssName do |response|
           p response
