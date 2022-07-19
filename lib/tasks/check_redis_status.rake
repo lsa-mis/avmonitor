@@ -1,6 +1,11 @@
 desc "This will find rooms that need attention"
 task check_redis_status: :environment do
+  include ApplicationHelper
 
+  # need to config redis
+  # run these commands in redis-cli
+  # CONFIG SET notify-keyspace-events KEA
+  # psubscribe '__key*__:*'
   require 'redis'
   redis = Redis.new(host: "localhost")
 
@@ -10,18 +15,22 @@ task check_redis_status: :environment do
     # https://redis.io/topics/notifications#events-generated-by-different-commands
     conn.psubscribe("__key*__:*") do |on|
       on.psubscribe do
-        puts "here one"
+        puts "subscribed"
       end
-      on.pmessage do |pattern, command, key|
-        puts "in"
-        puts key
-        value = redis.get(key)
-        puts value
-        # Device.create(room_id: 1, name: value)
-        puts "pattern"
-        puts pattern
-        puts "command"
-        puts command
+      on.pmessage do |pattern, command, room_name|
+        puts room_name
+        # room_name - room's facility_id
+        if Room.find_by(facility_id: room_name).present?
+          room = Room.find_by(facility_id: room_name)
+          s = redis.get(room_name)
+          puts s
+          h = JSON.parse s.gsub('=>', ':')
+          h["LSARoom"].each do |input, data|
+            write_socket_data_to_db(room, input, data)
+          end
+        else 
+          puts "no room with facility_id" + room_name
+        end
       end
       on.punsubscribe do
         puts "unsibscribe"
