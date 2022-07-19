@@ -6,6 +6,10 @@ task check_redis_status: :environment do
   # run these commands in redis-cli
   # CONFIG SET notify-keyspace-events KEA
   # psubscribe '__key*__:*'
+  # 
+  # start sockets scripst in different terminals: ruby lib/websocket-init/<script>
+  # run: lib/websocket-init/start_sockets.rb
+  # then run this task: bin/rake check_redis_status
   require 'redis'
   redis = Redis.new(host: "localhost")
 
