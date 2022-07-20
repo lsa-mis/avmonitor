@@ -1,32 +1,53 @@
 <%= turbo_frame_tag "room" do  %>
   <div class="container -mt-20 rounded-lg shadow-lg px-auto pl-2">
     <div class="flex-col w-full px-2">
-      <div class="">
-        <h1 class="text-3xl mb-2">
-        <%= @room.display_name %>
-        <% if room_need_attention?(@room) %>
-          <span class="text-red-500">Needs attention</span>
+      <div class="mx-auto">
+        <div class="grid grid-cols-2">
+          <div>
+            <h1 class="text-3xl mb-2">
+              <%= @room.display_name %>
+              <% if room_need_attention?(@room) %>
+                <span class="text-red-500">Needs attention</span>
+              <% end %>
+            </h1>
+            <p class="my-5">
+              <%= @room.building %>
+            </p>
+            <p class="my-5">
+              <%= @room.room_type %>
+            </p>
+            <p class="my-5">
+            <%= @room.websocket_ip %>
+            </p>
+            <p class="my-5">
+              <%= @room.websocket_port %>
+            </p>
+          </div>
+          <div class="mt-4 text-blue-600 hover: underline">
+            <%= link_to "Lecture Capture Dashboard", "https://leccap.engin.umich.edu/leccap/dashboard", target: "_blank" %>
+          </div>
+        </div>
+        <div>
+          <% if room_has_device_states?(@room) %>
+            <%= render @room %>
+          <% end %>
+        </div>
+      <div>
+        <% if current_user.role == "admin" %>
+         <%= link_to 'Edit this room', edit_room_path(@room), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
         <% end %>
-      </h1>
-      <p class="my-5">
-        <%= @room.building %>
-      </p>
-      <p class="my-5">
-        <%= @room.room_type %>
-      </p>
-      <p class="my-5">
-      <%= @room.websocket_ip %>
-      </p>
-      <p class="my-5">
-        <%= @room.websocket_port %>
-      </p>
-      <% if room_has_device_states?(@room) %>
-        <%= render @room %>
-      <% end %>
-      <% if current_user.role == "admin" %>
-        <%= link_to 'Edit this room', edit_room_path(@room), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
-      <% end %>
-      <%= link_to 'Back to rooms', rooms_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
+        <%= link_to 'Back to rooms', rooms_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
+      </div>
     </div>
   </div>
 <% end %>
+
+<div class="container p-2 rounded-lg shadow-lg text-xl mb-20 bg-gray-50">
+  <div class="mb-20">Notes:
+    <%= render partial: "notes/form", locals: { note: Note.new, noteable: @room } %>
+    <%= turbo_stream_from @room, :notes %>
+    <%= tag.div id: "#{dom_id(@room)}_notes" do %>
+      <%= render @room.notes %>
+    <% end %>
+  </div>
+</div>
