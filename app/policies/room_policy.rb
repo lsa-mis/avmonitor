@@ -1,19 +1,27 @@
 class RoomPolicy < ApplicationPolicy
 
   def index?
-    true
+    user_in_access_group?
   end
 
   def show?
-    true
+    user_in_access_group?
+  end
+
+  def new?
+    create?
   end
 
   def create?
-    true
+    user.role == 'admin'
+  end
+
+  def edit?
+    update?
   end
 
   def update?
-    true
+    user.role == 'admin'
   end
 
 end

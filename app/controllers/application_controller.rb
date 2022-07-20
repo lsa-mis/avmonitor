@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
 
   def user_not_in_group
     flash[:alert] = "You are not authorized to perform this action."
-    redirect_to about_path
+    redirect_to rooms_path
   end
 
   def set_membership

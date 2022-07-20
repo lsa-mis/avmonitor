@@ -36,4 +36,13 @@ class ApplicationPolicy
     false
   end
 
+  def user_in_access_group?
+    if Rails.env.production?
+      true
+    else
+      access_groups = ['LSA-AV-Monitoring-Admins', 'lsa-av-monitoring-tech', 'LSA-AV-Monitoring-Reviewers']
+      user.membership && (user.membership & access_groups).any?
+    end
+  end
+
 end

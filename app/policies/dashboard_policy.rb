@@ -1,7 +1,7 @@
 class DashboardPolicy < ApplicationPolicy
 
   def index?
-    true
+    user_in_access_group?
   end
 
 end
