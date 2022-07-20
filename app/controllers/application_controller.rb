@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
   def set_membership
     if user_signed_in?
       current_user.membership = session[:user_memberships]
-      current_user.admin = session[:user_admin]
+      current_user.role = session[:user_role]
     else
       new_user_session_path
     end

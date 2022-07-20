@@ -93,7 +93,7 @@ GEM
     hashie (5.0.0)
     i18n (1.12.0)
       concurrent-ruby (~> 1.0)
-    importmap-rails (1.1.4)
+    importmap-rails (1.1.5)
       actionpack (>= 6.0.0)
       railties (>= 6.0.0)
     io-console (0.5.11)
@@ -102,6 +102,8 @@ GEM
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
+    ldap_lookup (0.1.5)
+      net-ldap (~> 0.17.0)
     loofah (2.18.0)
       crass (~> 1.0.2)
       nokogiri (>= 1.5.9)
@@ -116,6 +118,7 @@ GEM
       digest
       net-protocol
       strscan
+    net-ldap (0.17.1)
     net-pop (0.1.1)
       digest
       net-protocol
@@ -202,7 +205,7 @@ GEM
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
     sqlite3 (1.4.4)
-    stimulus-rails (1.0.4)
+    stimulus-rails (1.1.0)
       railties (>= 6.0.0)
     strscan (3.0.3)
     tailwindcss-rails (2.0.10-x86_64-darwin)
@@ -213,7 +216,7 @@ GEM
       actionpack (>= 6.0.0)
       activejob (>= 6.0.0)
       railties (>= 6.0.0)
-    tzinfo (2.0.4)
+    tzinfo (2.0.5)
       concurrent-ruby (~> 1.0)
     warden (1.2.9)
       rack (>= 2.0.9)
@@ -238,6 +241,7 @@ DEPENDENCIES
   devise (~> 4.8)
   importmap-rails
   jbuilder
+  ldap_lookup
   omniauth-rails_csrf_protection
   omniauth-saml
   puma (~> 5.0)
