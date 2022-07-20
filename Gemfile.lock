@@ -102,7 +102,7 @@ GEM
     jbuilder (2.11.5)
       actionview (>= 5.0.0)
       activesupport (>= 5.0.0)
-    ldap_lookup (0.1.5)
+    ldap_lookup (0.1.6)
       net-ldap (~> 0.17.0)
     loofah (2.18.0)
       crass (~> 1.0.2)
@@ -241,7 +241,7 @@ DEPENDENCIES
   devise (~> 4.8)
   importmap-rails
   jbuilder
-  ldap_lookup
+  ldap_lookup (~> 0.1.6)
   omniauth-rails_csrf_protection
   omniauth-saml
   puma (~> 5.0)
