@@ -1,5 +1,5 @@
 <%= turbo_frame_tag "room" do  %>
-  <div class="container rounded-lg shadow-lg px-auto pl-2">
+  <div class="container -mt-20 rounded-lg shadow-lg px-auto pl-2">
     <div class="flex-col w-full px-2">
       <div class="mx-auto">
         <div class="grid grid-cols-2">
@@ -33,7 +33,9 @@
           <% end %>
         </div>
       <div>
-        <%= link_to 'Edit this room', edit_room_path(@room), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
+        <% if current_user.role == "admin" %>
+         <%= link_to 'Edit this room', edit_room_path(@room), class: "mt-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
+        <% end %>
         <%= link_to 'Back to rooms', rooms_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
       </div>
     </div>

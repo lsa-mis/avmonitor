@@ -16,19 +16,25 @@
         </div>
         <div class="hidden sm:ml-6 sm:flex sm:space-x-4 pl-2">
           <div class="border-transparent text-blue-50 inline-flex items-center justify-between space-x-4 pl-1 pt-1 border-b-2 text-base font-normal">
-            <div class="hover:underline">
-               <%= link_to "Dashboard", dashboard_path %>
-            </div>
-            <div class="hover:underline">
-              <%= link_to "Find a Room", rooms_path %>
-            </div>
-            <div class="hover:underline">
-              <%= link_to 'New room', new_room_path %>
-            </div>
-            <div>
+            <% if user_signed_in? %>
+              <div class="hover:underline">
+                <%= link_to "Dashboard", dashboard_path %>
+              </div>
+            <% end %>
+            <% if user_signed_in? %>
+              <div class="hover:underline">
+                <%= link_to "Find a Room", rooms_path %>
+              </div>
+            <% end %>
+            <% if user_signed_in? && current_user.role == "admin" %>
+              <div class="hover:underline">
+                <%= link_to 'New room', new_room_path %>
+              </div>
+            <% end %>
+            <div class="place-self-end">
               <% if user_signed_in? %>
                 <div class="text-yellow-400">
-                  <%= current_user.email %>
+                  <%= current_user.email %> - <%= current_user.role %>
                 </div>
                 <%= button_to destroy_user_session_path, method: :delete, tabindex: "-1", data: {turbo: "false"} do %>
                   <div>Sign Out</div>

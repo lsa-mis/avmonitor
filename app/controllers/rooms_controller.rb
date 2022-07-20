@@ -1,4 +1,5 @@
 class RoomsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_room, only: %i[ show edit update destroy ]
   include ApplicationHelper
 
@@ -31,6 +32,8 @@ class RoomsController < ApplicationController
       @rooms = rooms_need_attention(@rooms)
     end
 
+    authorize @rooms
+
     unless params[:q].nil?
       render turbo_stream: turbo_stream.replace(
       :roomListing,
@@ -46,6 +49,7 @@ class RoomsController < ApplicationController
   # GET /rooms/new
   def new
     @room = Room.new
+    authorize @room
   end
 
   # GET /rooms/1/edit
@@ -55,7 +59,7 @@ class RoomsController < ApplicationController
   # POST /rooms or /rooms.json
   def create
     @room = Room.new(room_params)
-
+    authorize @room
     room_data = get_room_data_from_oracle(room_params[:facility_id].upcase)
     if room_data.nil?
       flash.now[:alert] = "No data for this room in MPathways"
@@ -108,6 +112,7 @@ class RoomsController < ApplicationController
     # Use callbacks to share common setup or constraints between actions.
     def set_room
       @room = Room.find(params[:id])
+      authorize @room
     end
 
     def get_room_data_from_oracle(facility_id)
