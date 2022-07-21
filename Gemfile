@@ -57,6 +57,7 @@ gem 'ruby-oci8', '~> 2.2', '>= 2.2.11'
 gem 'activerecord-oracle_enhanced-adapter', '~> 7.0', '>= 7.0.2'
 
 gem 'resolv', '~> 0.2.1'
+gem 'sidekiq', '~> 6.5', '>= 6.5.1'
 gem 'pundit', '~> 2.2'
 gem 'ldap_lookup', '~> 0.1.6'
 
