@@ -10,7 +10,7 @@ module Noteable
   def create
     @note = @noteable.notes.new(note_params)
     @note.user = current_user
-    # authorize @note
+    authorize @note
     respond_to do |format|
       if @note.save
         note = Note.new

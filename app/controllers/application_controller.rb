@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
     if current_user.role == ""
       redirect_to root_path
     else
-      redirect_to room_path
+      redirect_to rooms_path
     end
   end
 
