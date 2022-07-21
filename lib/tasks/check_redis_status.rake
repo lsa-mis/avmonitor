@@ -37,7 +37,7 @@ task check_redis_status: :environment do
         end
       end
       on.punsubscribe do
-        puts "unsibscribe"
+        puts "unsubscribe"
       end
     end
   end
