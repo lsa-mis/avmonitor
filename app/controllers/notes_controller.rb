@@ -22,7 +22,7 @@ class NotesController < ApplicationController
 
   def set_note
     @note = Note.find(params[:id])
-    # authorize @note
+    authorize @note
   end
 
   def note_params
