@@ -49,6 +49,24 @@ def set_user
 
   if @user
     session[:user_email] = @user.email
+
+    membership = []
+    access_groups = ['LSA-AV-Monitoring-Admins', 'lsa-av-monitoring-tech', 'LSA-AV-Monitoring-Reviewers']
+    access_groups.each do |group|
+      if  LdapLookup.is_member_of_group?(@user.uniqname, group)
+        membership.append(group)
+      end
+    end
+    session[:user_memberships] = membership
+    if membership.include?('LSA-AV-Monitoring-Admins')
+      session[:user_role] = "admin"
+    elsif membership.include?('lsa-av-monitoring-tech')
+      session[:user_role] = "technician"
+    elsif membership.include?('LSA-AV-Monitoring-Reviewers')
+      session[:user_role] = "reviewer"
+    else
+      session[:user_role] = ""
+    end
   end
 end
 

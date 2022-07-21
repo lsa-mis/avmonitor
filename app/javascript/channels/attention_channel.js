@@ -6,6 +6,7 @@ consumer.subscriptions.create("AttentionChannel", {
   },
 
   disconnected() {
+    console.log("Disconnected from AttentionChannel");
     // Called when the subscription has been terminated by the server
   },
 
