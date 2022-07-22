@@ -40,7 +40,7 @@ class ApplicationPolicy
     if user.role == ''
       return false
     end
-    access_groups = ['LSA-AV-Monitoring-Admins', 'lsa-av-monitoring-tech', 'LSA-AV-Monitoring-Reviewers']
+    access_groups = ['LSA-AV-Monitoring-Admins', 'lsa-av-monitoring-tech', 'LSA-AV-Monitoring-Viewer']
     user.membership && (user.membership & access_groups).any?
   end
 
