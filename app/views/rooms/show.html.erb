@@ -44,7 +44,7 @@
 
 <div class="container p-2 rounded-lg shadow-lg text-xl mb-20 bg-gray-50">
   <div class="mb-20">Notes:
-    <% if user_signed_in? && ["admin", "technician"].include?(session[:user_role]) %>
+    <% if ["admin", "technician"].include?(session[:user_role]) %>
       <%= render partial: "notes/form", locals: { note: Note.new, noteable: @room } %>
     <% end %>
     <%= turbo_stream_from @room, :notes %>
