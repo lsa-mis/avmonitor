@@ -23,12 +23,12 @@
             <% end %>
             <% if user_signed_in? %>
               <div class="hover:underline">
-                <%= link_to "Find a Room", rooms_path %>
+                <%= link_to "Room Search", rooms_path %>
               </div>
             <% end %>
             <% if user_signed_in? && current_user.role == "admin" %>
               <div class="hover:underline">
-                <%= link_to 'New room', new_room_path %>
+                <%= link_to 'New Room', new_room_path %>
               </div>
             <% end %>
             <div class="place-self-end">

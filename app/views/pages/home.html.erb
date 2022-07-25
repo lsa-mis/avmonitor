@@ -4,7 +4,7 @@
 
   <% unless current_user %>
     <%= button_to user_saml_omniauth_authorize_path, data: {turbo: "false"} do %>
-      <div class="mt-10 inline-block w-full bg-gray-900 border border-transparent rounded-md py-3 px-8 font-medium text-white hover:bg-gray-800 sm:w-auto mb-10 sm:mb-0 href="#">Log In To Find A Room!</div>
+      <div class="mt-10 inline-block w-full bg-gray-900 border border-transparent rounded-md py-3 px-8 font-medium text-white hover:bg-gray-800 sm:w-auto mb-10 sm:mb-0 href="#">Sign In</div>
     <% end %>
   <% end %>
 </div>
