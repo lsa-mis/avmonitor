@@ -9,15 +9,15 @@ class NotePolicy < ApplicationPolicy
   end
 
   def create?
-    user_in_access_group?
+    ["admin", "technician"].include?(user.role)
   end
 
   def update?
-    user_in_access_group?
+    ["admin", "technician"].include?(user.role)
   end
 
   def destroy?
-    user.admin
+    ["admin", "technician"].include?(user.role)
   end
 
 end

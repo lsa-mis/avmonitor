@@ -12,16 +12,14 @@
           <%= note.updated_at.strftime('%m/%d/%Y') %>
         </div>
         <div class="flex items-center p-1">
-          
-            by
-            <%= note.user.display_name %>
+          by
+          <%= note.user.display_name %>
+          <% if ["admin", "technician"].include?(session[:user_role]) %>
             <%= link_to "Edit", edit_note_path(note), class: "px-2 ml-2 rounded-md shadow-sm bg-gray-100 text-sm text-black text-center ring-1 ring-black ring-opacity-5 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:bg-gray-400" %>
             <%= button_to "Delete", note_path(note), method: :delete, data: { confirm: 'Are you sure?', "turbo-frame": "_top" }, class: "ml-1 px-2 rounded-md shadow-sm bg-gray-100 text-sm text-black text-center ring-1 ring-black ring-opacity-5 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:bg-gray-400" %>
-          
+          <% end %>
         </div>
       </div>
     </div>
   </div>
-
-  
 <% end %>

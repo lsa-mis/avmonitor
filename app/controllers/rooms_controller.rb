@@ -10,6 +10,7 @@ class RoomsController < ApplicationController
 
     if params[:no_device]
       @rooms = Room.no_device
+      authorize @rooms
     else
       @q = Room.active.ransack(params[:q])
       @rooms = @q.result.order(:facility_id)
@@ -23,17 +24,15 @@ class RoomsController < ApplicationController
         room_ids = Device.where(id: device_ids, room_id: @rooms.pluck(:id)).pluck(:room_id)
         @rooms = Room.where(id: room_ids)
       end
-      
+      authorize @rooms
+      if params[:need_attention]
+        rooms = @rooms
+        @rooms = rooms_need_attention(rooms)
+        authorize :attention
+      end
     end
 
     @room_types = Room.all.pluck(:room_type).uniq.sort
-
-    if params[:need_attention]
-      @rooms = rooms_need_attention(@rooms)
-    end
-
-    authorize @rooms
-
     unless params[:q].nil?
       render turbo_stream: turbo_stream.replace(
       :roomListing,

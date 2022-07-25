@@ -49,10 +49,12 @@
 
 <div class="container p-2 rounded-lg shadow-lg text-xl mb-20 bg-gray-50">
   <div class="mb-20">Notes:
-    <%= render partial: "notes/form", locals: { note: Note.new, noteable: @room } %>
+    <% if ["admin", "technician"].include?(session[:user_role]) %>
+      <%= render partial: "notes/form", locals: { note: Note.new, noteable: @room } %>
+    <% end %>
     <%= turbo_stream_from @room, :notes %>
     <%= tag.div id: "#{dom_id(@room)}_notes" do %>
-      <%= render @room.notes %>
+      <%= render @room.notes %> 
     <% end %>
   </div>
 </div>
