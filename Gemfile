@@ -4,21 +4,21 @@ git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 ruby "3.1.2"
 
 
-gem 'activerecord-oracle_enhanced-adapter', '~> 7.0', '>= 7.0.2'
+gem "activerecord-oracle_enhanced-adapter", "~> 7.0", ">= 7.0.2"
 gem "devise", "~> 4.8"
 gem "importmap-rails"
 gem "jbuilder"
-gem 'ldap_lookup', '~> 0.1.6'
+gem "ldap_lookup", "~> 0.1.6"
 gem "omniauth-saml"
 gem "omniauth-rails_csrf_protection"
 gem "puma", "~> 5.0"
-gem 'pundit', '~> 2.2'
+gem "pundit", "~> 2.2"
 gem "rails", "~> 7.0.3.1"
-gem 'ransack', '~> 3.2', '>= 3.2.1'
+gem "ransack", "~> 3.2", ">= 3.2.1"
 gem "redis", "~> 4.0"
-gem 'resolv', '~> 0.2.1'
-gem 'ruby-oci8', '~> 2.2', '>= 2.2.11'
-gem 'sidekiq', '~> 6.5', '>= 6.5.1'
+gem "resolv", "~> 0.2.1"
+gem "ruby-oci8", "~> 2.2", ">= 2.2.11"
+gem "sidekiq", "~> 6.5", ">= 6.5.1"
 gem "sprockets-rails"
 gem "sqlite3", "~> 1.4"
 gem "stimulus-rails"
@@ -46,6 +46,7 @@ gem "bootsnap", require: false
 group :development, :test do
   gem "capistrano", "~> 3.10", require: false
   gem "capistrano-rails", "~> 1.3", require: false
+  gem "capistrano-rbenv", "~> 2.2",   require: false
   gem "debug", platforms: %i[ mri mingw x64_mingw ]
 end
 
