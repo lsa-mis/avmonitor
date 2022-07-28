@@ -11,7 +11,7 @@ task check_rooms_status: :environment do
         throw :attention 
       else
         devices.each do |device|
-          DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state|
+          DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key, :value).each do |state|
             if state_need_attention?(state)
               attention = true
               throw :attention 

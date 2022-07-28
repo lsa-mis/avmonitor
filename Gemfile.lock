@@ -70,11 +70,26 @@ GEM
       i18n (>= 1.6, < 2)
       minitest (>= 5.1)
       tzinfo (~> 2.0)
+    airbrussh (1.4.0)
+      sshkit (>= 1.6.1, != 1.7.0)
     bcrypt (3.1.18)
     bindex (0.8.1)
     bootsnap (1.12.0)
       msgpack (~> 1.2)
     builder (3.2.4)
+    capistrano (3.17.0)
+      airbrussh (>= 1.0.0)
+      i18n
+      rake (>= 10.0.0)
+      sshkit (>= 1.9.0)
+    capistrano-bundler (2.1.0)
+      capistrano (~> 3.1)
+    capistrano-rails (1.6.2)
+      capistrano (~> 3.1)
+      capistrano-bundler (>= 1.1, < 3)
+    capistrano-rbenv (2.2.0)
+      capistrano (~> 3.1)
+      sshkit (~> 1.3)
     concurrent-ruby (1.1.10)
     connection_pool (2.2.5)
     crass (1.0.6)
@@ -115,6 +130,7 @@ GEM
     mini_mime (1.1.2)
     minitest (5.16.2)
     msgpack (1.5.4)
+    mysql2 (0.5.4)
     net-imap (0.2.3)
       digest
       net-protocol
@@ -126,10 +142,13 @@ GEM
       timeout
     net-protocol (0.1.3)
       timeout
+    net-scp (1.2.1)
+      net-ssh (>= 2.6.5)
     net-smtp (0.3.1)
       digest
       net-protocol
       timeout
+    net-ssh (7.0.1)
     nio4r (2.5.8)
     nokogiri (1.13.8-x86_64-darwin)
       racc (~> 1.4)
@@ -209,7 +228,9 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sqlite3 (1.4.4)
+    sshkit (1.21.2)
+      net-scp (>= 1.1.2)
+      net-ssh (>= 2.8.0)
     stimulus-rails (1.1.0)
       railties (>= 6.0.0)
     strscan (3.0.4)
@@ -243,11 +264,15 @@ PLATFORMS
 DEPENDENCIES
   activerecord-oracle_enhanced-adapter (~> 7.0, >= 7.0.2)
   bootsnap
+  capistrano (~> 3.10)
+  capistrano-rails (~> 1.3)
+  capistrano-rbenv (~> 2.2)
   debug
   devise (~> 4.8)
   importmap-rails
   jbuilder
   ldap_lookup (~> 0.1.6)
+  mysql2 (~> 0.5.4)
   omniauth-rails_csrf_protection
   omniauth-saml
   puma (~> 5.0)
@@ -259,7 +284,6 @@ DEPENDENCIES
   ruby-oci8 (~> 2.2, >= 2.2.11)
   sidekiq (~> 6.5, >= 6.5.1)
   sprockets-rails
-  sqlite3 (~> 1.4)
   stimulus-rails
   tailwindcss-rails
   turbo-rails

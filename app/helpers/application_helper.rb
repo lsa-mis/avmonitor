@@ -45,7 +45,7 @@ module ApplicationHelper
     att = false
     catch :attention do
       devices.each do |device|
-        DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state|
+        DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key, :value).each do |state|
           if state_need_attention?(state)
             att = true
             throw :attention 
@@ -128,7 +128,7 @@ module ApplicationHelper
     if room_device.device_states.where(key: source_key).last.present?
       source = room_device.device_states.where(key: source_key).last.value
       if source != "0"
-        return room_device.device_states.where("key LIKE 'VideoSource%' AND key LIKE '%" + "#{source}'").last.value
+        return room_device.device_states.where("`key` LIKE 'VideoSource%' AND `key` LIKE '%" + "#{source}'").last.value
       else
         return "not selected"
       end
@@ -159,7 +159,7 @@ module ApplicationHelper
         devices = Device.where(room_id: room.id).where.not(name: 'Room')
         catch :attention do
           devices.each do |device|
-            DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key).each do |state|
+            DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key, :value).each do |state|
               if state_need_attention?(state)
                 attention_rooms << room
                 throw :attention 
