@@ -1,6 +1,9 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.17.0"
 
+set :stages, %w(production staging)
+set :default_stage, "staging"
+
 set :rbenv_type, :user
 set :rbenv_ruby, File.read('.ruby-version').strip
 set :rbenv_prefix, "RBENV_ROOT=#{fetch(:rbenv_path)} RBENV_VERSION=#{fetch(:rbenv_ruby)} #{fetch(:rbenv_path)}/bin/rbenv exec"
@@ -9,6 +12,7 @@ set :rbenv_roles, :all # default value
 
 set :application, "avmonitor"
 set :repo_url, "git@github.com:lsa-mis/avmonitor.git"
+set :deploy_via, :remote_cache 
 set :user, 'deployer'
 set :deploy_to, "/home/#{fetch(:user)}/apps/#{fetch(:application)}"
 set :tmp_dir, "/home/deployer/tmp" #"#{fetch(:home)}/tmp"
