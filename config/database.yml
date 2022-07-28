@@ -5,20 +5,35 @@
 #   gem "sqlite3"
 #
 default: &default
-  adapter: sqlite3
+  adapter: mysql2
+  encoding: utf8mb4
+  collation: utf8mb4_unicode_ci
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
-  timeout: 5000
 
 development:
   <<: *default
-  database: db/development.sqlite3
+  username: root
+  # make sure your local MySQL password is in credentials and uncomment this line if running without docker
+  password: <%= Rails.application.credentials.mysql[:local_password] %>
+  database: avm_development
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
 # Do not set this db to the same as development or production.
 test:
   <<: *default
-  database: db/test.sqlite3
+  username: root
+  # make sure your local MySQL password is in credentials and uncomment this line if running without docker
+  password: <%= Rails.application.credentials.mysql[:local_password] %>
+  database: vodst_test
+
+staging:
+  <<: *default
+  database: avmstaging
+  username: <%= Rails.application.credentials.mysql[:staging_user] %>
+  password: <%= Rails.application.credentials.mysql[:staging_password] %>
+  host: <%= Rails.application.credentials.mysql[:staging_servername] %>
+  sslca: <%= Rails.application.credentials.mysql[:staging_sslca] %>
 
 production:
   <<: *default
