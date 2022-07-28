@@ -25,7 +25,7 @@ test:
   username: root
   # make sure your local MySQL password is in credentials and uncomment this line if running without docker
   password: <%= Rails.application.credentials.mysql[:local_password] %>
-  database: vodst_test
+  database: avm_test
 
 staging:
   <<: *default
