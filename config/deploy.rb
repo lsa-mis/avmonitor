@@ -12,6 +12,10 @@ set :repo_url, "git@github.com:lsa-mis/avmonitor.git"
 set :user, 'deployer'
 set :deploy_to, "/home/#{fetch(:user)}/apps/#{fetch(:application)}"
 set :tmp_dir, "/home/deployer/tmp" #"#{fetch(:home)}/tmp"
+set :keep_releases, 3
+
+# set :linked_files, %w{config/puma.rb config/nginx.conf config/master.key config/puma.service config/lsa-was-base-008e5e92455f.json}
+# set :linked_dirs,  %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
