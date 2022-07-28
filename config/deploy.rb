@@ -14,6 +14,8 @@ set :deploy_to, "/home/#{fetch(:user)}/apps/#{fetch(:application)}"
 set :tmp_dir, "/home/deployer/tmp" #"#{fetch(:home)}/tmp"
 set :keep_releases, 3
 
+# set :default_environment["LD_LIBRARY_PATH"] = "/opt/oracle/instantclient_21_7:$LD_LIBRARY_PATH"
+
 # set :linked_files, %w{config/puma.rb config/nginx.conf config/master.key config/puma.service config/lsa-was-base-008e5e92455f.json}
 # set :linked_dirs,  %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
@@ -50,3 +52,13 @@ set :keep_releases, 3
 
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
+
+
+namespace :debug do
+  desc 'Print ENV variables'
+  task :env do
+    on roles(:app), in: :sequence, wait: 5 do
+      execute :printenv
+    end
+  end
+end
