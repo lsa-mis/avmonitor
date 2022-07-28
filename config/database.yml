@@ -29,7 +29,7 @@ test:
 
 staging:
   <<: *default
-  database: avmstaging
+  database: lsawasstaging
   username: <%= Rails.application.credentials.mysql[:staging_user] %>
   password: <%= Rails.application.credentials.mysql[:staging_password] %>
   host: <%= Rails.application.credentials.mysql[:staging_servername] %>
