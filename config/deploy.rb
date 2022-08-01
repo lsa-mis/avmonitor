@@ -72,7 +72,9 @@ namespace :debug do
       execute :printenv
     end
   end
+end
 
+namespace :deploy do
   desc 'Upload to shared/config'
   task :upload do
     on roles (:app) do
@@ -82,7 +84,6 @@ namespace :debug do
     upload! "config/puma_prod.service",  "#{fetch(:shared_path)}/config/puma.service"
     end
   end
-
 end
 
 namespace :maintenance do
