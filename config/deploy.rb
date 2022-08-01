@@ -79,9 +79,9 @@ namespace :deploy do
   task :upload do
     on roles (:app) do
     upload! "config/master.key",  "#{fetch(:shared_path)}/config/master.key"
-    upload! "config/puma_prod.rb",  "#{fetch(:shared_path)}/config/puma.rb"
-    upload! "config/nginx_prod.conf",  "#{fetch(:shared_path)}/config/nginx.conf"
-    upload! "config/puma_prod.service",  "#{fetch(:shared_path)}/config/puma.service"
+    upload! "config/puma_staging.rb",  "#{fetch(:shared_path)}/config/puma.rb"
+    upload! "config/nginx_staging.conf",  "#{fetch(:shared_path)}/config/nginx.conf"
+    upload! "config/puma_staging.service",  "#{fetch(:shared_path)}/config/puma.service"
     end
   end
 end

@@ -32,7 +32,7 @@ WorkingDirectory=/home/deployer/apps/avmonitor/current
 # SystemD will not run puma even if it is in your path. You must specify
 # an absolute URL to puma. For example /usr/local/bin/puma
 
-ExecStart=/home/deployer/.rbenv/shims/bundle exec puma -e production -C ./config/puma.rb config.ru
+ExecStart=/home/deployer/.rbenv/shims/bundle exec puma -e staging -C ./config/puma.rb config.ru
 PIDFile=/home/deployer/apps/avmonitor/shared/tmp/pids/puma.pid
 
 ExecStop=/home/deployer/.rbenv/shims/bundle exec pumactl -F /home/deployer/apps/avmonitor/current/config/puma.rb stop

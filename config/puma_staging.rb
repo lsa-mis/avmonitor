@@ -2,7 +2,7 @@
 
 directory '/home/deployer/apps/avmonitor/current'
 rackup "/home/deployer/apps/avmonitor/current/config.ru"
-environment 'production'
+environment 'staging'
 
 pidfile "/home/deployer/apps/avmonitor/shared/tmp/pids/puma.pid"
 state_path "/home/deployer/apps/avmonitor/shared/tmp/pids/puma.state"
