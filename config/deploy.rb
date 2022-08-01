@@ -17,7 +17,7 @@ set :application, "avmonitor"
 set :repo_url, "git@github.com:lsa-mis/avmonitor.git"
 set :deploy_via, :remote_cache 
 set :user, 'deployer'
-set :deploy_to, "/home/#{fetch(:user)}/apps/#{fetch(:application)}"
+set :deploy_to, "/home/#{fetch(:user)}/apps/#{fetch(:application)}"  # :user is in Capfile
 set :shared_path,     "#{fetch(:deploy_to)}/shared"
 set :tmp_dir, "/home/deployer/tmp" #"#{fetch(:home)}/tmp"
 set :keep_releases, 3
@@ -27,7 +27,8 @@ set :keep_releases, 3
 # set :linked_files, %w{config/puma.rb config/nginx.conf config/master.key config/puma.service config/lsa-was-base-008e5e92455f.json}
 # set :linked_dirs,  %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
-set :linked_files, %w{config/master.key}
+set :linked_files, %w{config/puma.rb config/nginx.conf config/master.key config/puma.service}
+set :linked_dirs,  %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
@@ -69,6 +70,33 @@ namespace :debug do
   task :env do
     on roles(:app), in: :sequence, wait: 5 do
       execute :printenv
+    end
+  end
+
+  desc 'Upload to shared/config'
+  task :upload do
+    on roles (:app) do
+    upload! "config/master.key",  "#{fetch(:shared_path)}/config/master.key"
+    upload! "config/puma_prod.rb",  "#{fetch(:shared_path)}/config/puma.rb"
+    upload! "config/nginx_prod.conf",  "#{fetch(:shared_path)}/config/nginx.conf"
+    upload! "config/puma_prod.service",  "#{fetch(:shared_path)}/config/puma.service"
+    end
+  end
+
+end
+
+namespace :maintenance do
+  desc "Maintenance start (edit config/maintenance_template.yml to provide parameters)"
+  task :start do
+    on roles(:web) do
+      upload! "config/maintenance_template.yml", "#{current_path}/tmp/maintenance.yml"
+    end
+  end
+
+  desc "Maintenance stop"
+  task :stop do
+    on roles(:web) do
+      execute "rm #{current_path}/tmp/maintenance.yml"
     end
   end
 end
