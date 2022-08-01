@@ -29,12 +29,11 @@ test:
 
 staging:
   <<: *default
-  database: lsawasstaging
-  username: <%= Rails.application.credentials.mysql[:staging_user] %>
-  password: <%= Rails.application.credentials.mysql[:staging_password] %>
-  host: <%= Rails.application.credentials.mysql[:staging_servername] %>
-  sslca: <%= Rails.application.credentials.mysql[:staging_sslca] %>
-
-production:
-  <<: *default
-  database: db/production.sqlite3
+  # database: lsawasstaging
+  # username: <%= Rails.application.credentials.mysql[:staging_user] %>
+  # password: <%= Rails.application.credentials.mysql[:staging_password] %>
+  # host: <%= Rails.application.credentials.mysql[:staging_servername] %>
+  # sslca: <%= Rails.application.credentials.mysql[:staging_sslca] %>
+  database: avm
+  username: <%= Rails.application.credentials.mysql[:staging_user_temp] %>
+  password: <%= Rails.application.credentials.mysql[:staging_password_temp] %>
