@@ -1,8 +1,11 @@
 # config valid for current version and patch releases of Capistrano
 lock "~> 3.17.0"
 
-set :stages, %w(production staging)
-set :default_stage, "staging"
+# set :stages, %w(staging)
+# set :default_stage, "staging"
+
+set :pty,             true
+set :stage,           :staging
 
 # set :rbenv_type, :user
 # set :rbenv_ruby, File.read('.ruby-version').strip
@@ -15,6 +18,7 @@ set :repo_url, "git@github.com:lsa-mis/avmonitor.git"
 set :deploy_via, :remote_cache 
 set :user, 'deployer'
 set :deploy_to, "/home/#{fetch(:user)}/apps/#{fetch(:application)}"
+set :shared_path,     "#{fetch(:deploy_to)}/shared"
 set :tmp_dir, "/home/deployer/tmp" #"#{fetch(:home)}/tmp"
 set :keep_releases, 3
 
@@ -22,6 +26,8 @@ set :keep_releases, 3
 
 # set :linked_files, %w{config/puma.rb config/nginx.conf config/master.key config/puma.service config/lsa-was-base-008e5e92455f.json}
 # set :linked_dirs,  %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/system}
+
+set :linked_files, %w{config/master.key}
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
