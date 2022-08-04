@@ -279,7 +279,7 @@ DEPENDENCIES
   ldap_lookup (~> 0.1.6)
   mysql2 (~> 0.5.4)
   omniauth-rails_csrf_protection
-  omniauth-saml
+  omniauth-saml (~> 2.1)
   puma (~> 5.0)
   pundit (~> 2.2)
   rails (~> 7.0.3.1)
