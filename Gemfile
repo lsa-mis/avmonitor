@@ -11,7 +11,7 @@ gem "jbuilder"
 gem "ldap_lookup", "~> 0.1.6"
 # gem install mysql2 -v '0.5.4' -- --with-ldflags=-L/usr/local/opt/openssl/lib --with-cppflags=-I/usr/local/opt/openssl/include
 gem 'mysql2', '~> 0.5.4'
-gem "omniauth-saml"
+gem 'omniauth-saml', '~> 2.1'
 gem "omniauth-rails_csrf_protection"
 gem "puma", "~> 5.0"
 gem "pundit", "~> 2.2"
