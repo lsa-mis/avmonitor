@@ -45,6 +45,11 @@ Devise.setup do |config|
   consumer_service_url = Rails.application.credentials.dev_assertion_consumer_service_url
   entity_id = Rails.application.credentials.dev_entity_id
 
+  if Rails.env.staging?
+    consumer_service_url = Rails.application.credentials.staging_assertion_consumer_service_url
+    entity_id = Rails.application.credentials.staging_entity_id
+  end
+
   config.omniauth :saml,
     :assertion_consumer_service_url     => consumer_service_url,
     :issuer                             => entity_id,
