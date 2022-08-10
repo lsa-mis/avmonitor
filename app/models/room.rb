@@ -2,15 +2,16 @@
 #
 # Table name: rooms
 #
-#  id                :integer          not null, primary key
-#  websocket_ip      :string           not null
-#  websocket_port    :string           not null
-#  facility_id       :string           not null
-#  building          :string           not null
-#  room_type         :string           not null
+#  id                :bigint           not null, primary key
+#  websocket_ip      :string(255)      not null
+#  websocket_port    :string(255)      not null
+#  facility_id       :string(255)      not null
+#  building          :string(255)      not null
+#  room_type         :string(255)      not null
 #  created_at        :datetime         not null
 #  updated_at        :datetime         not null
-#  building_nickname :string
+#  building_nickname :string(255)
+#  tport             :integer          not null
 #
 class Room < ApplicationRecord
   has_many :devices

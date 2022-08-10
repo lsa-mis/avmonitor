@@ -2,10 +2,10 @@
 #
 # Table name: devices
 #
-#  id          :integer          not null, primary key
-#  name        :string           not null
-#  description :string
-#  room_id     :integer          not null
+#  id          :bigint           not null, primary key
+#  name        :string(255)      not null
+#  description :string(255)
+#  room_id     :bigint           not null
 #  created_at  :datetime         not null
 #  updated_at  :datetime         not null
 #
