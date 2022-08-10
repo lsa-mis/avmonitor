@@ -5,6 +5,7 @@ class ConnectSocket
   require "rack"
   require "thin"
   require 'em-redis'
+  require 'typhoeus'
 
   def initialize(wssName, wssUri, thin_port)
     @wssName = wssName
@@ -47,5 +48,6 @@ class ConnectSocket
       }
     end
     Rack::Handler::Thin.run socket_app, Port: @thin_port
+    Typhoeus.get("http://localhost:#{@thin_port}/")
   end
 end
