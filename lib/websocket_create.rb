@@ -5,7 +5,7 @@ require_relative 'connect_socket'
 begin
   # connect to the MySQL server
   if ENV["RAILS_ENV"] == "staging"
-    dbh = Mysql2::Client.new(host: ENV["DBHOST"], username: ENV["DBUSER"], password: ENV["DBPWD"], database: ENV["DBDATABASE"], sslcapath: ENV["SSLCA"] )
+    dbh = Mysql2::Client.new(host: ENV["DBHOST"], username: ENV["DBUSER"], password: ENV["DBPWD"], database: ENV["DBDATABASE"], sslca: ENV["SSLCA"] )
   else
     dbh = Mysql2::Client.new(host: "localhost", username: ENV["DBUSER"], password: ENV["DBPWD"], database: "avm_development" )
   end
