@@ -4,7 +4,11 @@ require_relative 'connect_socket'
 
 begin
   # connect to the MySQL server
-  dbh = Mysql2::Client.new(host: "localhost", username: "root", password: "I9qACl7Jl3xobBZqQM", database: "avm_development")
+  if ENV["RAILS_ENV"] == "staging"
+    dbh = Mysql2::Client.new(host: ENV["DBHOST"], username: ENV["DBUSER"], password: ENV["DBPWD"], database: ENV["DBDATABASE"], sslcapath: ENV["SSLCA"] )
+  else
+    dbh = Mysql2::Client.new(host: "localhost", username: ENV["DBUSER"], password: ENV["DBPWD"], database: "avm_development" )
+  end
   results = dbh.query("SELECT websocket_ip, websocket_port, facility_id, tport FROM rooms")
 
   threads = []
@@ -24,4 +28,8 @@ rescue Exception => e
   puts "error raised"
   puts [e, e.backtrace].flatten.join("\n")
 end
-threads.each(&:join)
+if threads.any?
+  threads.each(&:join)
+else 
+  puts "There are no threads"
+end
