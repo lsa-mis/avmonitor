@@ -4,6 +4,7 @@ git_source(:github) { |repo| 'https://github.com/#{repo}.git' }
 ruby '3.1.2'
 
 gem 'activerecord-oracle_enhanced-adapter', '~> 7.0', '>= 7.0.2'
+gem 'bootsnap', require: false
 gem 'devise', '~> 4.8'
 gem 'em-redis', '~> 0.3.0'
 gem 'faye-websocket', '~> 0.11.1'
@@ -32,8 +33,6 @@ gem 'tzinfo-data', platforms: %i[ mingw mswin x64_mingw jruby ]
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem 'kredis'
 
-gem 'bootsnap', require: false
-
 group :development, :test do
   gem 'capistrano', '~> 3.10', require: false
   gem 'capistrano-rails', '~> 1.3', require: false
@@ -42,11 +41,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'pry', '~> 0.14.1'
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'web-console'
 end
-
-
-
-
-gem 'pry'
