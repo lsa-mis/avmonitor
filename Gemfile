@@ -28,6 +28,7 @@ gem 'stimulus-rails'
 gem 'tailwindcss-rails'
 gem 'thin', '~> 1.8', '>= 1.8.1'
 gem 'turbo-rails'
+gem 'typhoeus', '~> 1.4'
 gem 'tzinfo-data', platforms: %i[ mingw mswin x64_mingw jruby ]
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
@@ -41,6 +42,7 @@ group :development, :test do
 end
 
 group :development do
+  gem 'annotate', '~> 3.2'
   gem 'pry', '~> 0.14.1'
   # Use console on exceptions pages [https://github.com/rails/web-console]
   gem 'web-console'
