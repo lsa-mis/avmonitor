@@ -42,7 +42,7 @@ class ConnectSocket
         end
       
         ws.on :close do |event|
-          p [:close, event.code, event.reason]
+          p ["#{@wssName}", :close, event.code, event.reason]
           ws = nil
         end
       }

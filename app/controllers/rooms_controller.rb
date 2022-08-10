@@ -68,6 +68,7 @@ class RoomsController < ApplicationController
       @room.building = room_data[1]
       @room.building_nickname = room_data[2].split[1]
       @room.facility_id = room_params[:facility_id].upcase
+      # Check for rooms presence in DB maybe ||=
       @room.tport = Room.maximum(:tport) + 1
     
       respond_to do |format|
