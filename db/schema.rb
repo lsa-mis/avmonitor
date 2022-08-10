@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_07_18_172307) do
+ActiveRecord::Schema[7.0].define(version: 2022_08_10_163155) do
   create_table "action_text_rich_texts", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|
     t.string "name", null: false
     t.text "body", size: :long
@@ -93,6 +93,7 @@ ActiveRecord::Schema[7.0].define(version: 2022_07_18_172307) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "building_nickname"
+    t.integer "tport", null: false
   end
 
   create_table "users", charset: "utf8mb4", collation: "utf8mb4_unicode_ci", force: :cascade do |t|

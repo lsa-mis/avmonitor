@@ -68,9 +68,11 @@ class RoomsController < ApplicationController
       @room.building = room_data[1]
       @room.building_nickname = room_data[2].split[1]
       @room.facility_id = room_params[:facility_id].upcase
+      @room.tport = Room.maximum(:tport) + 1
     
       respond_to do |format|
         if @room.save
+          start_room_socket(@room)
           format.html { redirect_to room_url(@room), notice: "Room was successfully created." }
           format.json { render :show, status: :created, location: @room }
         else
@@ -79,6 +81,15 @@ class RoomsController < ApplicationController
         end
       end
     end
+  end
+
+  def start_room_socket(room)
+    socket = "wss://" + room.websocket_ip + ":" + room.websocket_port
+    name = room.facility_id
+    tport = room.tport
+    wss_instance = ConnectSocket.new(name, socket, tport)
+    t = Thread.new { wss_instance.connect }
+    t.join
   end
 
   # PATCH/PUT /rooms/1 or /rooms/1.json

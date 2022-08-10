@@ -2,18 +2,18 @@
 #
 # Table name: users
 #
-#  id                     :integer          not null, primary key
-#  email                  :string           default(""), not null
-#  encrypted_password     :string           default(""), not null
-#  reset_password_token   :string
+#  id                     :bigint           not null, primary key
+#  email                  :string(255)      default(""), not null
+#  encrypted_password     :string(255)      default(""), not null
+#  reset_password_token   :string(255)
 #  reset_password_sent_at :datetime
 #  remember_created_at    :datetime
-#  provider               :string
-#  uid                    :string
-#  uniqname               :string
-#  principal_name         :string
-#  display_name           :string
-#  person_affiliation     :string
+#  provider               :string(255)
+#  uid                    :string(255)
+#  uniqname               :string(255)
+#  principal_name         :string(255)
+#  display_name           :string(255)
+#  person_affiliation     :string(255)
 #  created_at             :datetime         not null
 #  updated_at             :datetime         not null
 #

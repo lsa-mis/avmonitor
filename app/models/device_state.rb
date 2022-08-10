@@ -2,11 +2,11 @@
 #
 # Table name: device_states
 #
-#  id         :integer          not null, primary key
-#  key        :string           not null
-#  value      :string
-#  notes      :string
-#  device_id  :integer          not null
+#  id         :bigint           not null, primary key
+#  key        :string(255)      not null
+#  value      :string(255)
+#  notes      :string(255)
+#  device_id  :bigint           not null
 #  created_at :datetime         not null
 #  updated_at :datetime         not null
 #
