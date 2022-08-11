@@ -13,7 +13,8 @@ class ConnectSocket
     @thin_port = thin_port
   end
 
-  def connect
+  # def connect
+  def create_socket
     socket_app = lambda do |env|
       EM.run {
         puts "in class Socket"
@@ -48,6 +49,11 @@ class ConnectSocket
       }
     end
     Rack::Handler::Thin.run socket_app, Port: @thin_port
+    # Typhoeus.get("http://localhost:#{@thin_port}/")
+  end
+   
+  def connect_to_socket
     Typhoeus.get("http://localhost:#{@thin_port}/")
   end
+
 end
