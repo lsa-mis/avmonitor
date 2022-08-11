@@ -1,5 +1,6 @@
 desc "This will find rooms that need attention"
 task check_redis_status: :environment do
+  # include ApplicationHelper
 
   # need to config redis
   # run these commands in redis-cli
@@ -12,34 +13,51 @@ task check_redis_status: :environment do
   require 'redis'
   redis = Redis.new(host: "localhost")
 
-  def write_socket_data_to_db(room, payload)
-    payload["LSARoom"].each do |input, data|
-      if input == "Assets"
-        data.each do |asset, device_data|
-          Device.where(room_id: room.id, name: asset).first_or_create
-          device = Device.find_by(room_id: room.id, name: asset)
-          device_data.each do |name, states|
-            if name == "BooleanInputs" || name == "ShortIntegerInputs"
-              states.each do |key, value|
-                DeviceState.create(device_id: device.id, key: key, value: value.to_s)
-                DeviceCurrentState.where(device_id: device.id, key: key).first_or_create.update(value: value.to_s)
-              end
+  def write_socket_data_to_db(room, input, data)
+    case input
+    when "BooleanInputs"
+      # write states to the device "Room"
+      unless Device.find_by(room_id: room.id, name: "Room").present?
+      Device.create(room_id: room.id, name: "Room")
+      end
+      device = Device.find_by(room_id: room.id, name: "Room")
+      data.each do |key, value|
+        DeviceState.create(device_id: device.id, key: key, value: value.to_s)
+      end
+    when "ShortIntegerInputs"
+      # write states to the device "Room"
+      device = Device.find_by(room_id: room.id, name: "Room")
+      data.each do |key, value|
+        DeviceState.create(device_id: device.id, key: key, value: value.to_s)
+      end
+    when "StringInputs"
+      # write states to the device "Room"
+      device = Device.find_by(room_id: room.id, name: "Room")
+      data.each do |key, value|
+        DeviceState.create(device_id: device.id, key: key, value: value.to_s)
+      end
+    when "Assets"
+      data.each do |asset, data|
+        Device.create(room_id: room.id, name: asset) unless Device.find_by(room_id: room.id, name: asset).present?
+        device = Device.find_by(room_id: room.id, name: asset)
+        data.each do |name, states|
+          case name
+          when "BooleanInputs"
+            # write states to the assets' device
+            states.each do |key, value|
+              DeviceState.create(device_id: device.id, key: key, value: value.to_s)
             end
-          end
-        end
-      else
-        if input == "BooleanInputs" || input == "ShortIntegerInputs" || input == "StringInputs"
-          Device.where(room_id: room.id, name: "Room").first_or_create
-          device = Device.find_by(room_id: room.id, name: "Room")
-          data.each do |key, value|
-            DeviceState.create(device_id: device.id, key: key, value: value.to_s)
-            DeviceCurrentState.where(device_id: device.id, key: key).first_or_create.update(value: value.to_s)
+          when "ShortIntegerInputs"
+            # write states to the assets' device
+            device = Device.find_by(room_id: room.id, name: "Room")
+            states.each do |key, value|
+              DeviceState.create(device_id: device.id, key: key, value: value.to_s)
+            end
           end
         end
       end
     end
   end
-
 
   Sidekiq.redis do |conn|
     # https://redis.io/topics/notifications#configuration
