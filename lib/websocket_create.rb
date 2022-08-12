@@ -25,7 +25,7 @@ begin
     wss_instance = ConnectSocket.new(name, socket, tport)
     # threads << Thread.new { wss_instance.connect }
     threads_create << Thread.new { wss_instance.create_socket }
-    threads_connect << Thread.new { wss_instance.create_socket }
+    threads_connect << Thread.new { wss_instance.connect_to_socket }
   end
 
 rescue Exception => e
