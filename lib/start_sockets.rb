@@ -11,11 +11,10 @@ begin
   end
   results = dbh.query("SELECT websocket_ip, websocket_port, facility_id, tport FROM rooms")
 
-  # threads = []
   threads_create = []
   threads_connect = []
   results.each do |row|
-    puts "in loop"
+    puts "in websocket_create loop"
     socket = "wss://" + row['websocket_ip'] + ":" + row['websocket_port']
     name = row['facility_id']
     tport = row['tport']
@@ -23,20 +22,16 @@ begin
     puts socket
     puts tport
     wss_instance = ConnectSocket.new(name, socket, tport)
-    # threads << Thread.new { wss_instance.connect }
     threads_create << Thread.new { wss_instance.create_socket }
-    threads_connect << Thread.new { wss_instance.connect_to_socket }
   end
 
 rescue Exception => e
   puts "error raised"
   puts [e, e.backtrace].flatten.join("\n")
 end
-# if threads.any?
-#   threads.each(&:join)
+
 if threads_create.any?
   threads_create.each(&:join)
-  threads_connect.each(&:join)
 else 
   puts "There are no threads"
 end
