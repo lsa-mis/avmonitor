@@ -74,10 +74,8 @@ class RoomsController < ApplicationController
     
       respond_to do |format|
         if @room.save
-          # start_room_socket(@room)
-          StartSingleSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, 
-            @room.tport)
-          Typhoeus.get("http://localhost:#{@room.tport}/")
+          Thread.new { StartSingleSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, 
+            @room.tport) }.join
           format.html { redirect_to room_url(@room), notice: "Room was successfully created." }
           format.json { render :show, status: :created, location: @room }
         else
