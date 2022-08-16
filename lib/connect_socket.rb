@@ -17,7 +17,7 @@ class ConnectSocket
   def create_socket
     socket_app = lambda do |env|
       EM.run {
-        puts "in class Socket"
+        puts "in ConnectSocket::create_socket"
         puts @wssName
         puts @wssUri
         redis = EM::Protocols::Redis.connect
@@ -49,11 +49,12 @@ class ConnectSocket
       }
     end
     Rack::Handler::Thin.run socket_app, Port: @thin_port
-    # Typhoeus.get("http://localhost:#{@thin_port}/")
+    connect_to_socket(@thin_port)
   end
    
-  def connect_to_socket
-    Typhoeus.get("http://localhost:#{@thin_port}/")
+  def connect_to_socket(p)
+    puts "In ConnectSocket::connect_to_socket method"
+    Typhoeus.get("http://localhost:#{p}/")
   end
 
 end
