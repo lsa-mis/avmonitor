@@ -13,10 +13,12 @@
 
   <body>
     <%= render 'layouts/header' %>
-    <main class="container mx-auto mt-28 px-5 flex">
-      <turbo-frame id="flash" >
-          <%= render 'layouts/notification' %>
-      </turbo-frame>
+    <main class="container mx-auto mt-4 px-5">
+      <div class="mb-2">
+        <turbo-frame id="flash" >
+            <%= render 'layouts/notification' %>
+        </turbo-frame>
+        </div>
       <%= yield %>
     </main>
   </body>

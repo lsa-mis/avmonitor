@@ -1,5 +1,5 @@
-<%= turbo_frame_tag "room" do  %>
-  <div class="container -mt-20 rounded-lg shadow-lg px-auto pl-2">
+<div class="rounded-lg shadow-lg px-auto pl-2">
+  <%= turbo_frame_tag "room" do  %>
     <div class="flex-col w-full px-2">
       <div class="mx-auto">
         <div class="grid grid-cols-2">
@@ -44,8 +44,9 @@
         <%= link_to 'Back to rooms', rooms_path, class: "ml-2 rounded-lg py-3 px-5 bg-gray-100 inline-block font-medium", data: { "turbo-frame": "_top" } %>
       </div>
     </div>
-  </div>
-<% end %>
+  <% end %>
+</div>
+
 
 <div class="container p-2 rounded-lg shadow-lg text-xl mb-20 bg-gray-50">
   <div class="mb-20">Notes:
