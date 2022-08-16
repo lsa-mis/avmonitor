@@ -23,7 +23,8 @@ class Note < ApplicationRecord
     broadcast_prepend_to [noteable, :notes], target: "#{dom_id(noteable)}_notes"
   end
   after_update_commit do
-    broadcast_prepend_to [noteable, :notes], target: "#{ dom_id noteable }_notes"
+    broadcast_remove_to self
+    broadcast_prepend_to [noteable, :notes], target: "#{dom_id(noteable)}_notes"
   end
   after_destroy_commit do
     broadcast_remove_to self
