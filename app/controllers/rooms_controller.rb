@@ -73,7 +73,9 @@ class RoomsController < ApplicationController
     
       respond_to do |format|
         if @room.save
-          start_room_socket(@room)
+          # start_room_socket(@room)
+          StartSingleSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, 
+            @room.tport)
           format.html { redirect_to room_url(@room), notice: "Room was successfully created." }
           format.json { render :show, status: :created, location: @room }
         else
@@ -84,16 +86,16 @@ class RoomsController < ApplicationController
     end
   end
 
-  def start_room_socket(room)
-    socket = "wss://" + room.websocket_ip + ":" + room.websocket_port
-    name = room.facility_id
-    tport = room.tport
-    wss_instance = ConnectSocket.new(name, socket, tport)
-    # t = Thread.new { wss_instance.connect }
-    # t.join
-    Thread.new { wss_instance.create_socket }
-    Thread.new { wss_instance.connect_to_socket }
-  end
+  # def start_room_socket(room)
+  #   socket = "wss://" + room.websocket_ip + ":" + room.websocket_port
+  #   name = room.facility_id
+  #   tport = room.tport
+  #   wss_instance = ConnectSocket.new(name, socket, tport)
+  #   # t = Thread.new { wss_instance.connect }
+  #   # t.join
+  #   Thread.new { wss_instance.create_socket }
+  #   Thread.new { wss_instance.connect_to_socket }
+  # end
 
   # PATCH/PUT /rooms/1 or /rooms/1.json
   def update
