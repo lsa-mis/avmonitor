@@ -12,17 +12,13 @@ begin
   results = dbh.query("SELECT websocket_ip, websocket_port, facility_id, tport FROM rooms")
 
   threads_create = []
-  threads_connect = []
   results.each do |row|
-    puts "in websocket_create loop"
     socket = "wss://" + row['websocket_ip'] + ":" + row['websocket_port']
     name = row['facility_id']
     tport = row['tport']
-    puts name
-    puts socket
-    puts tport
     wss_instance = ConnectSocket.new(name, socket, tport)
     threads_create << Thread.new { wss_instance.create_socket }
+    puts "Thread created for #{name} - #{socket} - [#{tport}]"
   end
 
 rescue Exception => e

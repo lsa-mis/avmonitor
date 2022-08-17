@@ -15,11 +15,9 @@ class ConnectSocket
 
   # def connect
   def create_socket
+    puts "in ConnectSocket::create_socket method for #{@wssName} - [#{@thin_port}]"
     socket_app = lambda do |env|
       EM.run {
-        puts "in ConnectSocket::create_socket"
-        puts @wssName
-        puts @wssUri
         redis = EM::Protocols::Redis.connect
         redis.errback do |code|
           puts "Error code: #{code}"
@@ -34,7 +32,7 @@ class ConnectSocket
         end
 
         ws.on :message do |event|
-          p "#{@wssName} socket is responding - #{Time.now}"
+          p "#{@wssName} - [#{@thin_port}] socket is responding - #{Time.now}"
           redis.set @wssName, event.data do |response|
             redis.get @wssName do |response|
               p response
@@ -43,7 +41,7 @@ class ConnectSocket
         end
       
         ws.on :close do |event|
-          p ["#{@wssName}", :close, event.code, event.reason]
+          p ["#{@wssName} - [#{@thin_port}]", :close, event.code, event.reason]
           ws = nil
         end
       }
@@ -53,7 +51,7 @@ class ConnectSocket
   end
    
   def connect_to_socket(p)
-    puts "In ConnectSocket::connect_to_socket method"
+    puts "In ConnectSocket::connect_to_socket method for #{@wssName} - [#{@thin_port}]"
     Typhoeus.get("http://localhost:#{p}/")
   end
 
