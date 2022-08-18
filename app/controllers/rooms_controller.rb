@@ -74,8 +74,8 @@ class RoomsController < ApplicationController
     
       respond_to do |format|
         if @room.save
-          Thread.new { StartSingleSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, 
-            @room.tport) }.join
+          StartSingleSocketJob.perform_in(1.minute, @room.websocket_ip, @room.websocket_port, @room.facility_id, 
+            @room.tport)
           format.html { redirect_to room_url(@room), notice: "Room was successfully created." }
           format.json { render :show, status: :created, location: @room }
         else
