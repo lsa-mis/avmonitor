@@ -16,7 +16,7 @@ class RoomsController < ApplicationController
       @rooms = @q.result.order(:facility_id)
       if (min != 0 && min > MIN_LAMP_HOURS || max != 0 && max < MAX_LAMP_HOURS)
         device_ids = []        
-        DeviceState.where(key: "Lamp Hours").select(:device_id, :key, :value, 'MAX(created_at)').group(:key, :device_id).each do |state|
+        DeviceCurrentState.where(key: "Lamp Hours").each do |state|
           if (state.value.to_i >= min && state.value.to_i <= max)
             device_ids << state.device_id
           end

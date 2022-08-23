@@ -45,7 +45,7 @@ module ApplicationHelper
     att = false
     catch :attention do
       devices.each do |device|
-        DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key, :value).each do |state|
+        DeviceCurrentState.where(device_id: device.id).each do |state|
           if state_need_attention?(state)
             att = true
             throw :attention 
@@ -139,8 +139,8 @@ module ApplicationHelper
 
   def room_is_off?(room)
     device = Device.find_by(name: "Room", room_id: room.id)
-    if device.present? && DeviceState.where(device_id: device.id).present?
-      if DeviceState.where(device_id: device.id).last.key == "Room Is On" && device.device_states.last.value == "false"
+    if device.present? && DeviceCurrentState.where(device_id: device.id).present?
+      if DeviceCurrentState.where(device_id: device.id).last.key == "Room Is On" && device.device_states.last.value == "false"
         return true
       else
         return false
@@ -159,7 +159,7 @@ module ApplicationHelper
         devices = Device.where(room_id: room.id).where.not(name: 'Room')
         catch :attention do
           devices.each do |device|
-            DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key, :value).each do |state|
+            DeviceCurrentState.where(device_id: device.id).each do |state|
               if state_need_attention?(state)
                 attention_rooms << room
                 throw :attention 
@@ -171,51 +171,4 @@ module ApplicationHelper
     end
     return attention_rooms
   end
-
-  def write_socket_data_to_db(room, input, data)
-    case input
-    when "BooleanInputs"
-      # write states to the device "Room"
-      unless Device.find_by(room_id: room.id, name: "Room").present?
-      Device.create(room_id: room.id, name: "Room")
-      end
-      device = Device.find_by(room_id: room.id, name: "Room")
-      data.each do |key, value|
-        DeviceState.create(device_id: device.id, key: key, value: value.to_s)
-      end
-    when "ShortIntegerInputs"
-      # write states to the device "Room"
-      device = Device.find_by(room_id: room.id, name: "Room")
-      data.each do |key, value|
-        DeviceState.create(device_id: device.id, key: key, value: value.to_s)
-      end
-    when "StringInputs"
-      # write states to the device "Room"
-      device = Device.find_by(room_id: room.id, name: "Room")
-      data.each do |key, value|
-        DeviceState.create(device_id: device.id, key: key, value: value.to_s)
-      end
-    when "Assets"
-      data.each do |asset, data|
-        Device.create(room_id: room.id, name: asset) unless Device.find_by(room_id: room.id, name: asset).present?
-        device = Device.find_by(room_id: room.id, name: asset)
-        data.each do |name, states|
-          case name
-          when "BooleanInputs"
-            # write states to the assets' device
-            states.each do |key, value|
-              DeviceState.create(device_id: device.id, key: key, value: value.to_s)
-            end
-          when "ShortIntegerInputs"
-            # write states to the assets' device
-            device = Device.find_by(room_id: room.id, name: "Room")
-            states.each do |key, value|
-              DeviceState.create(device_id: device.id, key: key, value: value.to_s)
-            end
-          end
-        end
-      end
-    end
-  end
-
 end

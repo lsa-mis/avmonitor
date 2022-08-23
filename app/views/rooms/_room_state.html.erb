@@ -1,5 +1,5 @@
 <div class="text-xs px-2">
-  <% DeviceState.where(device_id: device.id).select(:key, :value, 'MAX(created_at)').group(:key, :value).each do |state| %>
+  <% DeviceCurrentState.where(device_id: device.id).each do |state| %>
     <div>
       <%= "#{state.key} - #{state.value}" %>
     </div>
