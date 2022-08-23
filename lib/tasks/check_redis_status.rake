@@ -53,7 +53,7 @@ task check_redis_status: :environment do
             end
           when "ShortIntegerInputs"
             # write states to the assets' device
-            device = Device.find_by(room_id: room.id, name: "Room")
+            device = Device.find_by(room_id: room.id, name: asset)
             states.each do |key, value|
               DeviceState.create(device_id: device.id, key: key, value: value.to_s)
               DeviceCurrentState.where(device_id: device.id, key: key).first_or_create.update(value: value.to_s)
