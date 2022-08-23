@@ -38,9 +38,44 @@ DeviceState.create(key: "Online", value: "true", device_id: 4)
 DeviceState.create(key: "Power Is On", value: "true", device_id: 4)
 DeviceState.create(key: "Error State", value: "false", device_id: 4)
 
+DeviceCurrentState.create(key: "Ceiling Mic Signal", value: "false", device_id: 1)
+DeviceCurrentState.create(key: "WL Mic Signal", value: "true", device_id: 1)
+DeviceCurrentState.create(key: "Mic Volume", value: "22", device_id: 1)
+DeviceCurrentState.create(key: "Source Volume", value: "45", device_id: 1)
+DeviceCurrentState.create(key: "Current Source 1", value: "1", device_id: 1)
+DeviceCurrentState.create(key: "Current Source 2", value: "2", device_id: 1)
+DeviceCurrentState.create(key: "VideoSource1", value: "Document Camera", device_id: 1)
+DeviceCurrentState.create(key: "VideoSource2", value: "Blu-ray Player", device_id: 1)
+DeviceCurrentState.create(key: "VideoSource3", value: "Room PC", device_id: 1)
+
+DeviceCurrentState.create(key: "Online", value: "true", device_id: 2)
+DeviceCurrentState.create(key: "Power Is On", value: "true", device_id: 2)
+DeviceCurrentState.create(key: "Error State", value: "false", device_id: 2)
+
+DeviceCurrentState.create(key: "Online", value: "true", device_id: 3)
+
+DeviceCurrentState.create(key: "Online", value: "true", device_id: 4)
+DeviceCurrentState.create(key: "Power Is On", value: "true", device_id: 4)
+DeviceCurrentState.create(key: "Error State", value: "false", device_id: 4)
+
 Device.create!(name: "Room", description: "to keep states for the room", room_id: 2)
 Device.create!(name: "Projector 1", description: "asset", room_id: 2)
 Device.create!(name: "Touch Panel", description: "asset", room_id: 2)
+
+DeviceState.create(key: "Ceiling Mic Signal", value: "false", device_id: 5)
+DeviceState.create(key: "WL Mic Signal", value: "true", device_id: 5)
+DeviceState.create(key: "Mic Volume", value: "3", device_id: 5)
+DeviceState.create(key: "Source Volume", value: "10", device_id: 5)
+DeviceState.create(key: "Current Source 1", value: "1", device_id: 5)
+DeviceState.create(key: "VideoSource1", value: "Document Camera", device_id: 5)
+DeviceState.create(key: "VideoSource2", value: "Blu-ray Player", device_id: 5)
+DeviceState.create(key: "VideoSource3", value: "Room PC", device_id: 5)
+
+DeviceState.create(key: "Online", value: "true", device_id: 6)
+DeviceState.create(key: "Power Is On", value: "true", device_id: 6)
+DeviceState.create(key: "Error State", value: "false", device_id: 6)
+
+DeviceState.create(key: "Online", value: "true", device_id: 7)
 
 DeviceState.create(key: "Ceiling Mic Signal", value: "false", device_id: 5)
 DeviceState.create(key: "WL Mic Signal", value: "true", device_id: 5)
