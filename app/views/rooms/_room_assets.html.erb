@@ -1,28 +1,16 @@
 <div class="text-xs px-2">
   <% devices.all.each do |device| %>
-    <% if device.name == "Touch Panel" %>
-      <% DeviceCurrentState.where(device_id: device.id).each do |state| %>
-        <% if state_need_attention?(state) %>
-          <div class="font-bold"><%= device.name %></div>
-          <% @attention = true %>
-          <div class="text-red-500 pl-2">
-            <%= "#{state.key} - #{state.value}" %>
-          </div>
-        <% end %>
-      <% end %>
-    <% else %>
-      <div class="font-bold"><%= device.name %></div>
-      <% DeviceCurrentState.where(device_id: device.id).each do |state| %>
-        <% if state_need_attention?(state) %>
-          <% @attention = true %>
-          <div class="text-red-500 pl-2">
-            <%= "#{state.key} - #{state.value}" %>
-          </div>
-        <% else %>
-          <div class="pl-2">
-            <%= "#{state.key} - #{state.value}" unless state.key == "Error State" %>
-          </div>
-        <% end %>
+    <div class="font-bold"><%= device.name %></div>
+    <% DeviceCurrentState.where(device_id: device.id).each do |state| %>
+      <% if state_need_attention?(state) %>
+        <% @attention = true %>
+        <div class="text-red-500 pl-2">
+          <%= "#{state.key} - #{state.value}" %>
+        </div>
+      <% else %>
+        <div class="pl-2">
+          <%= "#{state.key} - #{state.value}" unless state.key == "Error State" %>
+        </div>
       <% end %>
     <% end %>
     <hr>
