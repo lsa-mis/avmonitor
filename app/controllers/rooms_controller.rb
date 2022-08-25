@@ -13,10 +13,10 @@ class RoomsController < ApplicationController
       authorize @rooms
     else
       @q = Room.active.ransack(params[:q])
-      @rooms = @q.result.order(:facility_id)
+      @rooms = @q.result
       if (min != 0 && min > MIN_LAMP_HOURS || max != 0 && max < MAX_LAMP_HOURS)
         device_ids = []        
-        DeviceState.where(key: "Lamp Hours").select(:device_id, :key, :value, 'MAX(created_at)').group(:key, :device_id).each do |state|
+        DeviceCurrentState.where(key: "Lamp Hours").each do |state|
           if (state.value.to_i >= min && state.value.to_i <= max)
             device_ids << state.device_id
           end
@@ -31,7 +31,7 @@ class RoomsController < ApplicationController
         authorize :attention
       end
     end
-
+    @rooms = @rooms.order(:facility_id)
     @room_types = Room.all.pluck(:room_type).uniq.sort
     unless params[:q].nil?
       render turbo_stream: turbo_stream.replace(

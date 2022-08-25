@@ -1,6 +1,5 @@
 desc "This will find rooms that need attention"
 task check_redis_status: :environment do
-  include ApplicationHelper
 
   # need to config redis
   # run these commands in redis-cli
@@ -12,6 +11,35 @@ task check_redis_status: :environment do
   # then run this task: bin/rake check_redis_status
   require 'redis'
   redis = Redis.new(host: "localhost")
+
+  def write_socket_data_to_db(room, payload)
+    payload["LSARoom"].each do |input, data|
+      if input == "Assets"
+        data.each do |asset, device_data|
+          Device.where(room_id: room.id, name: asset).first_or_create
+          device = Device.find_by(room_id: room.id, name: asset)
+          device_data.each do |name, states|
+            if name == "BooleanInputs" || name == "ShortIntegerInputs"
+              states.each do |key, value|
+                DeviceState.create(device_id: device.id, key: key, value: value.to_s)
+                DeviceCurrentState.where(device_id: device.id, key: key).first_or_create.update(value: value.to_s)
+              end
+            end
+          end
+        end
+      else
+        if input == "BooleanInputs" || input == "ShortIntegerInputs" || input == "StringInputs"
+          Device.where(room_id: room.id, name: "Room").first_or_create
+          device = Device.find_by(room_id: room.id, name: "Room")
+          data.each do |key, value|
+            DeviceState.create(device_id: device.id, key: key, value: value.to_s)
+            DeviceCurrentState.where(device_id: device.id, key: key).first_or_create.update(value: value.to_s)
+          end
+        end
+      end
+    end
+  end
+
 
   Sidekiq.redis do |conn|
     # https://redis.io/topics/notifications#configuration
@@ -28,10 +56,8 @@ task check_redis_status: :environment do
           room = Room.find_by(facility_id: room_name)
           s = redis.get(room_name)
           puts s
-          h = JSON.parse s.gsub('=>', ':')
-          h["LSARoom"].each do |input, data|
-            write_socket_data_to_db(room, input, data)
-          end
+          payload = JSON.parse s.gsub('=>', ':')
+          write_socket_data_to_db(room, payload)
         else 
           puts "no room with facility_id" + room_name
         end
