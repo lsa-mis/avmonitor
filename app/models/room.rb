@@ -14,7 +14,7 @@
 #  tport             :integer          not null
 #
 class Room < ApplicationRecord
-  has_many :devices
+  has_many :devices, dependent: :destroy
   has_many :notes, as: :noteable
 
   scope :active, -> { Room.where.associated(:devices).distinct }

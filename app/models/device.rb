@@ -11,6 +11,6 @@
 #
 class Device < ApplicationRecord
   belongs_to :room
-  has_many :device_states
+  has_many :device_states, dependent: :destroy
   has_many :device_current_states
 end
