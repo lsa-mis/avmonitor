@@ -6,16 +6,8 @@ module ApplicationHelper
     file_path
   end
 
-  def room_state?(room)
-    Device.find_by(name: "Room", room_id: room.id).present?
-  end
-
   def get_room_device(room)
     Device.find_by(name: "Room", room_id: room.id)
-  end
-
-  def room_assets?(room)
-    Device.where(room_id: room.id).where.not(name: 'Room').present?
   end
 
   def room_has_device_current_states?(room)

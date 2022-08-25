@@ -1,7 +1,0 @@
-<div class="text-xs px-2">
-  <% DeviceCurrentState.where(device_id: device.id).each do |state| %>
-    <div>
-      <%= "#{state.key} - #{state.value}" %>
-    </div>
-  <% end %>
-<div>
