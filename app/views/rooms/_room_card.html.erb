@@ -22,5 +22,7 @@
         <span class="text-red-500">Needs attention</span>
       <% end %>
     <% end %>
+    <hr>
+    <%= link_to "[Delete Room]", room_path(room), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-600" %>
   </div>
 <% end %>
