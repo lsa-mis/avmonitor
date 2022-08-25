@@ -18,7 +18,7 @@ task check_redis_status: :environment do
     when "BooleanInputs"
       # write states to the device "Room"
       unless Device.find_by(room_id: room.id, name: "Room").present?
-      Device.create(room_id: room.id, name: "Room")
+        Device.create(room_id: room.id, name: "Room")
       end
       device = Device.find_by(room_id: room.id, name: "Room")
       data.each do |key, value|
@@ -49,7 +49,7 @@ task check_redis_status: :environment do
             end
           when "ShortIntegerInputs"
             # write states to the assets' device
-            device = Device.find_by(room_id: room.id, name: "Room")
+            device = Device.find_by(room_id: room.id, name: asset)
             states.each do |key, value|
               DeviceState.create(device_id: device.id, key: key, value: value.to_s)
             end
