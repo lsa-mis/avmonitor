@@ -70,11 +70,11 @@ class RoomsController < ApplicationController
       @room.building_nickname = room_data[2].split[1]
       @room.facility_id = room_params[:facility_id].upcase
       # Check for rooms presence in DB maybe ||=
-      @room.tport = Room.maximum(:tport) + 1
+      @room.tport = Room.exists? ? (Room.maximum(:tport) + 1) : 8090
     
       respond_to do |format|
         if @room.save
-          StartSingleSocketJob.perform_in(1.minute, @room.websocket_ip, @room.websocket_port, @room.facility_id, 
+          StartSingleSocketJob.perform_in(10.seconds, @room.websocket_ip, @room.websocket_port, @room.facility_id, 
             @room.tport)
           format.html { redirect_to room_url(@room), notice: "Room was successfully created." }
           format.json { render :show, status: :created, location: @room }
@@ -120,6 +120,14 @@ class RoomsController < ApplicationController
           format.json { render json: @room.errors, status: :unprocessable_entity }
         end
       end
+    end
+  end
+
+  def destroy
+    @room.destroy
+    respond_to do |format|
+      format.turbo_stream {}
+      format.html { redirect_to rooms_path, notice: "Room was successfully destroyed." }
     end
   end
 
