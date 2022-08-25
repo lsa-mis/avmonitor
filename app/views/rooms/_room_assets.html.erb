@@ -1,9 +1,8 @@
 <div class="text-xs px-2">
   <% devices.all.each do |device| %>
     <div class="font-bold"><%= device.name %></div>
-    <% DeviceCurrentState.where(device_id: device.id).each do |state| %>
+    <% get_current_states_for_device(device).each do |state| %>
       <% if state_need_attention?(state) %>
-        <% @attention = true %>
         <div class="text-red-500 pl-2">
           <%= "#{state.key} - #{state.value}" %>
         </div>

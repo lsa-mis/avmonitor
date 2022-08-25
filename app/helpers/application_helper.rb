@@ -36,6 +36,10 @@ module ApplicationHelper
     Device.where(room_id: room.id).where.not(name: 'Room')
   end
 
+  def get_current_states_for_device(device)
+    DeviceCurrentState.where(device_id: device.id)
+  end
+
   def state_need_attention?(state)
     (state.key == "Online" && state.value == "false") || ( state.key == "Error State" && state.value == "true")
   end
