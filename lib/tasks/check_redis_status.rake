@@ -12,18 +12,14 @@ task check_redis_status: :environment do
   require 'redis'
   redis = Redis.new(host: "localhost")
 
-  def write_socket_data_to_db(room, h)
-    h["LSARoom"].each do |input, data|
-      puts input
+  def write_socket_data_to_db(room, payload)
+    payload["LSARoom"].each do |input, data|
       if input == "Assets"
-        puts "states for Assets"
         data.each do |asset, device_data|
-          puts asset
           Device.where(room_id: room.id, name: asset).first_or_create
           device = Device.find_by(room_id: room.id, name: asset)
           device_data.each do |name, states|
             if name == "BooleanInputs" || name == "ShortIntegerInputs"
-              puts name
               states.each do |key, value|
                 DeviceState.create(device_id: device.id, key: key, value: value.to_s)
                 DeviceCurrentState.where(device_id: device.id, key: key).first_or_create.update(value: value.to_s)
@@ -32,7 +28,6 @@ task check_redis_status: :environment do
           end
         end
       else
-        puts "states for Room"
         if input == "BooleanInputs" || input == "ShortIntegerInputs" || input == "StringInputs"
           Device.where(room_id: room.id, name: "Room").first_or_create
           device = Device.find_by(room_id: room.id, name: "Room")
@@ -61,8 +56,8 @@ task check_redis_status: :environment do
           room = Room.find_by(facility_id: room_name)
           s = redis.get(room_name)
           puts s
-          h = JSON.parse s.gsub('=>', ':')
-          write_socket_data_to_db(room, h)
+          payload = JSON.parse s.gsub('=>', ':')
+          write_socket_data_to_db(room, payload)
         else 
           puts "no room with facility_id" + room_name
         end
