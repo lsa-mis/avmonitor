@@ -1,15 +1,11 @@
 <div class="container px-1 mb-20 pl-4">
   <h1 class="text-xl font-semibold text-gray-900 p-2">Dashboard - Rooms that need attention</h1>
   <div class="mb-2">
-    <button type="button" class="px-2 rounded-md shadow-sm bg-gray-100 text-sm text-black text-center ring-1 ring-black ring-opacity-5 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:bg-gray-400"
-      data-controller='dashboard' data-action='click->dashboard#refresh'>
-      Refresh 
-    </button>
+    <%= form_tag('/dashboard') do %>
+      <%= submit_tag "Refresh", class: "px-2 rounded-md shadow-sm bg-gray-100 text-sm text-black text-center ring-1 ring-black ring-opacity-5 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:bg-gray-400" %>
+      <div class="">
+        <%= render 'listing' %>
+      </div>
+    <% end %>
   </div>
-  <div class="">
-    <%= render 'listing' %>
-  </div>
-
-  <script type="text/javascript" src="https://umlsait.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/r5gghz/b/3/bc54840da492f9ca037209037ef0522a/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=51ecac03"></script>
-  <%= javascript_include_tag 'dashboard_reload', async: true %>
 </div>
