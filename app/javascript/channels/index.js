@@ -1,2 +1,2 @@
 // Import all the channels to be used by Action Cable
-import "channels/attention_channel"
+// import "channels/attention_channel"
