@@ -1,15 +1,13 @@
 <div class="container px-1 mb-20 pl-4">
   <h1 class="text-xl font-semibold text-gray-900 p-2">Dashboard - Rooms that need attention</h1>
-
-  <%= turbo_stream_from :dashboard %>
-  <div class="" id="dashboard_listing">
-    <ul role="list" class="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4 m-4">
-      <% @rooms.each do |room| %>
-        <li class="col-span-1 bg-white rounded-lg shadow-md divide-y divide-gray-400 px-2 grid place-items-stretch bg-white border border-gray-300 rounded-lg">
-          <%= render 'rooms/room_card', {room: room } %>
-        </li>
-      <% end %>
-    </ul>
+  <div class="mb-2">
+    <button type="button" class="px-2 rounded-md shadow-sm bg-gray-100 text-sm text-black text-center ring-1 ring-black ring-opacity-5 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:bg-gray-400"
+      data-controller='dashboard' data-action='click->dashboard#refresh'>
+      Refresh 
+    </button>
+  </div>
+  <div class="">
+    <%= render 'listing' %>
   </div>
 
   <script type="text/javascript" src="https://umlsait.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/r5gghz/b/3/bc54840da492f9ca037209037ef0522a/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=51ecac03"></script>
