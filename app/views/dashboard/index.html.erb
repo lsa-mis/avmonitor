@@ -4,14 +4,14 @@
   <%= turbo_stream_from :dashboard %>
   <div class="" id="dashboard_listing">
     <ul role="list" class="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4 m-4">
-      <% dashboard_rooms_need_attention.each do |room| %>
+      <% @rooms.each do |room| %>
         <li class="col-span-1 bg-white rounded-lg shadow-md divide-y divide-gray-400 px-2 grid place-items-stretch bg-white border border-gray-300 rounded-lg">
           <%= render 'rooms/room_card', {room: room } %>
         </li>
       <% end %>
     </ul>
   </div>
-  
+
   <script type="text/javascript" src="https://umlsait.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/r5gghz/b/3/bc54840da492f9ca037209037ef0522a/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=51ecac03"></script>
   <%= javascript_include_tag 'dashboard_reload', async: true %>
 </div>

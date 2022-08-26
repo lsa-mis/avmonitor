@@ -168,27 +168,4 @@ module ApplicationHelper
     return attention_rooms
   end
 
-  def dashboard_rooms_need_attention
-    rooms = Room.active
-    attention_rooms = []
-    rooms.each do |room|
-      if room_is_off?(room)
-        attention_rooms << room
-      else
-        devices = Device.where(room_id: room.id).where.not(name: 'Room')
-        catch :attention do
-          devices.each do |device|
-            DeviceCurrentState.where(device_id: device.id).each do |state|
-              if state_need_attention?(state)
-                attention_rooms << room
-                throw :attention 
-              end
-            end
-          end
-        end
-      end
-    end
-    return attention_rooms
-  end
-
 end
