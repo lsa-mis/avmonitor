@@ -167,4 +167,5 @@ module ApplicationHelper
     end
     return attention_rooms
   end
+
 end

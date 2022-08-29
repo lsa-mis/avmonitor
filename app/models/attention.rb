@@ -9,6 +9,7 @@
 #
 class Attention < ApplicationRecord
 
-  after_create_commit { broadcast_update_to("attention_channel", target: 'attention_message') }
-  
+  after_create_commit do
+    broadcast_update_to :attention, target: "attention_message"
+  end
 end

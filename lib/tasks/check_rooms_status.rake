@@ -32,15 +32,11 @@ task check_rooms_status: :environment do
       puts "create first Attention"
       Attention.create(message: "Attention needed")
     end
-    puts "reload dashboard"
-      ActionCable.server.broadcast("attention_channel", { message: "Attention needed"})
   else
     puts "status is OK"
     if Attention.last.present? && Attention.last.message == "Attention needed"
       puts "change from Attention to Ok"
       Attention.create(message: "")
-      puts "reload dashboard"
-      ActionCable.server.broadcast("attention_channel", { message: ""})
     end
   end
   
