@@ -1,5 +1,6 @@
 desc "This will find rooms that need attention"
 task check_redis_status: :environment do
+  # include ApplicationHelper
 
   # need to config redis
   # run these commands in redis-cli
@@ -39,8 +40,7 @@ task check_redis_status: :environment do
       end
     end
   end
-
-
+  
   Sidekiq.redis do |conn|
     # https://redis.io/topics/notifications#configuration
     conn.config(:set, "notify-keyspace-events", "E$lshz")

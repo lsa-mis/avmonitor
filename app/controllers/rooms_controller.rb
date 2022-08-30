@@ -2,6 +2,7 @@ class RoomsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_room, only: %i[ show edit update destroy ]
   include ApplicationHelper
+  require 'typhoeus'
 
   # GET /rooms or /rooms.json
   def index
@@ -69,11 +70,12 @@ class RoomsController < ApplicationController
       @room.building_nickname = room_data[2].split[1]
       @room.facility_id = room_params[:facility_id].upcase
       # Check for rooms presence in DB maybe ||=
-      @room.tport = Room.maximum(:tport) + 1
+      @room.tport = Room.exists? ? (Room.maximum(:tport) + 1) : 8090
     
       respond_to do |format|
         if @room.save
-          start_room_socket(@room)
+          StartSingleSocketJob.perform_in(10.seconds, @room.websocket_ip, @room.websocket_port, @room.facility_id, 
+            @room.tport)
           format.html { redirect_to room_url(@room), notice: "Room was successfully created." }
           format.json { render :show, status: :created, location: @room }
         else
@@ -84,14 +86,16 @@ class RoomsController < ApplicationController
     end
   end
 
-  def start_room_socket(room)
-    socket = "wss://" + room.websocket_ip + ":" + room.websocket_port
-    name = room.facility_id
-    tport = room.tport
-    wss_instance = ConnectSocket.new(name, socket, tport)
-    t = Thread.new { wss_instance.connect }
-    t.join
-  end
+  # def start_room_socket(room)
+  #   socket = "wss://" + room.websocket_ip + ":" + room.websocket_port
+  #   name = room.facility_id
+  #   tport = room.tport
+  #   wss_instance = ConnectSocket.new(name, socket, tport)
+  #   # t = Thread.new { wss_instance.connect }
+  #   # t.join
+  #   Thread.new { wss_instance.create_socket }
+  #   Thread.new { wss_instance.connect_to_socket }
+  # end
 
   # PATCH/PUT /rooms/1 or /rooms/1.json
   def update
@@ -116,6 +120,14 @@ class RoomsController < ApplicationController
           format.json { render json: @room.errors, status: :unprocessable_entity }
         end
       end
+    end
+  end
+
+  def destroy
+    @room.destroy
+    respond_to do |format|
+      format.turbo_stream {}
+      format.html { redirect_to rooms_path, notice: "Room was successfully destroyed." }
     end
   end
 

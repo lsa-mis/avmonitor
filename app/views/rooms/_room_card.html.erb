@@ -21,5 +21,7 @@
       </div>
       <hr>
     <% end %>
+    <hr>
+    <%= link_to "[Delete Room]", room_path(room), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-600" %>
   </div>
 <% end %>
