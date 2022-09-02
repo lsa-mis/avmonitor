@@ -23,9 +23,11 @@ class ConnectSocket
           puts "Error code: #{code}"
         end
 
-        ws = Faye::WebSocket::Client.new(@wssUri, [], :tls => {
+        ws = Faye::WebSocket::Client.new(@wssUri, [], :ping=>15, :tls => {
           :verify_peer => false
         })
+
+        # ws.ping()
 
         ws.on :open do |event|
           ws.send("{'LSARoom': {'Password': 'LSAPassword'}}")

@@ -12,6 +12,7 @@ begin
   results = dbh.query("SELECT websocket_ip, websocket_port, facility_id, tport FROM rooms")
 
   threads_create = []
+  # start dummy websocket
   results.each do |row|
     socket = "wss://" + row['websocket_ip'] + ":" + row['websocket_port']
     name = row['facility_id']
