@@ -14,15 +14,10 @@ begin
   end
   results = dbh.query("SELECT websocket_ip, websocket_port, facility_id, tport FROM rooms")
   # start dummy socket
-  cmd_output = %x[lsof -i -P -n | grep LISTEN]
-    puts "cmd potput"
-    puts cmd_output
-    cmd_output = %x[lsof -i -P -n | grep LISTEN | grep 8999]
-    puts "cmd potput"
-    puts cmd_output
-    if cmd_output == ''
-      StartSingleSocketJob.perform_async("10.211.103.181", "32123", "dummy_room", "8999")
-    end
+  cmd_output = %x[lsof -i -P -n | grep LISTEN | grep 8999]
+  if cmd_output == ''
+    StartSingleSocketJob.perform_async("10.211.103.181", "32123", "dummy_room", "8999")
+  end
   results.each do |row|
     StartSingleSocketJob.perform_async(row['websocket_ip'], row['websocket_port'], row['facility_id'], 
     row['tport'])
