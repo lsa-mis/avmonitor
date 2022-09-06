@@ -13,7 +13,6 @@ class ConnectSocket
     @thin_port = thin_port
   end
 
-  # def connect
   def create_socket
     puts "in ConnectSocket::create_socket method for #{@wssName} - [#{@thin_port}]"
     socket_app = lambda do |env|
@@ -23,11 +22,9 @@ class ConnectSocket
           puts "Error code: #{code}"
         end
 
-        ws = Faye::WebSocket::Client.new(@wssUri, [], :ping=>15, :tls => {
+        ws = Faye::WebSocket::Client.new(@wssUri, [], :tls => {
           :verify_peer => false
         })
-
-        # ws.ping()
 
         ws.on :open do |event|
           ws.send("{'LSARoom': {'Password': 'LSAPassword'}}")
