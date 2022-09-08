@@ -3,6 +3,7 @@ require 'mysql2'
 require_relative 'connect_socket'
 require 'sidekiq'
 require_relative 'start_single_socket_job'
+require 'typhoeus'
 
 
 begin
@@ -13,14 +14,15 @@ begin
     dbh = Mysql2::Client.new(host: "localhost", username: ENV["DBUSER"], password: ENV["DBPWD"], database: "avm_development" )
   end
   results = dbh.query("SELECT websocket_ip, websocket_port, facility_id, tport FROM rooms")
-  # start dummy socket
-  cmd_output = %x[lsof -i -P -n | grep LISTEN | grep 8999]
-  if cmd_output == ''
-    StartSingleSocketJob.perform_async("10.211.103.181", "32123", "dummy_room", "8999")
-  end
   results.each do |row|
     StartSingleSocketJob.perform_async(row['websocket_ip'], row['websocket_port'], row['facility_id'], 
     row['tport'])
+  end
+
+  sleep 10
+
+  results.each do |row|
+    Typhoeus.get("http://localhost:#{row['tport']}/")
   end
 
 rescue Exception => e

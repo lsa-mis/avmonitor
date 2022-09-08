@@ -46,7 +46,6 @@ class ConnectSocket
       }
     end
     Rack::Handler::Thin.run socket_app, Port: @thin_port
-    connect_to_socket(@thin_port)
   end
    
   def connect_to_socket(p)

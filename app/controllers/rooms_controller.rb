@@ -86,17 +86,6 @@ class RoomsController < ApplicationController
     end
   end
 
-  # def start_room_socket(room)
-  #   socket = "wss://" + room.websocket_ip + ":" + room.websocket_port
-  #   name = room.facility_id
-  #   tport = room.tport
-  #   wss_instance = ConnectSocket.new(name, socket, tport)
-  #   # t = Thread.new { wss_instance.connect }
-  #   # t.join
-  #   Thread.new { wss_instance.create_socket }
-  #   Thread.new { wss_instance.connect_to_socket }
-  # end
-
   # PATCH/PUT /rooms/1 or /rooms/1.json
   def update
     room_data = get_room_data_from_oracle(room_params[:facility_id].upcase)
