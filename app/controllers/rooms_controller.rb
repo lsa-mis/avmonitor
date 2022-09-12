@@ -2,7 +2,6 @@ class RoomsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_room, only: %i[ show edit update destroy ]
   include ApplicationHelper
-  require 'typhoeus'
 
   # GET /rooms or /rooms.json
   def index
@@ -74,8 +73,8 @@ class RoomsController < ApplicationController
     
       respond_to do |format|
         if @room.save
-          StartSingleSocketJob.perform_in(10.seconds, @room.websocket_ip, @room.websocket_port, @room.facility_id, 
-            @room.tport)
+          CreateSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, @room.tport)
+          ConnectSocketJob.perform_in(5.seconds, @room.facility_id, @room.tport)
           format.html { redirect_to room_url(@room), notice: "Room was successfully created." }
           format.json { render :show, status: :created, location: @room }
         else
