@@ -1,2 +1,4 @@
+redisstatus: bundle exec rake check_redis_status
+sidekiq: bundle exec sidekiq
 web: bin/rails server -p 3000
 css: bin/rails tailwindcss:watch
