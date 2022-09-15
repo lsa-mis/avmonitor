@@ -1,11 +1,10 @@
-class ConnectSocket
+class WebsocketFactory
 
   require 'faye/websocket'
   require 'eventmachine'
   require "rack"
   require "thin"
   require 'em-redis'
-  require 'typhoeus'
 
   def initialize(wssName, wssUri, thin_port)
     @wssName = wssName
@@ -13,7 +12,6 @@ class ConnectSocket
     @thin_port = thin_port
   end
 
-  # def connect
   def create_socket
     puts "in ConnectSocket::create_socket method for #{@wssName} - [#{@thin_port}]"
     socket_app = lambda do |env|
@@ -23,15 +21,15 @@ class ConnectSocket
           puts "Error code: #{code}"
         end
 
-        ws = Faye::WebSocket::Client.new(@wssUri, [], :tls => {
+        @wssName_ws = Faye::WebSocket::Client.new(@wssUri, [], :tls => {
           :verify_peer => false
         })
 
-        ws.on :open do |event|
-          ws.send("{'LSARoom': {'Password': 'LSAPassword'}}")
+        @wssName_ws.on :open do |event|
+          @wssName_ws.send("{'LSARoom': {'Password': 'LSAPassword'}}")
         end
 
-        ws.on :message do |event|
+        @wssName_ws.on :message do |event|
           p "#{@wssName} - [#{@thin_port}] socket is responding - #{Time.now}"
           redis.set @wssName, event.data do |response|
             redis.get @wssName do |response|
@@ -40,19 +38,13 @@ class ConnectSocket
           end
         end
       
-        ws.on :close do |event|
+        @wssName_ws.on :close do |event|
           p ["#{@wssName} - [#{@thin_port}]", :close, event.code, event.reason]
-          ws = nil
+          @wssName_ws = nil
         end
       }
     end
     Rack::Handler::Thin.run socket_app, Port: @thin_port
-    connect_to_socket(@thin_port)
-  end
-   
-  def connect_to_socket(p)
-    puts "In ConnectSocket::connect_to_socket method for #{@wssName} - [#{@thin_port}]"
-    Typhoeus.get("http://localhost:#{p}/")
   end
 
 end
