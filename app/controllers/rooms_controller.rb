@@ -31,7 +31,7 @@ class RoomsController < ApplicationController
         authorize :attention
       end
     end
-    @rooms = @rooms.order(:facility_id)
+    @rooms = @rooms.sort_by(&:facility_id)
     @room_types = Room.all.pluck(:room_type).uniq.sort
     unless params[:q].nil?
       render turbo_stream: turbo_stream.replace(
