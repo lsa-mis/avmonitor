@@ -1,15 +1,11 @@
 desc "This will find rooms that need attention"
 task check_redis_status: :environment do
-  # include ApplicationHelper
 
   # need to config redis
   # run these commands in redis-cli
   # CONFIG SET notify-keyspace-events KEA
   # psubscribe '__key*__:*'
-  # 
-  # start sockets scripst in different terminals: ruby lib/websocket_init/<script>
-  # run: lib/websocket_init/start_sockets.rb
-  # then run this task: bin/rake check_redis_status
+
   require 'redis'
   redis = Redis.new(host: "localhost")
 
@@ -58,8 +54,8 @@ task check_redis_status: :environment do
           puts s
           payload = JSON.parse s.gsub('=>', ':')
           write_socket_data_to_db(room, payload)
-        else 
-          puts "no room with facility_id" + room_name
+        # else 
+        #   puts "no room with facility_id" + room_name
         end
       end
       on.punsubscribe do
