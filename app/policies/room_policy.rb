@@ -28,4 +28,8 @@ class RoomPolicy < ApplicationPolicy
     user.role == 'admin'
   end
 
+  def refresh_room?
+    user.role == 'admin'
+  end
+
 end
