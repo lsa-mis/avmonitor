@@ -10,6 +10,9 @@ Rails.application.routes.draw do
   end
   resources :notes
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
+ 
+  get '/connect_all_rooms', to: 'rooms#connect_all_rooms', as: 'connect'
+  get '/refresh_room/:id', to: 'rooms#refresh_room', as: 'refresh'
 
   # Defines the root path route ("/")
   root "pages#home"

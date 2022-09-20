@@ -1,6 +1,6 @@
 class RoomsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_room, only: %i[ show edit update destroy ]
+  before_action :set_room, only: %i[ show edit update destroy refresh_room ]
   include ApplicationHelper
 
   # GET /rooms or /rooms.json
@@ -68,13 +68,11 @@ class RoomsController < ApplicationController
       @room.building = room_data[1]
       @room.building_nickname = room_data[2].split[1]
       @room.facility_id = room_params[:facility_id].upcase
-      # Check for rooms presence in DB maybe ||=
-      @room.tport = Room.exists? ? (Room.maximum(:tport) + 1) : 8090
+      @room.tport = 9999
     
       respond_to do |format|
         if @room.save
-          CreateSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, @room.tport)
-          ConnectSocketJob.perform_in(5.seconds, @room.facility_id, @room.tport)
+          CreateSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id)
           format.html { redirect_to room_url(@room), notice: "Room was successfully created." }
           format.json { render :show, status: :created, location: @room }
         else
@@ -118,6 +116,20 @@ class RoomsController < ApplicationController
       format.html { redirect_to rooms_path, notice: "Room was successfully destroyed." }
     end
   end
+
+  def connect_all_rooms
+    @all_rooms = Room.all
+    @all_rooms.each do |a_room|
+      CreateSocketJob.perform_async(a_room.websocket_ip, a_room.websocket_port, a_room.facility_id)
+    end
+  end
+
+  def refresh_room
+    CreateSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id)
+    redirect_to room_path(@room)
+  end
+
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

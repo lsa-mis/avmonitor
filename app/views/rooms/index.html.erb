@@ -11,6 +11,9 @@
     </div>
   </div>
   <div>
+  <%= button_to 'ReConnect All Rooms', connect_path, method: :get %>
+  </div>
+  <div>
     <%= search_form_for @q, data: { target: "autosubmit.form", action: "input->autosubmit#search" } do |form| %>
       <div class="relative min-h-screen md:flex">
         <div class="sidebar w-64 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out" data-autosubmit-target="sidebar">
