@@ -33,7 +33,7 @@ class WebsocketFactory
           p "!***CREATE***! #{@wssName} - socket is responding - #{Time.now}"
           redis.set @wssName, event.data do |response|
             redis.get @wssName do |response|
-              p response
+              p "!***CREATE***! WRITTEN TO REDIS: #{response}"
             end
           end
         end
