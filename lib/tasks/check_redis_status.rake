@@ -43,23 +43,22 @@ task check_redis_status: :environment do
     # https://redis.io/topics/notifications#events-generated-by-different-commands
     conn.psubscribe("__key*__:*") do |on|
       on.psubscribe do
-        puts "subscribed"
+        puts "SIDEKIQ-REDIS SUBSCRIBED"
       end
       on.pmessage do |pattern, command, room_name|
-        puts room_name
+        # puts "SIDEKIQ-REDIS PATTERN: #{pattern}, COMMAND: #{command}, ROOM NAME: #{room_name}"
         # room_name - room's facility_id
-        if Room.find_by(facility_id: room_name).present?
+        all_rooms = Room.all.pluck(:facility_id)
+        if all_rooms.include?(room_name)
           room = Room.find_by(facility_id: room_name)
-          s = redis.get(room_name)
-          puts s
-          payload = JSON.parse s.gsub('=>', ':')
+          redis_value = redis.get(room_name)
+          puts "SIDEKIQ-REDIS VALUE: #{room_name} - #{redis_value}"
+          payload = JSON.parse redis_value.gsub('=>', ':')
           write_socket_data_to_db(room, payload)
-        # else 
-        #   puts "no room with facility_id" + room_name
         end
       end
       on.punsubscribe do
-        puts "unsubscribe"
+        puts "SIDEKIQ-REDIS UN-SUBSCRIBED"
       end
     end
   end
