@@ -11,6 +11,7 @@ class WebsocketFactory
 
   def create_socket
     puts "!***CREATE***! start WebsocketFactory::create_socket method for #{@wssName}"
+
       EM.run {
         redis = EM::Protocols::Redis.connect
         redis.errback do |code|
@@ -21,11 +22,11 @@ class WebsocketFactory
           :verify_peer => false
         })
 
-        p ["!***CREATE***! #{@wssName} - send close to #{wss}", :close]
-        sleep 2
         p ["!***CREATE***! #{@wssName} - send initial message to #{wss}", :open]
+        redis.set "#{@wssName}_status", "socket_sent_open - #{Time.now}"
 
         wss.on :open do |event|
+          redis.set "#{@wssName}_status", "socket_opened - #{Time.now}"
           wss.send("{'LSARoom': {'Password': 'LSAPassword'}}")
         end
 
@@ -40,10 +41,12 @@ class WebsocketFactory
       
         wss.on :close do |event|
           p ["!***CREATE***! #{@wssName} - close socket", :close, event.code, event.reason]
+          redis.set "#{@wssName}_status", "socket_closed - #{Time.now}"
           wss = nil
         end
       }
-      puts "!***CREATE***! ended WebsocketFactory::create_socket method for #{@wssName}"
+      
+      puts "!***CREATE***! ended WebsocketFactory::create_socket method for #{@wssName}"                          
   end
 
 end
