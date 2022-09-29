@@ -23,6 +23,7 @@
               <%= @room.websocket_port %>
             </p>
             <%= button_to 'Refresh Room', refresh_path, method: :get %>
+            <%= button_to 'Send to Room', send_path, method: :get %>
           </div>
           
           <div class="mt-4 text-blue-600 hover: underline">

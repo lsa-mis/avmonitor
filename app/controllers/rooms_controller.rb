@@ -1,6 +1,6 @@
 class RoomsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_room, only: %i[ show edit update destroy refresh_room ]
+  before_action :set_room, only: %i[ show edit update destroy refresh_room send_to_room]
   include ApplicationHelper
 
   # GET /rooms or /rooms.json
@@ -129,6 +129,10 @@ class RoomsController < ApplicationController
     redirect_to room_path(@room)
   end
 
+  def send_to_room
+    SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id)
+    redirect_to room_path(@room)
+  end
 
 
   private

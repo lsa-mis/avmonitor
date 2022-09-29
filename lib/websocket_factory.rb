@@ -4,11 +4,15 @@ class WebsocketFactory
   require 'eventmachine'
   require 'em-redis'
 
+  attr_accessor :wss
+
   def initialize(wssName, wssUri)
     @wssName = wssName
     @wssUri = wssUri
+    @wss = nil
   end
 
+  
   def create_socket
     puts "!***CREATE***! start WebsocketFactory::create_socket method for #{@wssName}"
 
@@ -18,19 +22,20 @@ class WebsocketFactory
           puts "!***CREATE***! Redis Error code: #{code}"
         end
 
-        wss = Faye::WebSocket::Client.new(@wssUri, [], :tls => {
+        @wss = Faye::WebSocket::Client.new(@wssUri, [], :tls => {
           :verify_peer => false
         })
 
-        p ["!***CREATE***! #{@wssName} - send initial message to #{wss}", :open]
-        redis.set "#{@wssName}_status", "socket_sent_open - #{Time.now}"
 
-        wss.on :open do |event|
+        # p ["calling #{@wss} :open method", :open]
+
+        @wss.on :open do |event|
           redis.set "#{@wssName}_status", "socket_opened - #{Time.now}"
-          wss.send("{'LSARoom': {'Password': 'LSAPassword'}}")
+          p "!***CREATE***! in #{@wss} :open method"
+          @wss.send("{'LSARoom': {'Password': 'LSAPassword'}}")
         end
 
-        wss.on :message do |event|
+        @wss.on :message do |event|
           p "!***CREATE***! #{@wssName} - socket is responding - #{Time.now}"
           redis.set @wssName, event.data do |response|
             redis.get @wssName do |response|
@@ -42,11 +47,95 @@ class WebsocketFactory
         wss.on :close do |event|
           p ["!***CREATE***! #{@wssName} - close socket", :close, event.code, event.reason]
           redis.set "#{@wssName}_status", "socket_closed - #{Time.now}"
-          wss = nil
+          @wss = nil
         end
+
+
+        # EM.next_tick do
+        #   p "&&&&&&&&&&&&&&in EM::next_tick"
+        #   # @wss.send("{'LSARoom': {'Password': 'LSAPassword'}}")
+        #   @wss.ping
+        # end
+
+        # EM::Timer.new(3) do
+        #   p "&&&&&&&&&&&&&&in EM::Timer"
+        #   # @wss.send("{'LSARoom': {'Password': 'LSAPassword'}}")
+        #   @wss.ping do
+        #     redis.set "#{@wssName}_status", "socket_ponged - #{Time.now}"
+        #   end 
+        # end
+
+        EM.add_periodic_timer(3) do
+          p "&&&&&&&&&&&&&&!***CREATE***! in EM::Timer"
+          # @wss.send("{'LSARoom': {'Password': 'LSAPassword'}}")
+          @wss.ping do
+            redis.set "#{@wssName}_status", "socket_ponged - #{Time.now}"
+          end 
+        end
+
       }
+
+      puts "!***CREATE***! ended WebsocketFactory::create_socket method for #{@wssName}"
+  end
+
+
+  def send_message
+    puts "!***SEND***! start WebsocketFactory::send_socket method for #{@wssName}"
+
+      EM.run {
+        redis = EM::Protocols::Redis.connect
+        redis.errback do |code|
+          puts "!***CREATE***! Redis Error code: #{code}"
+        end
+
+        @wss = Faye::WebSocket::Client.new(@wssUri, [], :tls => {
+          :verify_peer => false
+        })
+
+        @wss.send("{'LSARoom': {'Password': 'LSAPassword'}}")
+
+        # p ["calling #{@wss} :open method", :open]
+
+        # @wss.on :open do |event|
+        #   redis.set "#{@wssName}_status", "socket_opened - #{Time.now}"
+        #   p "!***CREATE***! in #{@wss} :open method"
+        #   @wss.send("{'LSARoom': {'Password': 'LSAPassword'}}")
+        # end
+
+        @wss.on :message do |event|
+          p "!***SEND***! #{@wssName} - socket is responding - #{Time.now}"
+          redis.set @wssName, event.data do |response|
+            redis.get @wssName do |response|
+              p "!***SEND***! WRITTEN TO REDIS: #{response}"
+            end
+          end
+        end
       
-      puts "!***CREATE***! ended WebsocketFactory::create_socket method for #{@wssName}"                          
+        # wss.on :close do |event|
+        #   p ["!***CREATE***! #{@wssName} - close socket", :close, event.code, event.reason]
+        #   redis.set "#{@wssName}_status", "socket_closed - #{Time.now}"
+        #   @wss = nil
+        # end
+
+
+        # # EM.next_tick do
+        # #   p "&&&&&&&&&&&&&&in EM::next_tick"
+        # #   # @wss.send("{'LSARoom': {'Password': 'LSAPassword'}}")
+        # #   @wss.ping
+        # # end
+
+        EM::Timer.new(5) do
+          p "&&&&&&&&&&&&&&!***SEND***! in EM::Timer"
+          EM.stop
+          # @wss.send("{'LSARoom': {'Password': 'LSAPassword'}}")
+          # @wss.ping do
+          #   redis.set "#{@wssName}_status", "socket_ponged - #{Time.now}"
+          # end 
+        end
+
+      }
+
+      puts "!***SEND***! ended WebsocketFactory::send_socket method for #{@wssName}"
   end
 
 end
