@@ -130,7 +130,27 @@ class RoomsController < ApplicationController
   end
 
   def send_to_room
-    SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id)
+    case params[:operation]
+    when 'refresh'
+      msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
+    # when 'mic_vol'
+    #   msg = "{'LSARoom':{'ShortIntegerOutputs':{'Set Mic Volume': 0}},'Password': 'LSAPassword'}"
+    # when 'source_vol'
+    #   msg = "{'LSARoom':{'ShortIntegerOutputs':{'Set Source Volume': 0}},'Password': 'LSAPassword'}"
+    # when 'projector_on'
+    #   msg = "{'LSARoom':{'Assets':{'Projector 1':{'BooleanOutputs': {'Power On': true}}}},'Password': 'LSAPassword'}"
+    # when 'projector_off'
+    #   msg = "{'LSARoom':{'Assets':{'Projector 1':{'BooleanOutputs': {'Power On': false}}}},'Password': 'LSAPassword'}"
+    # when 'system_on'
+    #   msg = "{'LSARoom':{'BooleanOutputs': {'Turn System On': true}},'Password': 'LSAPassword'}"
+    # when 'system_off'
+    #   msg = "{'LSARoom':{'BooleanOutputs': {'Turn System On': false}},'Password': 'LSAPassword'}"
+    # when 'source_int'
+    #   msg = "{'LSARoom':{'ShortIntegerOutputs': {'Set Source': INT}},'Password': 'LSAPassword'}"
+    else
+      msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
+    end
+    SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, msg)
     redirect_to room_path(@room)
   end
 
