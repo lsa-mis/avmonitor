@@ -32,4 +32,8 @@ class RoomPolicy < ApplicationPolicy
     user.role == 'admin'
   end
 
+  def send_to_room?
+    user.role == 'admin'
+  end
+
 end
