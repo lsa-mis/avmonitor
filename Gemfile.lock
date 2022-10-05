@@ -166,6 +166,8 @@ GEM
     nio4r (2.5.8)
     nokogiri (1.13.8-x86_64-darwin)
       racc (~> 1.4)
+    nokogiri (1.13.8-x86_64-linux)
+      racc (~> 1.4)
     omniauth (2.1.0)
       hashie (>= 3.4.6)
       rack (>= 2.2.3)
@@ -253,6 +255,8 @@ GEM
     strscan (3.0.4)
     tailwindcss-rails (2.0.14-x86_64-darwin)
       railties (>= 6.0.0)
+    tailwindcss-rails (2.0.14-x86_64-linux)
+      railties (>= 6.0.0)
     thin (1.8.1)
       daemons (~> 1.0, >= 1.0.9)
       eventmachine (~> 1.0, >= 1.0.4)
@@ -281,6 +285,7 @@ GEM
 
 PLATFORMS
   x86_64-darwin-20
+  x86_64-linux
 
 DEPENDENCIES
   activerecord-oracle_enhanced-adapter (~> 7.0, >= 7.0.2)
