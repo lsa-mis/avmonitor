@@ -51,7 +51,7 @@ class WebsocketFactory
         # EM.add_periodic_timer(3) do
         #   p "&&&&&&&&&&&&&&!***CREATE***! in EM::Timer"
         #   @wss.ping do
-        #     redis.set "#{@wssName}_status", "socket_ponged - #{Time.now}"
+        #     redis.set "#{@wssName}_status", "#{Time.now}"
         #   end 
         # end
       }
