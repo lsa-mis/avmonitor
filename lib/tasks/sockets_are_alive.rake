@@ -7,6 +7,22 @@ task sockets_are_alive: :environment do
   # do we need a log file for this task?
   # @@socket_log ||= Logger.new("#{Rails.root}/log/sockets_are_alive.log")
 
+  # a ping is sent to a socket every SOCKET_ALIVE_PERIOD seconds
+  # if a socket responces with a pong websocket_factory class write to redis: 
+  #         redis.set "#{@wssName}_status", "#{Time.now}"
+  # this task scans redis database for "*_status" keys (like "MH1339_status") and run a loop for every key
+  # examples:
+  # status: MH1339_status; redis.get(status): "2022-10-11 08:49:25.080945 -0400" (string)
+  # status_time: redis.get(status) converted to Time object
+  # facility_id: MH1339
+  # device: a device with the name "Room" and MH1339's room_id 
+  # if socket is not responging (Time.now - status_time > SOCKET_ALIVE_PERIOD)
+  #   the task writes to DeviceSate or update DeviceCurrentState table for device: 
+  #    key "Room Is On", value: "false"
+  # if socket is alive: key "Room Is On", value: "true"
+
+  # the key "Room Is On" is used in the [room_is_off?(room)] method to check if the room is Online/Offline
+
   Sidekiq.redis do |conn|
     redis.scan_each(match: "*_status") do |status|
       status_time = Time.parse(redis.get(status))
