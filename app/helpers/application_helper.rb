@@ -135,8 +135,8 @@ module ApplicationHelper
 
   def room_is_off?(room)
     device = Device.find_by(name: "Room", room_id: room.id)
-    if device.present? && DeviceCurrentState.where(device_id: device.id).present?
-      if DeviceCurrentState.where(device_id: device.id).last.key == "Room Is On" && device.device_current_states.last.value == "false"
+    if device.present? && DeviceCurrentState.where(device_id: device.id, key: "Room Is On").present?
+      if DeviceCurrentState.find_by(device_id: device.id, key: "Room Is On").value == "false"
         return true
       else
         return false
