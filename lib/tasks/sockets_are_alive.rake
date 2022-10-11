@@ -3,9 +3,10 @@ task sockets_are_alive: :environment do
 # run this task every SOCKET_ALIVE_PERIOD time
   require 'redis'
   redis = Redis.new(host: "localhost")
-  # @@api_logger ||= Logger.new("#{Rails.root}/log/sockets_are_alive.log")
 
-  # api_logger.debug "get access token for update_campus_list, error: No access_token - #{result['error']}"
+  # do we need a log file for this task?
+  # @@socket_log ||= Logger.new("#{Rails.root}/log/sockets_are_alive.log")
+
   Sidekiq.redis do |conn|
     redis.scan_each(match: "*_status") do |status|
       status_time = Time.parse(redis.get(status))
