@@ -1,4 +1,4 @@
-desc "This will find rooms that need attention"
+desc "Wait for websockets information to be written to redis, and write it to the AVM database"
 task check_redis_status: :environment do
 
   # need to config redis
