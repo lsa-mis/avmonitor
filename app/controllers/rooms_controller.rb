@@ -146,7 +146,7 @@ class RoomsController < ApplicationController
     when 'system_off'
       msg = "{'LSARoom': {'BooleanOutputs': {'Turn System Off': true}, 'Password': 'LSAPassword'}}"
     when 'source_int'
-      msg = "{'LSARoom': {'ShortIntegerOutputs': {'Set Source': INT}, 'Password': 'LSAPassword'}}"
+      msg = "{'LSARoom': {'ShortIntegerOutputs': {'Set Current Source 1': 1}, 'Password': 'LSAPassword'}}"
     else
       msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
     end
