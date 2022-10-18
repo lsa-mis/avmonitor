@@ -84,10 +84,10 @@ class WebsocketFactory
           end
         end
 
-        EM::Timer.new(5) do
-          p "&&&&&&&&&&&&&&!***SEND***! in EM::Timer"
-          EM.stop
-        end
+        # EM::Timer.new(5) do
+        #   p "&&&&&&&&&&&&&&!***SEND***! in EM::Timer"
+        #   EM.stop
+        # end
       }
 
     puts "!***SEND***! ended WebsocketFactory::send_socket method for #{@wssName}"
