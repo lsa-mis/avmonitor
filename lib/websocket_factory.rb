@@ -48,7 +48,7 @@ class WebsocketFactory
           @wss = nil
         end
 
-        # EM.add_periodic_timer(3) do
+        #  EM.add_periodic_timer(3) do
         #   p "&&&&&&&&&&&&&&!***CREATE***! in EM::Timer"
         #   @wss.ping do
         #     redis.set "#{@wssName}_status", "socket_ponged - #{Time.now}"
@@ -84,10 +84,10 @@ class WebsocketFactory
           end
         end
 
-        # EM::Timer.new(5) do
-        #   p "&&&&&&&&&&&&&&!***SEND***! in EM::Timer"
-        #   EM.stop
-        # end
+        EM::Timer.new(5) do
+          p "&&&&&&&&&&&&&&!***SEND***! in EM::Timer"
+          EM.stop
+        end
       }
 
     puts "!***SEND***! ended WebsocketFactory::send_socket method for #{@wssName}"
