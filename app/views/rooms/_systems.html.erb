@@ -31,7 +31,7 @@
             </td>
             <% if video_source_device?(device) %>
               <td>
-                <%= current_source(room, device) %>
+                <%= render 'rooms/change_source', {room: room, device: device} %>
               </td>
               <td>
                 <%= lamp_hour(device) %>
