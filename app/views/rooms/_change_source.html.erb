@@ -1,11 +1,14 @@
-<div>
+<div data-controller="sendtosocket">
   <% if current_source(room, device) == "not available" %>
     Not Available
   <% elsif current_source(room, device) == "not selected" %>
     <%= select_tag "source", options_from_collection_for_select(list_of_sources(room), "id", "value"), 
-      prompt: "Select source ...", class: "block rounded-none rounded-l-md sm:text-sm border-gray-300" %>
+      prompt: "Select source ...", class: "block rounded-none rounded-l-md sm:text-sm border-gray-300",
+      "data-sendtosocket-target": "source", "data-action": "change->sendtosocket#changeSource" %>
   <% else %>
     <%= select_tag "source", options_from_collection_for_select(list_of_sources(room), "id", "value", "#{current_source(room, device)}"), 
-     prompt: "Select source ...", class: "block rounded-none rounded-l-md sm:text-sm border-gray-300" %>
+     prompt: "Select source ...", class: "block rounded-none rounded-l-md sm:text-sm border-gray-300",
+     "data-sendtosocket-target": "source", "data-action": "change->sendtosocket#changeSource" %>
   <% end %>
+  <input type="hidden" id="room_id" name="room_id" value="<%= room.id %>" data-sendtosocket-target="room">
 </div>
