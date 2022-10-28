@@ -146,13 +146,16 @@ class RoomsController < ApplicationController
     when 'system_off'
       msg = "{'LSARoom': {'BooleanOutputs': {'Turn System Off': true}, 'Password': 'LSAPassword'}}"
     when 'source_int'
-      msg = "{'LSARoom': {'ShortIntegerOutputs': {'Set Current Source 1': 1}, 'Password': 'LSAPassword'}}"
+      source = params[:source]
+      msg = "{'LSARoom': {'ShortIntegerOutputs': {'Set Current Source 1': " + "#{source}}, 'Password': 'LSAPassword'}}"
     else
       msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
     end
-    SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, msg)
+    Rails.logger.debug "************************ msg #{msg}"
+    # SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, msg)
     redirect_to room_path(@room)
   end
+
 
 
   private
