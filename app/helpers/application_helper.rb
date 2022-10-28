@@ -124,13 +124,18 @@ module ApplicationHelper
     if room_device.device_current_states.where(key: source_key).last.present?
       source = room_device.device_current_states.where(key: source_key).last.value
       if source != "0" && room_device.device_current_states.where("`key` LIKE 'VideoSource%' AND `key` LIKE '%" + "#{source}'").last.present?
-        return room_device.device_current_states.where("`key` LIKE 'VideoSource%' AND `key` LIKE '%" + "#{source}'").last.value
+        return room_device.device_current_states.where("`key` LIKE 'VideoSource%' AND `key` LIKE '%" + "#{source}'").last.id
       else
         return "not selected"
       end
     else 
       return "not available"
     end
+  end
+
+  def list_of_sources(room)
+    room_device = get_room_device(room)
+    DeviceCurrentState.where("device_id = " + "#{room_device.id} AND `key` LIKE 'VideoSource%' AND value <> ''")
   end
 
   def room_is_off?(room)
