@@ -134,9 +134,11 @@ class RoomsController < ApplicationController
     when 'refresh'
       msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
     when 'mic_vol'
-      msg = "{'LSARoom': {'ShortIntegerOutputs':{'Set Mic Volume': 0}, 'Password': 'LSAPassword'}}"
+      volume = params[:volume]
+      msg = "{'LSARoom': {'ShortIntegerOutputs':{'Set Mic Volume': " + "#{volume}}, 'Password': 'LSAPassword'}}"
     when 'source_vol'
-      msg = "{'LSARoom': {'ShortIntegerOutputs':{'Set Source Volume': 0}, 'Password': 'LSAPassword'}}"
+      volume = params[:volume]
+      msg = "{'LSARoom': {'ShortIntegerOutputs':{'Set Source Volume': " + "#{volume}}, 'Password': 'LSAPassword'}}"
     when 'projector_on'
       msg = "{'LSARoom': {'Assets':{'Projector 1':{'BooleanOutputs': {'Power On': true}}}, 'Password': 'LSAPassword'}}"
     when 'projector_off'
@@ -150,7 +152,8 @@ class RoomsController < ApplicationController
     else
       msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
     end
-    SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, msg)
+    Rails.logger.debug "************************ msg #{msg}"
+    # SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, msg)
     redirect_to room_path(@room)
   end
 
