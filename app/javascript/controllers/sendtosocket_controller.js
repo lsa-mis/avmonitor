@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["wl_mic_volume", "source_vol"]
 
-  changeMicVolume(event) {
+  changeMicVolume() {
     let confirmed = confirm("Are you sure?")
     if (confirmed) {
       console.log("mic")
@@ -17,11 +17,11 @@ export default class extends Controller {
     }
     else {
       console.log("nothing")
-      event.preventDefault()
+      location.reload()
     }
   }
 
-  changeSourceVolume(event) {
+  changeSourceVolume() {
     let confirmed = confirm("Are you sure?")
     if (confirmed) {
       console.log("source")
@@ -35,7 +35,7 @@ export default class extends Controller {
     }
     else {
       console.log("nothing")
-      event.preventDefault()
+      location.reload()
     }
   }
 }
