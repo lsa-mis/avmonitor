@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["source"]
 
-  changeSource(event) {
+  changeSource() {
     let confirmed = confirm("Are you sure?")
     if (confirmed) {
       console.log("here")
@@ -17,7 +17,7 @@ export default class extends Controller {
     }
     else {
       console.log("nothing")
-      event.preventDefault()
+      location.reload()
     }
   }
 }
