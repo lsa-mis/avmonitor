@@ -146,8 +146,9 @@ class RoomsController < ApplicationController
     when 'system_off'
       msg = "{'LSARoom': {'BooleanOutputs': {'Turn System Off': true}, 'Password': 'LSAPassword'}}"
     when 'source_int'
-      source = params[:source]
-      msg = "{'LSARoom': {'ShortIntegerOutputs': {'Set Current Source 1': " + "#{source}}, 'Password': 'LSAPassword'}}"
+      key = DeviceCurrentState.find_by(id: params[:source]).key
+      key.slice!("VideoSource")
+      msg = "{'LSARoom': {'ShortIntegerOutputs': {'Set Current Source 1': " + "#{key}}, 'Password': 'LSAPassword'}}"
     else
       msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
     end
@@ -155,8 +156,6 @@ class RoomsController < ApplicationController
     # SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, msg)
     redirect_to room_path(@room)
   end
-
-
 
   private
     # Use callbacks to share common setup or constraints between actions.
