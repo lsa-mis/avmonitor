@@ -57,7 +57,7 @@ module ApplicationHelper
     if room_device.device_current_states.where(key: "Source Volume").last.present?
       return room_device.device_current_states.where(key: "Source Volume").last.value
     else
-      return ""
+      return 0
     end
   end
 
@@ -66,7 +66,7 @@ module ApplicationHelper
     if room_device.device_current_states.where(key: "Ceiling Mic Signal").last.present?
       return room_device.device_current_states.where(key: "Ceiling Mic Signal").last.value
     else 
-      return "not available"
+      return 0
     end
   end
 
@@ -84,7 +84,7 @@ module ApplicationHelper
     if room_device.device_current_states.where(key: "Mic Volume").last.present?
       return room_device.device_current_states.where(key: "Mic Volume").last.value
     else 
-      return "not available"
+      return 0
     end
   end
 
