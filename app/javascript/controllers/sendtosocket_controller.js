@@ -3,6 +3,26 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
   static targets = ["source", "wl_mic_volume", "source_vol"]
 
+  changeDeviceOnOff() {
+    let confirmed = confirm("Are you sure?")
+    if (confirmed) {
+      console.log("on/off")
+      var power = document.getElementById("power_on_off").checked
+      console.log(power)
+      var room_id = document.getElementById("room_id").value
+      console.log(room_id)
+      var device_id = document.getElementById("device_id").value
+      console.log(device_id)
+      if (device_id) {
+        fetch(`/send_to_room/${room_id}?operation=device_on_off&device=${device_id}&power=${power}`)
+      }
+    }
+    else {
+      console.log("nothing")
+      location.reload()
+    }
+  }
+
   changeSource() {
     let confirmed = confirm("Are you sure?")
     if (confirmed) {
@@ -20,6 +40,7 @@ export default class extends Controller {
       location.reload()
     }
   }
+
 
   changeMicVolume() {
     let confirmed = confirm("Are you sure?")
