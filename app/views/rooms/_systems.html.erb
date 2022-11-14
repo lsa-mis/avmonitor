@@ -27,7 +27,7 @@
               <%= device_online(device) %>
             </td>
             <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-              <%= device_power_is_on(device) %>
+              <%= render 'rooms/device_on_off', {room: room, device: device} %>
             </td>
             <% if video_source_device?(device) %>
               <td>

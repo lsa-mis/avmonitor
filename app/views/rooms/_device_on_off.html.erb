@@ -1,0 +1,6 @@
+<div data-controller="sendtosocket">
+  <%= check_box_tag "power_on_off", "#{device_power_is_on(device)}", device_power_is_on(device),
+     "data-action": "change->sendtosocket#changeDeviceOnOff" %>
+  <input type="hidden" id="room_id" name="room_id" value="<%= room.id %>" >
+  <input type="hidden" id="device_id" name="device_id" value="<%= device.id %>" >
+</div
