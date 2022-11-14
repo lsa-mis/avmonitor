@@ -135,15 +135,19 @@ class RoomsController < ApplicationController
       msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
     when 'mic_vol'
       volume = params[:volume]
-      msg = "{'LSARoom': {'ShortIntegerOutputs':{'Set Mic Volume': " + "#{volume}}, 'Password': 'LSAPassword'}}"
+      msg = "{'LSARoom': {'ShortIntegerOutputs':{'Set Mic Volume': #{volume}}, 'Password': 'LSAPassword'}}"
     when 'source_vol'
       volume = params[:volume]
-      msg = "{'LSARoom': {'ShortIntegerOutputs':{'Set Source Volume': " + "#{volume}}, 'Password': 'LSAPassword'}}"
+      msg = "{'LSARoom': {'ShortIntegerOutputs':{'Set Source Volume': #{volume}}, 'Password': 'LSAPassword'}}"
     when 'device_on_off'
       device_id = params[:device]
       power = params[:power]
       device_name = Device.find(device_id).name
-      msg = "{'LSARoom': {'Assets':{'#{device_name}':{'BooleanOutputs': {'Power On': #{power}}}}, 'Password': 'LSAPassword'}}"
+      if power == "true"
+        msg = "{'LSARoom': {'Assets':{'#{device_name}':{'BooleanOutputs': {'Power On': true}}}, 'Password': 'LSAPassword'}}"
+      else
+        msg = "{'LSARoom': {'Assets':{'#{device_name}':{'BooleanOutputs': {'Power Off': true}}}, 'Password': 'LSAPassword'}}"
+      end
     when 'system_on'
       msg = "{'LSARoom': {'BooleanOutputs': {'Turn System On': true}, 'Password': 'LSAPassword'}}"
     when 'system_off'
@@ -151,7 +155,7 @@ class RoomsController < ApplicationController
     when 'source_int'
       key = DeviceCurrentState.find_by(id: params[:source]).key
       key.slice!("VideoSource")
-      msg = "{'LSARoom': {'ShortIntegerOutputs': {'Set Current Source 1': " + "#{key}}, 'Password': 'LSAPassword'}}"
+      msg = "{'LSARoom': {'ShortIntegerOutputs': {'Set Current Source 1': #{key}}, 'Password': 'LSAPassword'}}"
     else
       msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
     end
