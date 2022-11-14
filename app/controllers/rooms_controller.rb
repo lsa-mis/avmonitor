@@ -139,10 +139,11 @@ class RoomsController < ApplicationController
     when 'source_vol'
       volume = params[:volume]
       msg = "{'LSARoom': {'ShortIntegerOutputs':{'Set Source Volume': " + "#{volume}}, 'Password': 'LSAPassword'}}"
-    when 'projector_on'
-      msg = "{'LSARoom': {'Assets':{'Projector 1':{'BooleanOutputs': {'Power On': true}}}, 'Password': 'LSAPassword'}}"
-    when 'projector_off'
-      msg = "{'LSARoom': {'Assets':{'Projector 1':{'BooleanOutputs': {'Power Off': true}}}, 'Password': 'LSAPassword'}}"
+    when 'device_on_off'
+      device_id = params[:device]
+      power = params[:power]
+      device_name = Device.find(device_id).name
+      msg = "{'LSARoom': {'Assets':{'#{device_name}':{'BooleanOutputs': {'Power On': #{power}}}}, 'Password': 'LSAPassword'}}"
     when 'system_on'
       msg = "{'LSARoom': {'BooleanOutputs': {'Turn System On': true}, 'Password': 'LSAPassword'}}"
     when 'system_off'
@@ -154,6 +155,7 @@ class RoomsController < ApplicationController
     else
       msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
     end
+    Rails.logger.debug "**************** msg: #{msg}"
     SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, msg)
     redirect_to room_path(@room)
   end
