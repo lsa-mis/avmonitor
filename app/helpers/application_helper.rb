@@ -106,7 +106,11 @@ module ApplicationHelper
 
   def device_power_is_on(device)
     if device.device_current_states.pluck(:key).include?("Power Is On")
-      return device.device_current_states.where(key: "Power Is On").last.value
+      if device.device_current_states.where(key: "Power Is On").last.value == "true"
+        return true
+      else
+        return false
+      end
     else
       return "-"
     end
