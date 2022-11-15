@@ -11,7 +11,8 @@ export default class extends Controller {
       console.log(event.target.dataset)
       var name = event.target.dataset.sendtosocketNameValue
       console.log(event.target.dataset.sendtosocketNameValue)
-      var id = name.replace(" ", "_")
+      var id = name.replaceAll(" ", "_")
+      console.log(id)
       var power = document.getElementById(id).checked
       console.log("power")
       console.log(power)
