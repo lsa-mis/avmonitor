@@ -1,14 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["source", "wl_mic_volume", "source_vol"]
-  static values = {
-    name: String
-  }
-
-  connect() {
-    console.log("hello")
-  }
+  static targets = ["wl_mic_volume", "source_vol"]
 
   changeDeviceOnOff(event) {
     let confirmed = confirm("Are you sure?")
