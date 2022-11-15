@@ -152,9 +152,11 @@ class RoomsController < ApplicationController
     when 'system_off'
       msg = "{'LSARoom': {'BooleanOutputs': {'Turn System Off': true}, 'Password': 'LSAPassword'}}"
     when 'source_int'
+      device_name = params[:device_name]
+      number = device_name[-1].to_i
       key = DeviceCurrentState.find_by(id: params[:source]).key
       key.slice!("VideoSource")
-      msg = "{'LSARoom': {'ShortIntegerOutputs': {'Set Current Source 1': #{key}}, 'Password': 'LSAPassword'}}"
+      msg = "{'LSARoom': {'ShortIntegerOutputs': {'Set Current Source #{number}': #{key}}, 'Password': 'LSAPassword'}}"
     else
       msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
     end

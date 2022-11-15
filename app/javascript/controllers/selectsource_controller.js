@@ -19,7 +19,7 @@ export default class extends Controller {
       var room_id = document.getElementById("room_id").value
       console.log(room_id)
       if (source_id) {
-        fetch(`/send_to_room/${room_id}?operation=source_int&source=${source_id}`)
+        fetch(`/send_to_room/${room_id}?operation=source_int&device_name=${name}&source=${source_id}`)
       }
     }
     else {
