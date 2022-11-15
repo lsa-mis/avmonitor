@@ -93,4 +93,11 @@ class WebsocketFactory
     puts "!***SEND***! ended WebsocketFactory::send_socket method for #{@wssName}"
   end
 
+  def socket_close
+    @wss = Faye::WebSocket::Client.new(@wssUri, [], :tls => {
+      :verify_peer => false
+    })
+    @wss.close
+  end
+
 end
