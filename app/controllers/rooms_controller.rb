@@ -140,9 +140,8 @@ class RoomsController < ApplicationController
       volume = params[:volume]
       msg = "{'LSARoom': {'ShortIntegerOutputs':{'Set Source Volume': #{volume}}, 'Password': 'LSAPassword'}}"
     when 'device_on_off'
-      device_id = params[:device]
+      device_name = params[:device_name]
       power = params[:power]
-      device_name = Device.find(device_id).name
       if power == "true"
         msg = "{'LSARoom': {'Assets':{'#{device_name}':{'BooleanOutputs': {'Power On': true}}}, 'Password': 'LSAPassword'}}"
       else
