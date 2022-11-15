@@ -120,12 +120,22 @@ class RoomsController < ApplicationController
   def connect_all_rooms
     @all_rooms = Room.all
     @all_rooms.each do |a_room|
-      CreateSocketJob.perform_async(a_room.websocket_ip, a_room.websocket_port, a_room.facility_id)
+      # CreateSocketJob.perform_async(a_room.websocket_ip, a_room.websocket_port, a_room.facility_id)
+
+      socket = "wss://" + a_room.websocket_ip + ":" + a_room.websocket_port
+      wss_instance = WebsocketFactory.new(a_room.facility_id, socket)
+      wss_instance.create_socket
+      
     end
   end
 
   def refresh_room
-    CreateSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id)
+    # CreateSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id)
+
+    socket = "wss://" + @room.websocket_ip + ":" + @room.websocket_port
+    wss_instance = WebsocketFactory.new(@room.facility_id, socket)
+    wss_instance.create_socket
+    
     redirect_to room_path(@room)
   end
 
@@ -161,9 +171,19 @@ class RoomsController < ApplicationController
       msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
     end
     Rails.logger.debug "**************** msg: #{msg}"
-    SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, "{'LSARoom': {'Password': 'LSAPassword'}}" )
+    # SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, "{'LSARoom': {'Password': 'LSAPassword'}}" )
+
+    socket = "wss://" + @room.websocket_ip + ":" + @room.websocket_port
+    wss_instance = WebsocketFactory.new(@room.facility_id, socket)
+    wss_instance.send_message("{'LSARoom': {'Password': 'LSAPassword'}}")
+
     sleep(10)
-    SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, msg)
+    # SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, msg)
+
+    socket = "wss://" + @room.websocket_ip + ":" + @room.websocket_port
+    wss_instance = WebsocketFactory.new(@room.facility_id, socket)
+    wss_instance.send_message(msg)
+
     redirect_to room_path(@room)
   end
 
