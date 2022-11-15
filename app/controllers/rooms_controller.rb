@@ -161,6 +161,8 @@ class RoomsController < ApplicationController
       msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
     end
     Rails.logger.debug "**************** msg: #{msg}"
+    SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, "{'LSARoom': {'Password': 'LSAPassword'}}" )
+    sleep(10)
     SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, msg)
     redirect_to room_path(@room)
   end
