@@ -1,6 +1,6 @@
 class RoomsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_room, only: %i[ show edit update destroy refresh_room send_to_room]
+  before_action :set_room, only: %i[ show edit update destroy refresh_room send_to_room close_socket] 
   include ApplicationHelper
 
   # GET /rooms or /rooms.json
@@ -72,7 +72,7 @@ class RoomsController < ApplicationController
     
       respond_to do |format|
         if @room.save
-          CreateSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id)
+          # CreateSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id)
           format.html { redirect_to room_url(@room), notice: "Room was successfully created." }
           format.json { render :show, status: :created, location: @room }
         else
@@ -131,10 +131,19 @@ class RoomsController < ApplicationController
 
   def refresh_room
     # CreateSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id)
-
     socket = "wss://" + @room.websocket_ip + ":" + @room.websocket_port
     wss_instance = WebsocketFactory.new(@room.facility_id, socket)
     wss_instance.create_socket
+
+    redirect_to room_path(@room)
+  end
+
+  def close_socket
+    # CreateSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id)
+
+    socket = "wss://" + @room.websocket_ip + ":" + @room.websocket_port
+    wss_instance = WebsocketFactory.new(@room.facility_id, socket)
+    wss_instance.socket_close
     
     redirect_to room_path(@room)
   end
