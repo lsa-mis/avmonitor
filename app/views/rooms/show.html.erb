@@ -22,10 +22,12 @@
             <p class="my-5">
               <%= @room.websocket_port %>
             </p>
-            <%= button_to 'Refresh Room', refresh_path, method: :get %>
+            <%= button_to 'Refresh Room', refresh_path, method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
+            <span class="ml-2 text-xs text-gray-700">(if responds - socket starts streaming data - check status)</span>
             <hr class="mb-2">
             </p>
-            <%= button_to 'Close socket', close_path, method: :get %>
+            <%= button_to 'Close socket', close_path, method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
+            <span class="ml-2 text-xs text-gray-700">(close socket before changing anything - check status)</span>
             <hr class="mb-2">
           </div>
           <div>
@@ -39,8 +41,8 @@
             </div>
             <div>
               Current Status:
-              <% if SocketStatus.find_by(socket_name: @room.facility_id).present? %>
-                <%= SocketStatus.find_by(socket_name: @room.facility_id).status %>
+              <% if @socket_status.present? %>
+                <%= @socket_status.status %>
               <% end %>
             </div>
           </div>
