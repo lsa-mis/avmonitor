@@ -185,9 +185,9 @@ class RoomsController < ApplicationController
     socket = "wss://" + @room.websocket_ip + ":" + @room.websocket_port
     wss_instance = WebsocketFactory.new(@room.facility_id, socket)
     # wss_instance.send_message("{'LSARoom': {'Password': 'LSAPassword'}}")
-    wss_instance.socket_close
+    # wss_instance.socket_close
 
-    sleep(2)
+    # sleep(2)
     # SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, msg)
 
     socket = "wss://" + @room.websocket_ip + ":" + @room.websocket_port
