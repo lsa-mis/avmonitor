@@ -43,6 +43,7 @@ class RoomsController < ApplicationController
 
   # GET /rooms/1 or /rooms/1.json
   def show
+    @socket_status = SocketStatus.find_by(socket_name: @room.facility_id)
   end
 
   # GET /rooms/new
