@@ -4,7 +4,7 @@ export default class extends Controller {
   static targets = ["wl_mic_volume", "source_vol"]
 
   changeDeviceOnOff(event) {
-    let confirmed = confirm("Are you sure?")
+    let confirmed = confirm("Switch on/off only when the socket closed? Do you want to comtinue?")
     if (confirmed) {
       console.log(event)
       console.log(event.target)
@@ -31,7 +31,7 @@ export default class extends Controller {
 
 
   changeMicVolume() {
-    let confirmed = confirm("Are you sure?")
+    let confirmed = confirm("Change the volume only when the socket closed? Do you want to comtinue?")
     if (confirmed) {
       console.log("mic")
       var volume = this.wl_mic_volumeTarget.value
@@ -49,7 +49,7 @@ export default class extends Controller {
   }
 
   changeSourceVolume() {
-    let confirmed = confirm("Are you sure?")
+    let confirmed = confirm("Change the volume only when the socket closed? Do you want to comtinue?")
     if (confirmed) {
       console.log("source")
       var volume = this.source_volTarget.value

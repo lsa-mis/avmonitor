@@ -87,7 +87,7 @@ class WebsocketFactory
 
         EM::Timer.new(5) do
           p "&&&&&&&&&&&&&&!***SEND*** stoped"
-          redis.set "#{@wssName}_status", "socket stopped after sending message - #{Time.now}"
+          redis.set "#{@wssName}_status", "socket closed after sending message - #{Time.now}"
           EM.stop
         end
       }
