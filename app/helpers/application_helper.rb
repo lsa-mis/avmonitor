@@ -1,7 +1,7 @@
 module ApplicationHelper
 
-  def show_time(field)
-    field.strftime("%m/%d/%Y - %H:%M:%S") unless field.blank?
+  def show_status(field)
+    field[0...field.rindex(' ')] unless field.blank?
   end
 
   def svg(svg)
@@ -41,7 +41,7 @@ module ApplicationHelper
   end
 
   def room_need_attention?(room)
-    if SocketStatus.find_by(socket_name: room.facility_id).status.include?("socket_not_responding")
+    if SocketStatus.find_by(socket_name: room.facility_id).status.include?("not_responding")
       return false
     end
     devices = get_room_asset_devices(room)
