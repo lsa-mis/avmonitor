@@ -80,10 +80,11 @@ class WebsocketFactory
         end
 
         EM::Timer.new(5) do
-          p "&&&&&&&&&&&&&&!***SEND*** stoped"
-          redis.set "#{@wssName}_status", "action complete - refresh roomtosee current status - #{Time.now}"
+          p "&&&&&&&&&&&&&&!***SEND*** stopped"
+          redis.set "#{@wssName}_status", "action complete - open socket to stream socket data - #{Time.now}"
           EM.stop
         end
+
       }
 
     puts "!***SEND***! ended WebsocketFactory::send_socket method for #{@wssName}"
