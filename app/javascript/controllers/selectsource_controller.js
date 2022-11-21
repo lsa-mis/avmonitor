@@ -3,7 +3,7 @@ import { Controller } from "@hotwired/stimulus"
 export default class extends Controller {
 
   changeSource(event) {
-    let confirmed = confirm("Change the source only when the socket closed? Do you want to comtinue?")
+    let confirmed = confirm("Is the websocket closed? If yes, click OK to change source")
     if (confirmed) {
       console.log("here")
       console.log(event.target.dataset)
