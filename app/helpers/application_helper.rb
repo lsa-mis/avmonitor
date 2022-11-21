@@ -1,7 +1,14 @@
 module ApplicationHelper
 
-  def show_status(field)
-    field[0...field.rindex(' ')] unless field.blank?
+  def show_status(status)
+    return "" if status.blank?
+    time_string = status.split(" - ").last
+    status_time = time_string.to_datetime
+    status_to_display = status[0...status.rindex(' ')] 
+    if Time.now - status_time > 30
+      status_to_display += " - too old"
+    end
+    return status_to_display
   end
 
   def svg(svg)
@@ -41,11 +48,18 @@ module ApplicationHelper
   end
 
   def room_need_attention?(room)
-    if SocketStatus.find_by(socket_name: room.facility_id).status.include?("not_responding")
-      return true
-    end
-    if SocketStatus.find_by(socket_name: room.facility_id).status.include?("not_responding")
-      return false
+    if SocketStatus.find_by(socket_name: room.facility_id).present? 
+      if SocketStatus.find_by(socket_name: room.facility_id).status.include?("not_responding")
+        return true
+      end
+      if SocketStatus.find_by(socket_name: room.facility_id).status.include?("active")
+        status = SocketStatus.find_by(socket_name: room.facility_id).status
+        time_string = status.split(" - ").last
+        status_time = time_string.to_datetime
+        if Time.now - status_time > 30
+          return true
+        end
+      end
     end
     devices = get_room_asset_devices(room)
     need_attention = false
@@ -168,20 +182,20 @@ module ApplicationHelper
   def rooms_need_attention(rooms)
     attention_rooms = []
     rooms.each do |room|
-      if room_is_off?(room)
+      if room_need_attention?(room)
         attention_rooms << room
-      else
-        devices = Device.where(room_id: room.id).where.not(name: 'Room')
-        catch :attention do
-          devices.each do |device|
-            DeviceCurrentState.where(device_id: device.id).each do |state|
-              if state_need_attention?(state)
-                attention_rooms << room
-                throw :attention 
-              end
-            end
-          end
-        end
+      # else
+      #   devices = Device.where(room_id: room.id).where.not(name: 'Room')
+      #   catch :attention do
+      #     devices.each do |device|
+      #       DeviceCurrentState.where(device_id: device.id).each do |state|
+      #         if state_need_attention?(state)
+      #           attention_rooms << room
+      #           throw :attention 
+      #         end
+      #       end
+      #     end
+      #   end
       end
     end
     return attention_rooms
