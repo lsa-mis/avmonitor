@@ -23,11 +23,6 @@
               <%= check_box_tag(:need_attention) %>
             </div>
             <hr>
-            <div class="px-1 pb-2">
-              <%= label_tag(:need_attention, "Rooms with no crestron devices") %>
-              <%= check_box_tag(:no_device) %>
-            </div>
-            <hr>
             <div class="px-1">
               <label for="building">Search Building Names</label>
               <%= form.text_field :building_cont, class: "block rounded-none rounded-l-md sm:text-sm border-gray-300", :placeholder => 'ex. "East Hall"', :"data-action" => "input->autosubmit#search", :"data-autosubmit-target" => "building_name" %>
