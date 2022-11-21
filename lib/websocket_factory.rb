@@ -36,9 +36,6 @@ class WebsocketFactory
           p "!***CREATE***! #{@wssName} - socket is responding - #{Time.now}"
           redis.set @wssName, event.data do |response|
             redis.set "#{@wssName}_status", "socket_responding - #{Time.now}"
-            redis.get @wssName do |response|
-              p "!***CREATE***! WRITTEN TO REDIS: #{response}"
-            end
           end
         end
       
@@ -79,9 +76,6 @@ class WebsocketFactory
           p "!***SEND***! #{@wssName} - socket is responding - #{Time.now}"
           redis.set @wssName, event.data do |response|
             redis.set "#{@wssName}_status", "socket responded after sending message - #{Time.now}"
-            redis.get @wssName do |response|
-              p "!***SEND***! WRITTEN TO REDIS: #{response}"
-            end
           end
         end
 
