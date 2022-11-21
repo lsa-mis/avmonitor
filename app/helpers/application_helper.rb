@@ -1,5 +1,9 @@
 module ApplicationHelper
 
+  def show_status(field)
+    field[0...field.rindex(' ')] unless field.blank?
+  end
+
   def svg(svg)
     file_path = "app/assets/images/svg/#{svg}.svg"
     return File.read(file_path).html_safe if File.exist?(file_path)
@@ -37,6 +41,9 @@ module ApplicationHelper
   end
 
   def room_need_attention?(room)
+    if SocketStatus.find_by(socket_name: room.facility_id).status.include?("not_responding")
+      return false
+    end
     devices = get_room_asset_devices(room)
     att = false
     catch :attention do
@@ -57,7 +64,7 @@ module ApplicationHelper
     if room_device.device_current_states.where(key: "Source Volume").last.present?
       return room_device.device_current_states.where(key: "Source Volume").last.value
     else
-      return ""
+      return 0
     end
   end
 
@@ -66,7 +73,7 @@ module ApplicationHelper
     if room_device.device_current_states.where(key: "Ceiling Mic Signal").last.present?
       return room_device.device_current_states.where(key: "Ceiling Mic Signal").last.value
     else 
-      return "not available"
+      return 0
     end
   end
 
@@ -84,7 +91,7 @@ module ApplicationHelper
     if room_device.device_current_states.where(key: "Mic Volume").last.present?
       return room_device.device_current_states.where(key: "Mic Volume").last.value
     else 
-      return "not available"
+      return 0
     end
   end
 
@@ -106,7 +113,11 @@ module ApplicationHelper
 
   def device_power_is_on(device)
     if device.device_current_states.pluck(:key).include?("Power Is On")
-      return device.device_current_states.where(key: "Power Is On").last.value
+      if device.device_current_states.where(key: "Power Is On").last.value == "true"
+        return true
+      else
+        return false
+      end
     else
       return "-"
     end
@@ -124,13 +135,18 @@ module ApplicationHelper
     if room_device.device_current_states.where(key: source_key).last.present?
       source = room_device.device_current_states.where(key: source_key).last.value
       if source != "0" && room_device.device_current_states.where("`key` LIKE 'VideoSource%' AND `key` LIKE '%" + "#{source}'").last.present?
-        return room_device.device_current_states.where("`key` LIKE 'VideoSource%' AND `key` LIKE '%" + "#{source}'").last.value
+        return room_device.device_current_states.where("`key` LIKE 'VideoSource%' AND `key` LIKE '%" + "#{source}'").last.id
       else
         return "not selected"
       end
     else 
       return "not available"
     end
+  end
+
+  def list_of_sources(room)
+    room_device = get_room_device(room)
+    DeviceCurrentState.where("device_id = " + "#{room_device.id} AND `key` LIKE 'VideoSource%' AND value <> ''")
   end
 
   def room_is_off?(room)

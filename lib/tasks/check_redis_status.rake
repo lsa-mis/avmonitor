@@ -36,6 +36,10 @@ task check_redis_status: :environment do
       end
     end
   end
+
+  def write_socket_status_to_db(room, status)
+    SocketStatus.where(socket_name: room).first_or_create.update(status: status)
+  end
   
   Sidekiq.redis do |conn|
     # https://redis.io/topics/notifications#configuration
@@ -55,6 +59,10 @@ task check_redis_status: :environment do
           puts "SIDEKIQ-REDIS VALUE: #{room_name} - #{redis_value}"
           payload = JSON.parse redis_value.gsub('=>', ':')
           write_socket_data_to_db(room, payload)
+        elsif room_name.include? 'status'
+          room = room_name.split("_").first
+          status = redis.get(room_name)
+          write_socket_status_to_db(room, status)
         end
       end
       on.punsubscribe do

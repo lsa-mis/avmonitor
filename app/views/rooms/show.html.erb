@@ -22,25 +22,33 @@
             <p class="my-5">
               <%= @room.websocket_port %>
             </p>
-            <%= button_to 'Refresh Room', refresh_path, method: :get %>
+            <%= button_to 'Reload Page', "", method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
+            <span class="ml-2 text-xs text-gray-700">(reload page)</span>
             <hr class="mb-2">
-            <%= button_to 'Send to Room-Refresh', send_path, method: :get, params: { operation: 'refresh'  }, form_class: "btn-command"  %>
-            <%= button_to 'Send to Room - MicVol: 0', send_path, method: :get, params: { operation: 'mic_vol'  }, form_class: "btn-command", disabled: false  %>
-            <%= button_to 'Send to Room - SourceVol: 0', send_path, method: :get, params: { operation: 'source_vol'  }, form_class: "btn-command", disabled: false  %>
-            <%= button_to 'Send to Room - Projector ON', send_path, method: :get, params: { operation: 'projector_on'  }, form_class: "btn-command", disabled: false  %>
-            <%= button_to 'Send to Room - Projector OFF', send_path, method: :get, params: { operation: 'projector_off'  }, form_class: "btn-command", disabled: false  %>
-            <%= button_to 'Send to Room - System ON', send_path, method: :get, params: { operation: 'system_on'  }, form_class: "btn-command", disabled: false  %>
-            <%= button_to 'Send to Room - System OFF', send_path, method: :get, params: { operation: 'system_off'  }, form_class: "btn-command", disabled: false  %>
-            <%= button_to 'Send to Room - Source INT', send_path, method: :get, params: { operation: 'source_int'  }, form_class: "btn-command", disabled: false  %>
 
+
+            <%= button_to 'Open Socket', refresh_path, method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
+            <span class="ml-2 text-xs text-gray-700">(if responds - socket starts streaming data - check status)</span>
+            <hr class="mb-2">
+            
+            <%= button_to 'Close Socket', close_path, method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
+            <span class="ml-2 text-xs text-gray-700">(close socket before changing anything - check status)</span>
+            <hr class="mb-2">
           </div>
-          
-          <div class="mt-4 text-blue-600 hover: underline">
-            <div>
-              <%= link_to "Lecture Capture Dashboard", "https://leccap.engin.umich.edu/leccap/dashboard" %>
+          <div>
+            <div class="mt-4 text-blue-600 hover: underline">
+              <div>
+                <%= link_to "Lecture Capture Dashboard", "https://leccap.engin.umich.edu/leccap/dashboard", data:{"turbo-frame": "_top"}, "target": "_blank" %>
+              </div>
+              <div>
+                <%= link_to "Room Schedule", "https://csprod.dsc.umich.edu/services/facilitycalendar?facilityid=#{@room.facility_id }", data:{"turbo-frame": "_top"}, "target": "_blank" %>
+              </div>
             </div>
             <div>
-              <%= link_to "Room Schedule", "https://csprod.dsc.umich.edu/services/facilitycalendar?facilityid=#{@room.facility_id }" %>
+              WebSocket status:
+              <% if @socket_status.present? %>
+                <%= show_status(@socket_status.status) %>
+              <% end %>
             </div>
           </div>
         </div>

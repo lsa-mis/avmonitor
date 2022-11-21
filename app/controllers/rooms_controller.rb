@@ -1,6 +1,6 @@
 class RoomsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_room, only: %i[ show edit update destroy refresh_room send_to_room]
+  before_action :set_room, only: %i[ show edit update destroy refresh_room send_to_room close_socket] 
   include ApplicationHelper
 
   # GET /rooms or /rooms.json
@@ -43,6 +43,7 @@ class RoomsController < ApplicationController
 
   # GET /rooms/1 or /rooms/1.json
   def show
+    @socket_status = SocketStatus.find_by(socket_name: @room.facility_id)
   end
 
   # GET /rooms/new
@@ -72,7 +73,6 @@ class RoomsController < ApplicationController
     
       respond_to do |format|
         if @room.save
-          CreateSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id)
           format.html { redirect_to room_url(@room), notice: "Room was successfully created." }
           format.json { render :show, status: :created, location: @room }
         else
@@ -120,12 +120,25 @@ class RoomsController < ApplicationController
   def connect_all_rooms
     @all_rooms = Room.all
     @all_rooms.each do |a_room|
-      CreateSocketJob.perform_async(a_room.websocket_ip, a_room.websocket_port, a_room.facility_id)
+      socket = "wss://" + a_room.websocket_ip + ":" + a_room.websocket_port
+      wss_instance = WebsocketFactory.new(a_room.facility_id, socket)
+      wss_instance.create_socket
     end
   end
 
   def refresh_room
-    CreateSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id)
+    socket = "wss://" + @room.websocket_ip + ":" + @room.websocket_port
+    wss_instance = WebsocketFactory.new(@room.facility_id, socket)
+    wss_instance.create_socket
+
+    redirect_to room_path(@room)
+  end
+
+  def close_socket
+    socket = "wss://" + @room.websocket_ip + ":" + @room.websocket_port
+    wss_instance = WebsocketFactory.new(@room.facility_id, socket)
+    wss_instance.socket_close
+    
     redirect_to room_path(@room)
   end
 
@@ -134,26 +147,39 @@ class RoomsController < ApplicationController
     when 'refresh'
       msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
     when 'mic_vol'
-      msg = "{'LSARoom': {'ShortIntegerOutputs':{'Set Mic Volume': 0}, 'Password': 'LSAPassword'}}"
+      volume = params[:volume]
+      msg = "{'LSARoom': {'ShortIntegerOutputs':{'Set Mic Volume': #{volume}}, 'Password': 'LSAPassword'}}"
     when 'source_vol'
-      msg = "{'LSARoom': {'ShortIntegerOutputs':{'Set Source Volume': 0}, 'Password': 'LSAPassword'}}"
-    when 'projector_on'
-      msg = "{'LSARoom': {'Assets':{'Projector 1':{'BooleanOutputs': {'Power On': true}}}, 'Password': 'LSAPassword'}}"
-    when 'projector_off'
-      msg = "{'LSARoom': {'Assets':{'Projector 1':{'BooleanOutputs': {'Power Off': true}}}, 'Password': 'LSAPassword'}}"
+      volume = params[:volume]
+      msg = "{'LSARoom': {'ShortIntegerOutputs':{'Set Source Volume': #{volume}}, 'Password': 'LSAPassword'}}"
+    when 'device_on_off'
+      device_name = params[:device_name]
+      power = params[:power]
+      if power == "true"
+        msg = "{'LSARoom': {'Assets':{'#{device_name}':{'BooleanOutputs': {'Power On': true}}}, 'Password': 'LSAPassword'}}"
+      else
+        msg = "{'LSARoom': {'Assets':{'#{device_name}':{'BooleanOutputs': {'Power Off': true}}}, 'Password': 'LSAPassword'}}"
+      end
     when 'system_on'
       msg = "{'LSARoom': {'BooleanOutputs': {'Turn System On': true}, 'Password': 'LSAPassword'}}"
     when 'system_off'
       msg = "{'LSARoom': {'BooleanOutputs': {'Turn System Off': true}, 'Password': 'LSAPassword'}}"
     when 'source_int'
-      msg = "{'LSARoom': {'ShortIntegerOutputs': {'Set Current Source 1': 1}, 'Password': 'LSAPassword'}}"
+      device_name = params[:device_name]
+      number = device_name[-1].to_i
+      key = DeviceCurrentState.find_by(id: params[:source]).key
+      key.slice!("VideoSource")
+      msg = "{'LSARoom': {'ShortIntegerOutputs': {'Set Current Source #{number}': #{key}}, 'Password': 'LSAPassword'}}"
     else
       msg = "{'LSARoom': {'Password': 'LSAPassword'}}"
     end
-    SendSocketJob.perform_async(@room.websocket_ip, @room.websocket_port, @room.facility_id, msg)
+
+    socket = "wss://" + @room.websocket_ip + ":" + @room.websocket_port
+    wss_instance = WebsocketFactory.new(@room.facility_id, socket)
+    wss_instance.send_message(msg)
+
     redirect_to room_path(@room)
   end
-
 
   private
     # Use callbacks to share common setup or constraints between actions.

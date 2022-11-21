@@ -36,4 +36,8 @@ class RoomPolicy < ApplicationPolicy
     user.role == 'admin'
   end
 
+  def close_socket?
+    user.role == 'admin'
+  end
+
 end

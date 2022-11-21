@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   get '/connect_all_rooms', to: 'rooms#connect_all_rooms', as: 'connect'
   get '/refresh_room/:id', to: 'rooms#refresh_room', as: 'refresh'
   get '/send_to_room/:id', to: 'rooms#send_to_room', as: 'send'
+  get '/close_socket/:id', to: 'rooms#close_socket', as: 'close'
 
   # Defines the root path route ("/")
   root "pages#home"

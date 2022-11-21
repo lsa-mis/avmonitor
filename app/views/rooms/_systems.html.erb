@@ -17,30 +17,32 @@
         </tr>
       </thead>
       <tbody>
-        <% get_room_asset_devices(room).each do |device| %>
-          <tr class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm border-t border-grey"-200>
-            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm>
-              <div class="font-medium text-gray-900">
-                <%= device.name %></div>
-              <div>
-            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-              <%= device_online(device) %>
-            </td>
-            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-              <%= device_power_is_on(device) %>
-            </td>
-            <% if video_source_device?(device) %>
-              <td>
-                <%= current_source(room, device) %>
+          <% get_room_asset_devices(room).each do |device| %>
+            <tr class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm border-t border-grey"-200>
+              <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm>
+                <div class="font-medium text-gray-900">
+                  <%= device.name %></div>
+                <div>
+              <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
+                <%= device_online(device) %>
               </td>
-              <td>
-                <%= lamp_hour(device) %>
-              </td>
-            <% else %>
-              <td>-</td><td>-</td>
-            <% end %>
-          </tr>
-        <% end %>
+              <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm" data-controller="sendtosocket">
+                <%= check_box_tag "#{device.name}", "#{device.name}", device_power_is_on(device),
+                "data-sendtosocket-name-value": "#{device.name}",
+                "data-action": "change->sendtosocket#changeDeviceOnOff" %>
+              <% if video_source_device?(device) %>
+                <td>
+                  <%= render 'rooms/change_source', {room: room, device: device} %>
+                </td>
+                <td>
+                  <%= lamp_hour(device) %>
+                </td>
+              <% else %>
+                <td>-</td><td>-</td>
+              <% end %>
+            </tr>
+          <% end %>
+          <input type="hidden" id="room_id" name="room_id" value="<%= room.id %>" data-sendtosocket-target="room">
       </tbody>
     </table>
   </div>
