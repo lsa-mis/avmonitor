@@ -41,9 +41,6 @@ module ApplicationHelper
   end
 
   def room_need_attention?(room)
-    if SocketStatus.find_by(socket_name: room.facility_id).status.include?("not_responding")
-      return false
-    end
     devices = get_room_asset_devices(room)
     att = false
     catch :attention do
