@@ -35,20 +35,20 @@ class WebsocketFactory
         @wss.on :message do |event|
           p "!***CREATE***! #{@wssName} - socket is responding - #{Time.now}"
           redis.set @wssName, event.data do |response|
-            redis.set "#{@wssName}_status", "socket_responding - #{Time.now}"
+            redis.set "#{@wssName}_status", "responding - #{Time.now}"
           end
         end
       
         wss.on :close do |event|
           p ["!***CREATE***! #{@wssName} - close socket", :close, event.code, event.reason]
-          redis.set "#{@wssName}_status", "socket_not_responding - #{Time.now}"
+          redis.set "#{@wssName}_status", "not_responding - #{Time.now}"
           @wss = nil
         end
 
          EM.add_periodic_timer(30) do
           p "&&&&&&&&&&&&&&!***CREATE*** ping"
           @wss.ping do
-            redis.set "#{@wssName}_status", "socket_ponged - #{Time.now}"
+            redis.set "#{@wssName}_status", "active - #{Time.now}"
           end 
         end
       }
@@ -75,13 +75,13 @@ class WebsocketFactory
         @wss.on :message do |event|
           p "!***SEND***! #{@wssName} - socket is responding - #{Time.now}"
           redis.set @wssName, event.data do |response|
-            redis.set "#{@wssName}_status", "socket responded after sending message - #{Time.now}"
+            redis.set "#{@wssName}_status", "action received - #{Time.now}"
           end
         end
 
         EM::Timer.new(5) do
           p "&&&&&&&&&&&&&&!***SEND*** stoped"
-          redis.set "#{@wssName}_status", "socket closed after sending message - #{Time.now}"
+          redis.set "#{@wssName}_status", "action complete - refresh roomtosee current status - #{Time.now}"
           EM.stop
         end
       }
@@ -106,7 +106,7 @@ class WebsocketFactory
 
         wss.on :close do |event|
           p ["!***SOCKET CLOSE***! #{@wssName} - close socket", :close, event.code, event.reason]
-          redis.set "#{@wssName}_status", "socket_closed - #{Time.now}"
+          redis.set "#{@wssName}_status", "closed - #{Time.now}"
           @wss = nil
         end
 
