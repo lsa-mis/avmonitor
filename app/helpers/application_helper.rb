@@ -42,21 +42,24 @@ module ApplicationHelper
 
   def room_need_attention?(room)
     if SocketStatus.find_by(socket_name: room.facility_id).status.include?("not_responding")
+      return true
+    end
+    if SocketStatus.find_by(socket_name: room.facility_id).status.include?("not_responding")
       return false
     end
     devices = get_room_asset_devices(room)
-    att = false
+    need_attention = false
     catch :attention do
       devices.each do |device|
         DeviceCurrentState.where(device_id: device.id).each do |state|
           if state_need_attention?(state)
-            att = true
+            need_attention = true
             throw :attention 
           end
         end
       end
     end
-    return att
+    return need_attention
   end
   
   def source_volume(room)
