@@ -40,9 +40,9 @@
               </div>
             </div>
             <div>
-              Current Status:
+              WebSocket status:
               <% if @socket_status.present? %>
-                <%= @socket_status.status %>
+                <%= show_status(@socket_status.status) %>
               <% end %>
             </div>
           </div>
