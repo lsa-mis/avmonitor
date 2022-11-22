@@ -3,7 +3,7 @@ task check_rooms_status: :environment do
   include ApplicationHelper
 
   attention = false
-  Room.active.each do |room|
+  Room.all.each do |room|
     devices = Device.where(room_id: room.id).where.not(name: 'Room')
     catch :attention do
       if room_is_off?(room)

@@ -1,7 +1,14 @@
 module ApplicationHelper
 
-  def show_status(field)
-    field[0...field.rindex(' ')] unless field.blank?
+  def show_status(status)
+    return "" if status.blank?
+    time_string = status.split(" - ").last
+    status_time = time_string.to_datetime
+    status_to_display = status[0...status.rindex(' ')] 
+    if status.include?("active") && (Time.now - status_time > 30)
+      status_to_display += " - too old"
+    end
+    return status_to_display
   end
 
   def svg(svg)
@@ -41,19 +48,36 @@ module ApplicationHelper
   end
 
   def room_need_attention?(room)
+    need_attention = false
+    if SocketStatus.find_by(socket_name: room.facility_id).present? 
+      if SocketStatus.find_by(socket_name: room.facility_id).status.include?("not_responding")
+        return true
+      end
+      if SocketStatus.find_by(socket_name: room.facility_id).status.include?("active")
+        status = SocketStatus.find_by(socket_name: room.facility_id).status
+        time_string = status.split(" - ").last
+        status_time = time_string.to_datetime
+        if Time.now - status_time > 30
+          return true
+        end
+      end
+    end
     devices = get_room_asset_devices(room)
-    att = false
-    catch :attention do
-      devices.each do |device|
-        DeviceCurrentState.where(device_id: device.id).each do |state|
-          if state_need_attention?(state)
-            att = true
-            throw :attention 
+    if devices.empty?
+      return true
+    else
+      catch :attention do
+        devices.each do |device|
+          DeviceCurrentState.where(device_id: device.id).each do |state|
+            if state_need_attention?(state)
+              need_attention = true
+              throw :attention 
+            end
           end
         end
       end
     end
-    return att
+    return need_attention
   end
   
   def source_volume(room)
@@ -147,35 +171,38 @@ module ApplicationHelper
   end
 
   def room_is_off?(room)
-    device = Device.find_by(name: "Room", room_id: room.id)
-    if device.present? && DeviceCurrentState.where(device_id: device.id).present?
-      if DeviceCurrentState.where(device_id: device.id).last.key == "Room Is On" && device.device_current_states.last.value == "false"
+    if SocketStatus.find_by(socket_name: room.facility_id).present? 
+      if SocketStatus.find_by(socket_name: room.facility_id).status.include?("not_responding")
         return true
-      else
-        return false
       end
-    else 
-      return true
+      if SocketStatus.find_by(socket_name: room.facility_id).status.include?("active")
+        status = SocketStatus.find_by(socket_name: room.facility_id).status
+        time_string = status.split(" - ").last
+        status_time = time_string.to_datetime
+        if Time.now - status_time > 30
+          return true
+        end
+      end
     end
   end
 
   def rooms_need_attention(rooms)
     attention_rooms = []
     rooms.each do |room|
-      if room_is_off?(room)
+      if room_need_attention?(room)
         attention_rooms << room
-      else
-        devices = Device.where(room_id: room.id).where.not(name: 'Room')
-        catch :attention do
-          devices.each do |device|
-            DeviceCurrentState.where(device_id: device.id).each do |state|
-              if state_need_attention?(state)
-                attention_rooms << room
-                throw :attention 
-              end
-            end
-          end
-        end
+      # else
+      #   devices = Device.where(room_id: room.id).where.not(name: 'Room')
+      #   catch :attention do
+      #     devices.each do |device|
+      #       DeviceCurrentState.where(device_id: device.id).each do |state|
+      #         if state_need_attention?(state)
+      #           attention_rooms << room
+      #           throw :attention 
+      #         end
+      #       end
+      #     end
+      #   end
       end
     end
     return attention_rooms

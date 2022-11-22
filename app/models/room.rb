@@ -17,9 +17,6 @@ class Room < ApplicationRecord
   has_many :devices, dependent: :destroy
   has_many :notes, as: :noteable
 
-  scope :active, -> { Room.where.associated(:devices).distinct }
-  scope :no_device, -> { Room.where.missing(:devices) }
-
   validates :websocket_ip, :presence => true, :uniqueness => true,
   :format => { :with => Resolv::AddressRegex }
   validates :websocket_port, :presence => true

@@ -4,7 +4,7 @@ class DashboardController < ApplicationController
 
   def index
     
-    rooms = Room.active
+    rooms = Room.all
     @rooms = rooms_need_attention(rooms)
     authorize :dashboard
   

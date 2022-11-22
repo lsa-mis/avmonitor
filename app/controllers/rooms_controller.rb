@@ -12,7 +12,7 @@ class RoomsController < ApplicationController
       @rooms = Room.no_device
       authorize @rooms
     else
-      @q = Room.active.ransack(params[:q])
+      @q = Room.ransack(params[:q])
       @rooms = @q.result
       if (min != 0 && min > MIN_LAMP_HOURS || max != 0 && max < MAX_LAMP_HOURS)
         device_ids = []        

@@ -24,7 +24,12 @@
                   <%= device.name %></div>
                 <div>
               <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-                <%= device_online(device) %>
+                <% if device_online(device) == "false" %>
+                  <span class="text-red-500">
+                <% else %>
+                  <span>
+                <% end %>
+                <%= device_online(device) %></span>
               </td>
               <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm" data-controller="sendtosocket">
                 <%= check_box_tag "#{device.name}", "#{device.name}", device_power_is_on(device),
