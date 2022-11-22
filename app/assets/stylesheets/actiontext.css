@@ -81,3 +81,7 @@ option {
   background-position-x: center;
   z-index: -1;
 }
+
+.active {
+  color: #ecc94b
+}
