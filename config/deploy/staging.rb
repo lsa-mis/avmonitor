@@ -61,3 +61,39 @@ set :rails_env, "staging"
 #     auth_methods: %w(publickey password)
 #     # password: "please use keys"
 #   }
+
+namespace :deploy do
+  desc "Make sure local git is in sync with remote."
+  task :check_revision do
+    on roles(:app) do
+      unless `git rev-parse HEAD` == `git rev-parse origin/staging`
+        puts "WARNING: HEAD is not the same as origin/staging"
+        puts "Run `git push` to sync changes."
+        exit
+      end
+    end
+  end
+
+  desc 'Upload to shared/config'
+  task :upload do
+    on roles (:app) do
+      upload! "config/master.key",  "#{fetch(:shared_path)}/config/master.key"
+      upload! "config/puma_staging.rb",  "#{fetch(:shared_path)}/config/puma.rb"
+      upload! "config/nginx_staging.conf",  "#{fetch(:shared_path)}/config/nginx.conf"
+      upload! "config/puma_staging.service",  "#{fetch(:shared_path)}/config/puma.service"
+    end
+  end
+
+  namespace :rake do
+    desc "Invoke check_redis_redis rake task"
+    task :invoke_check_redis do
+      run "cd #{deploy_to}/current"
+      # run "bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env}"
+      run bundle exec rake check_redis_status
+    end
+  end
+
+  before :starting,     :check_revision
+  after  :finishing,    'puma:restart'
+  after  :finishing,    'rake:invoke_check_redis'
+end
