@@ -89,7 +89,7 @@ namespace :deploy do
     task :invoke_check_redis do
       run "cd #{deploy_to}/current"
       # run "bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env}"
-      run bundle exec rake check_redis_status
+      run "bundle exec rake check_redis_status"
     end
   end
 
