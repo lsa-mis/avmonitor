@@ -64,6 +64,28 @@ set :linked_dirs,  %w{log tmp/pids tmp/cache tmp/sockets vendor/bundle public/sy
 # Uncomment the following to require manually verifying the host key before first deploy.
 # set :ssh_options, verify_host_key: :secure
 
+namespace :puma do
+  desc 'Stop the PUMA service'
+  task :stop do
+    on roles(:app) do
+      execute "cd #{fetch(:deploy_to)}/current; bin/bundle exec pumactl -P ~/apps/#{fetch(:application)}/current/tmp/pids/puma.pid stop"
+    end
+  end
+
+  desc 'Restart the PUMA service'
+  task :restart do
+    on roles(:app) do
+      execute "cd #{fetch(:deploy_to)}/current; bin/bundle exec pumactl -P ~/apps/#{fetch(:application)}/current/tmp/pids/puma.pid phased-restart"
+    end
+  end
+
+  desc 'Start the PUMA service'
+  task :start do
+    on roles(:app) do
+      puts "You must intially start the puma service using sudo on the server"
+    end
+  end
+end
 
 namespace :debug do
   desc 'Print ENV variables'
@@ -74,17 +96,31 @@ namespace :debug do
   end
 end
 
-namespace :deploy do
-  desc 'Upload to shared/config'
-  task :upload do
-    on roles (:app) do
-    upload! "config/master.key",  "#{fetch(:shared_path)}/config/master.key"
-    upload! "config/puma_staging.rb",  "#{fetch(:shared_path)}/config/puma.rb"
-    upload! "config/nginx_staging.conf",  "#{fetch(:shared_path)}/config/nginx.conf"
-    upload! "config/puma_staging.service",  "#{fetch(:shared_path)}/config/puma.service"
-    end
-  end
-end
+# namespace :deploy do
+#   desc "Make sure local git is in sync with remote."
+#   task :check_revision do
+#     on roles(:app) do
+#       unless `git rev-parse HEAD` == `git rev-parse origin/main`
+#         puts "WARNING: HEAD is not the same as origin/main"
+#         puts "Run `git push` to sync changes."
+#         exit
+#       end
+#     end
+#   end
+
+#   desc 'Upload to shared/config'
+#   task :upload do
+#     on roles (:app) do
+#     upload! "config/master.key",  "#{fetch(:shared_path)}/config/master.key"
+#     upload! "config/puma_staging.rb",  "#{fetch(:shared_path)}/config/puma.rb"
+#     upload! "config/nginx_staging.conf",  "#{fetch(:shared_path)}/config/nginx.conf"
+#     upload! "config/puma_staging.service",  "#{fetch(:shared_path)}/config/puma.service"
+#     end
+#   end
+
+#   before :starting,     :check_revision
+#   after  :finishing,    'puma:restart'
+# end
 
 namespace :maintenance do
   desc "Maintenance start (edit config/maintenance_template.yml to provide parameters)"
