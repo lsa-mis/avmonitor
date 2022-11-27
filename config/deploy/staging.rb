@@ -62,15 +62,15 @@ set :rails_env, "staging"
 #     # password: "please use keys"
 #   }
 
-namespace :rake do
-  desc "Invoke check_redis_redis rake task"
-  task :invoke_check_redis do
-    run "cd #{deploy_to}/current"
-    # run "bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env}"
-    # run "bundle exec rake check_redis_status"
-    run("cd #{deploy_to}/current && /usr/bin/env rake check_redis_status RAILS_ENV=staging")
-  end
-end
+# namespace :rake do
+#   desc "Invoke check_redis_redis rake task"
+#   task :invoke_check_redis do
+#     run "cd #{deploy_to}/current"
+#     # run "bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env}"
+#     # run "bundle exec rake check_redis_status"
+#     run("cd #{deploy_to}/current && bundle exec rake check_redis_status RAILS_ENV=staging")
+#   end
+# end
 
 namespace :deploy do
   desc "Make sure local git is in sync with remote."
@@ -94,7 +94,15 @@ namespace :deploy do
     end
   end
 
+  desc "Invoke check_redis_redis rake task"
+  task :invoke_check_redis do
+    # run "cd #{deploy_to}/current"
+    # run "bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env}"
+    # run "bundle exec rake check_redis_status"
+    run("cd #{deploy_to}/current && bundle exec rake check_redis_status RAILS_ENV=staging")
+  end
+
   before :starting,     :check_revision
   after  :finishing,    'puma:restart'
-  after  :finishing,    'rake:invoke_check_redis'
+  after  :finishing,    :invoke_check_redis
 end
