@@ -96,10 +96,9 @@ namespace :deploy do
 
   desc "Invoke check_redis_redis rake task"
   task :invoke_check_redis do
-    # run "cd #{deploy_to}/current"
-    # run "bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env}"
-    # run "bundle exec rake check_redis_status"
-    execute "cd #{fetch(:deploy_to)}/current; bin/bundle exec rake check_redis_status"
+    on roles(:app) do
+      execute "cd #{fetch(:deploy_to)}/current; bin/bundle exec rake check_redis_status"
+    end
   end
 
   before :starting,     :check_revision
