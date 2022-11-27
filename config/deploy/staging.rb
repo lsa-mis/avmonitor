@@ -62,6 +62,16 @@ set :rails_env, "staging"
 #     # password: "please use keys"
 #   }
 
+namespace :rake do
+  desc "Invoke check_redis_redis rake task"
+  task :invoke_check_redis do
+    run "cd #{deploy_to}/current"
+    # run "bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env}"
+    # run "bundle exec rake check_redis_status"
+    run("cd #{deploy_to}/current && /usr/bin/env rake check_redis_status RAILS_ENV=staging")
+  end
+end
+
 namespace :deploy do
   desc "Make sure local git is in sync with remote."
   task :check_revision do
@@ -81,15 +91,6 @@ namespace :deploy do
       upload! "config/puma_staging.rb",  "#{fetch(:shared_path)}/config/puma.rb"
       upload! "config/nginx_staging.conf",  "#{fetch(:shared_path)}/config/nginx.conf"
       upload! "config/puma_staging.service",  "#{fetch(:shared_path)}/config/puma.service"
-    end
-  end
-
-  namespace :rake do
-    desc "Invoke check_redis_redis rake task"
-    task :invoke_check_redis do
-      run "cd #{deploy_to}/current"
-      # run "bundle exec rake #{ENV['task']} RAILS_ENV=#{rails_env}"
-      run "bundle exec rake check_redis_status"
     end
   end
 
