@@ -103,5 +103,5 @@ namespace :deploy do
 
   before :starting,     :check_revision
   after  :finishing,    'puma:restart'
-  after  :finishing,    :invoke_check_redis
+  # after  :finishing,    :invoke_check_redis
 end
