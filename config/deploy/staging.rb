@@ -97,7 +97,8 @@ namespace :deploy do
   desc "Invoke check_redis_redis rake task"
   task :invoke_check_redis do
     on roles(:app) do
-      execute "cd #{fetch(:deploy_to)}/current; bin/bundle exec rake check_redis_status > /dev/null 2>&1 &"
+      # nohup bundle exec rake check_redis_status > rake.out 2>&1 &
+      execute "cd #{fetch(:deploy_to)}/current; nohup bundle exec rake check_redis_status > rake.out 2>&1 &"
     end
   end
 
