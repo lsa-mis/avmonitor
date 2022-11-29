@@ -56,7 +56,6 @@ task check_redis_status: :environment do
         if all_rooms.include?(room_name)
           room = Room.find_by(facility_id: room_name)
           redis_value = redis.get(room_name)
-          puts "SIDEKIQ-REDIS VALUE: #{room_name} - #{redis_value}"
           payload = JSON.parse redis_value.gsub('=>', ':')
           write_socket_data_to_db(room, payload)
         elsif room_name.include? 'status'
