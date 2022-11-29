@@ -45,7 +45,6 @@ class RoomsController < ApplicationController
   def show
     @socket_status = SocketStatus.find_by(socket_name: @room.facility_id)
     @day = Date.today.strftime("%d-%^b-%Y")
-    # @room_meetings = get_room_reservation_data_from_oracle(facility_id, day)
   end
 
   # GET /rooms/new
@@ -190,23 +189,13 @@ class RoomsController < ApplicationController
       @day = Date.today.strftime("%d-%^b-%Y")
     end
     Rails.logger.debug "**************************** day #{@day}"
-    #  render turbo_stream: turbo_stream.update(
-    #   :room_reservation,
-    #      partial: "rooms/reservation_data", locals: { room: @room, day: @day })
-
-    # <%= turbo_stream.replace "room_reservation" do %>
-    #   <%= render "reservation_data", room: @room %>
-    # <% end %>
-    # respond_to do |format|
-    #   format.turbo_stream
-    #     @day = params[:day]
+    
   end
 
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_room
       @room = Room.find(params[:id])
-      @day = Date.today.strftime("%d-%^b-%Y")
       authorize @room
     end
 
@@ -248,6 +237,6 @@ class RoomsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def room_params
-      params.require(:room).permit(:websocket_ip, :websocket_port, :facility_id, :building, :room_type, :day)
+      params.require(:room).permit(:websocket_ip, :websocket_port, :facility_id, :building, :room_type)
     end
 end
