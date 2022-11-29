@@ -30,6 +30,7 @@ gem 'thin', '~> 1.8', '>= 1.8.1'
 gem 'turbo-rails'
 gem 'typhoeus', '~> 1.4'
 gem 'tzinfo-data', platforms: %i[ mingw mswin x64_mingw jruby ]
+gem 'requestjs-rails', '~> 0.0.10'
 
 # Use Kredis to get higher-level data types in Redis [https://github.com/rails/kredis]
 # gem 'kredis'
