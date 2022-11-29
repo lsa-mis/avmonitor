@@ -67,6 +67,11 @@
   <% end %>
 </div>
 
+<div class="container p-2 rounded-lg shadow-lg text-xl mb-20 bg-gray-50">
+  <div class="mb-20">Room's reservations:
+    <%= render 'reservations', { room: @room } %> 
+  </div>
+</div>
 
 <div class="container p-2 rounded-lg shadow-lg text-xl mb-20 bg-gray-50">
   <div class="mb-20">Notes:

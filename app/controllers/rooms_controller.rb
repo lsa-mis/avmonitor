@@ -1,6 +1,6 @@
 class RoomsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_room, only: %i[ show edit update destroy refresh_room send_to_room close_socket] 
+  before_action :set_room, only: %i[ show edit update destroy refresh_room send_to_room close_socket get_room_reservations] 
   include ApplicationHelper
 
   # GET /rooms or /rooms.json
@@ -44,6 +44,8 @@ class RoomsController < ApplicationController
   # GET /rooms/1 or /rooms/1.json
   def show
     @socket_status = SocketStatus.find_by(socket_name: @room.facility_id)
+    @day = Date.today.strftime("%d-%^b-%Y")
+    # @room_meetings = get_room_reservation_data_from_oracle(facility_id, day)
   end
 
   # GET /rooms/new
@@ -181,10 +183,30 @@ class RoomsController < ApplicationController
     redirect_to room_path(@room)
   end
 
+  def get_room_reservations
+    if params[:day].present?
+      @day = params[:day]
+    else 
+      @day = Date.today.strftime("%d-%^b-%Y")
+    end
+    Rails.logger.debug "**************************** day #{@day}"
+    #  render turbo_stream: turbo_stream.update(
+    #   :room_reservation,
+    #      partial: "rooms/reservation_data", locals: { room: @room, day: @day })
+
+    # <%= turbo_stream.replace "room_reservation" do %>
+    #   <%= render "reservation_data", room: @room %>
+    # <% end %>
+    # respond_to do |format|
+    #   format.turbo_stream
+    #     @day = params[:day]
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_room
       @room = Room.find(params[:id])
+      @day = Date.today.strftime("%d-%^b-%Y")
       authorize @room
     end
 
@@ -204,8 +226,28 @@ class RoomsController < ApplicationController
       return cursor.fetch
     end
 
+    def get_room_reservation_data_from_oracle(facility_id, day)
+      oracle_database = OCI8.new("#{Rails.application.credentials.oracle_db[:username]}", "#{Rails.application.credentials.oracle_db[:password]}", "#{Rails.application.credentials.oracle_db[:database]}")
+
+      sql = "SELECT FACILITY_ID, FACILITY_DESCR,
+                    to_char(MEETING_TIME_START, 'hh24:mi') as Start_Time, to_char(m.MEETING_TIME_END, 'hh24:mi') as End_Time,
+                    CAMPUS_EVENT_TYPE_DESCRSHORT, CAMPUS_MTG_TYPE_DESCRSHORT,
+                    CAMPUS_EVENT_DESCR, CAMPUS_MTG_HOST_DEPTID, CAMPUS_MTG_HOST_DEPT_DESCR,
+                    MEETING_DESCR, to_char(MEETING_DT, 'mm/dd/yyyy') as Meeting_Date, m.DAY_OF_WEEK_DESCRSHORT
+            FROM M_SRDW1.CAMPUS_MTG m
+            WHERE
+              m.FACILITY_ID = '#{facility_id}'
+              and m.MEETING_DT = '#{day}'
+            ORDER BY
+              m.MEETING_TIME_START, m.MEETING_TIME_END"
+
+      cursor = oracle_database.parse(sql)
+      cursor.exec
+      return cursor.fetch
+    end
+
     # Only allow a list of trusted parameters through.
     def room_params
-      params.require(:room).permit(:websocket_ip, :websocket_port, :facility_id, :building, :room_type)
+      params.require(:room).permit(:websocket_ip, :websocket_port, :facility_id, :building, :room_type, :day)
     end
 end

@@ -1,0 +1,29 @@
+<!-- This example requires Tailwind CSS v2.0+ -->
+<div class="px-4 sm:px-6 lg:px-8" data-controller="reservation">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-xl font-semibold text-gray-900 bg-gray-300 p-2">Reservations</h1>
+    </div>
+  </div>
+  <div class="mt-4 ring-1 ring-gray-300 sm:-mx-6 md:mx-0 md:rounded-lg">
+    <div class="mt-2">
+      
+        <div class="flex items-end">
+          <div class="flex-1 w-1/2">
+            <%= label_tag "Day" %>
+            <%= text_field_tag :day, Date.today,
+              data: {
+              controller: "flatpickr",
+              flatpickr_date_format: "Y-m-d",
+              }, "data-reservation-target": "day", "data-action": "change->reservation#getData"
+            %>
+          </div>
+        </div>
+        <input type="hidden" id="room_id" name="room_id" value="<%= room.id %>">
+      
+    </div>
+    <div>
+      <%= render 'reservation_data' %>
+    </div>
+  </div>
+</div>

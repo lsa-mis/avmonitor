@@ -8,6 +8,10 @@ class RoomPolicy < ApplicationPolicy
     user_in_access_group?
   end
 
+  def get_room_reservations?
+    user_in_access_group?
+  end
+
   def new?
     create?
   end

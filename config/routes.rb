@@ -16,6 +16,8 @@ Rails.application.routes.draw do
   get '/send_to_room/:id', to: 'rooms#send_to_room', as: 'send'
   get '/close_socket/:id', to: 'rooms#close_socket', as: 'close'
 
+  get '/get_room_reservations/:id/:day(.:format)', to: 'rooms#get_room_reservations', as: 'get_room_reservations'
+
   # Defines the root path route ("/")
   root "pages#home"
 end
