@@ -45,6 +45,7 @@ class RoomsController < ApplicationController
   def show
     @socket_status = SocketStatus.find_by(socket_name: @room.facility_id)
     @day = Date.today.strftime("%d-%^b-%Y")
+    @room_meetings =  get_room_reservation_data_from_oracle(@room.facility_id, @day)
   end
 
   # GET /rooms/new
@@ -184,12 +185,11 @@ class RoomsController < ApplicationController
 
   def get_room_reservations
     if params[:day].present?
-      @day = params[:day]
-    else 
+      @day = params[:day].to_date.strftime("%d-%^b-%Y")
+    else
       @day = Date.today.strftime("%d-%^b-%Y")
     end
-    Rails.logger.debug "**************************** day #{@day}"
-    
+    @room_meetings =  get_room_reservation_data_from_oracle(@room.facility_id, @day)
   end
 
   private
@@ -218,11 +218,10 @@ class RoomsController < ApplicationController
     def get_room_reservation_data_from_oracle(facility_id, day)
       oracle_database = OCI8.new("#{Rails.application.credentials.oracle_db[:username]}", "#{Rails.application.credentials.oracle_db[:password]}", "#{Rails.application.credentials.oracle_db[:database]}")
 
-      sql = "SELECT FACILITY_ID, FACILITY_DESCR,
+      sql = "SELECT
                     to_char(MEETING_TIME_START, 'hh24:mi') as Start_Time, to_char(m.MEETING_TIME_END, 'hh24:mi') as End_Time,
-                    CAMPUS_EVENT_TYPE_DESCRSHORT, CAMPUS_MTG_TYPE_DESCRSHORT,
-                    CAMPUS_EVENT_DESCR, CAMPUS_MTG_HOST_DEPTID, CAMPUS_MTG_HOST_DEPT_DESCR,
-                    MEETING_DESCR, to_char(MEETING_DT, 'mm/dd/yyyy') as Meeting_Date, m.DAY_OF_WEEK_DESCRSHORT
+                    CAMPUS_MTG_HOST_DEPT_DESCR,
+                    MEETING_DESCR
             FROM M_SRDW1.CAMPUS_MTG m
             WHERE
               m.FACILITY_ID = '#{facility_id}'
@@ -232,7 +231,11 @@ class RoomsController < ApplicationController
 
       cursor = oracle_database.parse(sql)
       cursor.exec
-      return cursor.fetch
+      output = []
+      while r = cursor.fetch 
+        output << r
+      end
+      return output
     end
 
     # Only allow a list of trusted parameters through.
