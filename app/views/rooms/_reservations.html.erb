@@ -2,20 +2,23 @@
 <div class="px-4 sm:px-6 lg:px-8" data-controller="reservation">
   <div class="sm:flex sm:items-center">
     <div class="sm:flex-auto">
-      <h1 class="text-xl font-semibold text-gray-900 bg-gray-300 p-2">Reservations</h1>
+      <h1 class="text-xl font-semibold text-gray-900 p-2">Events</h1>
     </div>
   </div>
   <div class="mt-4 ring-1 ring-gray-300 sm:-mx-6 md:mx-0 md:rounded-lg">
     <div class="mt-2">
       
-        <div class="flex items-end">
-          <div class="flex-1 w-1/2">
-            <%= label_tag "Day" %>
+        <div class="flex items-center">
+          <div class="text-base p-4">
+            <%= label_tag "Choose a date:" %>
+          </div>
+          <div>
             <%= text_field_tag :day, Date.today,
               data: {
               controller: "flatpickr",
               flatpickr_date_format: "Y-m-d",
-              }, "data-reservation-target": "day", "data-action": "change->reservation#getData"
+              }, "data-reservation-target": "day", "data-action": "change->reservation#getData",
+              class: "block rounded-none rounded-l-md sm:text-sm border-gray-300"
             %>
           </div>
         </div>

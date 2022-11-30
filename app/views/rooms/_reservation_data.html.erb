@@ -1,9 +1,6 @@
 <%= turbo_frame_tag 'room_reservation' do %>
-  <div>
-    Room is reserved:
-  </div>
   <% if @room_meetings.present? %>
-    <table class="min-w-full divide-y divide-gray-300">
+    <table class="px-2 min-w-full divide-y divide-gray-300">
       <thead class="bg-gray-400">
         <tr>
           <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Start_Time</th>
