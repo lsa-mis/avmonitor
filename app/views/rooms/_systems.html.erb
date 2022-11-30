@@ -18,11 +18,11 @@
       </thead>
       <tbody>
           <% get_room_asset_devices(room).each do |device| %>
-            <tr class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm border-t border-grey"-200>
-              <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm>
+            <tr class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm border-t border-grey-200">
+              <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
                 <div class="font-medium text-gray-900">
-                  <%= device.name %></div>
-                <div>
+                  <%= device.name %>
+                </div>
               <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
                 <% if device_online(device) == "false" %>
                   <span class="text-red-500">
