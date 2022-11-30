@@ -24,4 +24,9 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :validatable, :omniauthable, omniauth_providers: [:saml]
 
   attr_accessor :membership, :role
+
+  def name_with_uniqname
+    "#{self.display_name} (#{uniqname})"
+  end
+
 end
