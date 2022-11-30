@@ -4,7 +4,7 @@
   </div>
   <% if @room_meetings.present? %>
     <table class="min-w-full divide-y divide-gray-300">
-      <thead>
+      <thead class="bg-gray-400">
         <tr>
           <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Start_Time</th>
           <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">End_Time</th>
@@ -14,23 +14,27 @@
       </thead>
       <tbody>
         <% @room_meetings.each do |meeting| %>
-          <tr class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm border-t border-grey"-200>
-            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm>
+          <% if @room_meetings.index(meeting).odd? %>
+            <tr class="relative py-2 pl-4 sm:pl-6 pr-3 text-sm border-t border-grey-700 bg-gray-200">
+          <% else %>
+            <tr class="relative py-2 pl-4 sm:pl-6 pr-3 text-sm border-t border-grey-700 bg-white">
+          <% end %>
+            <td class="relative py-2 pl-4 sm:pl-6 pr-3 text-sm">
               <div class="font-medium text-gray-900">
-                <%= meeting[0] %></div>
-              <div>
-            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm>
+                <%= meeting[0] %> - <%= @room_meetings.index(meeting).class %>
+              </div>
+            <td class="relative py-2 pl-4 sm:pl-6 pr-3 text-sm">
               <div class="font-medium text-gray-900">
-                <%= meeting[1] %></div>
-              <div>
-            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm>
+                <%= meeting[1] %>
+              </div>
+            <td class="relative py-2 pl-4 sm:pl-6 pr-3 text-sm">
               <div class="font-medium text-gray-900">
-                <%= meeting[2] %></div>
-              <div>
-            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm>
+                <%= meeting[2] %>
+              </div>
+            <td class="relative py-2 pl-4 sm:pl-6 pr-3 text-sm">
               <div class="font-medium text-gray-900">
-                <%= meeting[3] %></div>
-              <div>
+                <%= meeting[3] %>
+              </div>
           </tr>
         <% end %>
       </tbody>
