@@ -208,4 +208,8 @@ module ApplicationHelper
     return attention_rooms
   end
 
+  def show_delete_button
+    current_user.uniqname == "rsmoke" ? true : false
+  end
+
 end
