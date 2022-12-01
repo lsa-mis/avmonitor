@@ -209,7 +209,7 @@ module ApplicationHelper
   end
 
   def show_delete_button
-    current_user.uniqname == "rsmoke" ? true : false
+    session[:user_memberships].include?('lsa-avm-special-ops') ? true : false
   end
 
 end
