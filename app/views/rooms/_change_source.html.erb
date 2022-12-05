@@ -1,15 +1,31 @@
-<div data-controller="selectsource">
-  <% if current_source(room, device) == "not available" %>
-    Not Available
-  <% elsif current_source(room, device) == "not selected" %>
-    <%= select_tag "source_#{device.name}", options_from_collection_for_select(list_of_sources(room), "id", "value"), 
+<% if policy(Room).send_to_room? %>
+  <div data-controller="selectsource">
+    <% if current_source(room, device) == "not available" %>
+      Not Available
+    <% elsif current_source(room, device) == "not selected" %>
+      <%= select_tag "source_#{device.name}", options_from_collection_for_select(list_of_sources(room), "id", "value"), 
+        prompt: "Select source ...", class: "block rounded-none rounded-l-md sm:text-sm border-gray-300",
+        "data-selectsource-name-value": "#{device.name}",
+        "data-action": "change->selectsource#changeSource" %>
+    <% else %>
+      <%= select_tag "source_#{device.name}", options_from_collection_for_select(list_of_sources(room), "id", "value", "#{current_source(room, device)}"), 
       prompt: "Select source ...", class: "block rounded-none rounded-l-md sm:text-sm border-gray-300",
       "data-selectsource-name-value": "#{device.name}",
       "data-action": "change->selectsource#changeSource" %>
-  <% else %>
-    <%= select_tag "source_#{device.name}", options_from_collection_for_select(list_of_sources(room), "id", "value", "#{current_source(room, device)}"), 
-     prompt: "Select source ...", class: "block rounded-none rounded-l-md sm:text-sm border-gray-300",
-     "data-selectsource-name-value": "#{device.name}",
-    "data-action": "change->selectsource#changeSource" %>
-  <% end %>
-</div>
+    <% end %>
+  </div>
+<% else %>
+  <div>
+    <% if current_source(room, device) == "not available" %>
+      Not Available
+    <% elsif current_source(room, device) == "not selected" %>
+      <%= select_tag "source_#{device.name}", options_from_collection_for_select(list_of_sources(room), "id", "value"), 
+        prompt: "Select source ...", class: "block rounded-none rounded-l-md sm:text-sm border-gray-300"
+      %>
+    <% else %>
+      <%= select_tag "source_#{device.name}", options_from_collection_for_select(list_of_sources(room), "id", "value", "#{current_source(room, device)}"), 
+        prompt: "Select source ...", class: "block rounded-none rounded-l-md sm:text-sm border-gray-300"
+      %>
+    <% end %>
+  </div>
+<% end %>
