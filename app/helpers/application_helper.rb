@@ -126,9 +126,23 @@ module ApplicationHelper
 
   def device_online(device)
     if device.device_current_states.pluck(:key).include?("Online")
-      return device.device_current_states.where(key: "Online").last.value
+      if device.device_current_states.where(key: "Online").last.value == "true"
+        return true
+      else
+        return false
+      end
     else
       return "-"
+    end
+  end
+
+  def device_online_string(device)
+    if device_online(device) == '-'
+      '-'
+    elsif device_online(device)
+      "On"
+    else 
+      "Off"
     end
   end
 
@@ -141,6 +155,16 @@ module ApplicationHelper
       end
     else
       return "-"
+    end
+  end
+
+  def device_power_is_on_string(device)
+    if device_power_is_on(device) == '-'
+      '-'
+    elsif device_power_is_on(device)
+      "On"
+    else 
+      "Off"
     end
   end
 
@@ -162,6 +186,22 @@ module ApplicationHelper
       end
     else 
       return "not available"
+    end
+  end
+
+  def current_source_name(room, device)
+    room_device = get_room_device(room)
+    device_number = device.name.split(" ").last
+    source_key = "Current Source " + device_number
+    if room_device.device_current_states.where(key: source_key).last.present?
+      source = room_device.device_current_states.where(key: source_key).last.value
+      if source != "0" && room_device.device_current_states.where("`key` LIKE 'VideoSource%' AND `key` LIKE '%" + "#{source}'").last.present?
+        return room_device.device_current_states.where("`key` LIKE 'VideoSource%' AND `key` LIKE '%" + "#{source}'").last.value
+      else
+        return "Not Selected"
+      end
+    else 
+      return "Not Available"
     end
   end
 
