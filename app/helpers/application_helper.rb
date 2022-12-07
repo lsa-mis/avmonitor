@@ -208,4 +208,8 @@ module ApplicationHelper
     return attention_rooms
   end
 
+  def show_delete_button
+    session[:user_memberships].include?('lsa-avm-special-ops') ? true : false
+  end
+
 end
