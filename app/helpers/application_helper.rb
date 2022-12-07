@@ -6,9 +6,9 @@ module ApplicationHelper
     status_time = time_string.to_datetime
     status_to_display = status[0...status.rindex(' ')] 
     if status.include?("active") && (Time.now - status_time > 30)
-      status_to_display += " - too old"
+      status_to_display += time_ago_in_words(status_time) + " - too old"
     end
-    return status_to_display
+    return status_to_display += ": " + time_ago_in_words(status_time) + " ago"
   end
 
   def svg(svg)
