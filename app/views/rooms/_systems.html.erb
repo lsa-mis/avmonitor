@@ -25,17 +25,21 @@
                 </div>
               </td>
               <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-                <% if device_online(device) == "false" %>
-                  <span class="text-red-500">
-                <% else %>
+                <% if device_online(device) %>
                   <span>
+                <% else %>
+                  <span  class="text-red-500">
                 <% end %>
-                <%= device_online(device) %></span>
+                <%= device_online_string(device) %></span>
               </td>
               <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm" data-controller="sendtosocket">
-                <%= check_box_tag "#{device.name}", "#{device.name}", device_power_is_on(device),
-                "data-sendtosocket-name-value": "#{device.name}",
-                "data-action": "change->sendtosocket#changeDeviceOnOff" %>
+                <% if policy(Room).send_to_room? %>
+                  <%= check_box_tag "#{device.name}", "#{device.name}", device_power_is_on(device),
+                  "data-sendtosocket-name-value": "#{device.name}",
+                  "data-action": "change->sendtosocket#changeDeviceOnOff" %>
+                <% else %>
+                  <%= device_power_is_on_string(device) %>
+                <% end %>
                 <% if video_source_device?(device) %>
                   <td>
                     <%= render 'rooms/change_source', {room: room, device: device} %>
