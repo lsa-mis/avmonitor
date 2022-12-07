@@ -29,15 +29,15 @@ class RoomPolicy < ApplicationPolicy
   end
 
   def refresh_room?
-    user.role == 'admin'
+    ["admin", "technician"].include?(user.role)
   end
 
   def send_to_room?
-    user.role == 'admin'
+    ["admin", "technician"].include?(user.role)
   end
 
   def close_socket?
-    user.role == 'admin'
+    ["admin", "technician"].include?(user.role)
   end
 
 end
