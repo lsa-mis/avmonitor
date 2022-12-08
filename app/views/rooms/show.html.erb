@@ -22,18 +22,23 @@
             <p class="my-5">
               <%= @room.websocket_port %>
             </p>
-            <%= button_to 'Reload Page', "", method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
-            <span class="ml-2 text-xs text-gray-700">(reload page)</span>
-            <hr class="mb-2">
+            <% if policy(Room).refresh_room? %>
+              <%= button_to 'Reload Page', "", method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
+              <span class="ml-2 text-xs text-gray-700">(reload page)</span>
+              <hr class="mb-2">
+            <% end %>
 
+            <% if policy(Room).send_to_room? %>
+              <%= button_to 'Open Socket', refresh_path, method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
+              <span class="ml-2 text-xs text-gray-700">(if responds - socket starts streaming data - check status)</span>
+              <hr class="mb-2">
+            <% end %>
 
-            <%= button_to 'Open Socket', refresh_path, method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
-            <span class="ml-2 text-xs text-gray-700">(if responds - socket starts streaming data - check status)</span>
-            <hr class="mb-2">
-            
-            <%= button_to 'Close Socket', close_path, method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
-            <span class="ml-2 text-xs text-gray-700">(close socket before changing anything - check status)</span>
-            <hr class="mb-2">
+            <% if policy(Room).close_socket? %>
+              <%= button_to 'Close Socket', close_path, method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
+              <span class="ml-2 text-xs text-gray-700">(close socket before changing anything - check status)</span>
+              <hr class="mb-2">
+            <% end %>
           </div>
           <div>
             <div class="mt-4 text-blue-600 hover: underline">
@@ -67,6 +72,11 @@
   <% end %>
 </div>
 
+<div class="container p-2 rounded-lg shadow-lg text-xl mb-20 bg-gray-50">
+  <div class="mb-20">
+    <%= render 'reservations', { room: @room } %> 
+  </div>
+</div>
 
 <div class="container p-2 rounded-lg shadow-lg text-xl mb-20 bg-gray-50">
   <div class="mb-20">Notes:

@@ -22,8 +22,10 @@
         </div>
         <hr>
       <% end %>
-      <hr>
-      <%= link_to "[Delete Room]", room_path(room), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-600" %>
+      <% if show_delete_button %>
+        <hr>
+        <%= link_to "[Delete Room]", room_path(room), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-600" %>
+      <% end %>
     </div>
   </li>
 <% end %>

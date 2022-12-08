@@ -8,6 +8,10 @@ class RoomPolicy < ApplicationPolicy
     user_in_access_group?
   end
 
+  def get_room_reservations?
+    user_in_access_group?
+  end
+
   def new?
     create?
   end
@@ -29,15 +33,15 @@ class RoomPolicy < ApplicationPolicy
   end
 
   def refresh_room?
-    user.role == 'admin'
+    ["admin", "technician"].include?(user.role)
   end
 
   def send_to_room?
-    user.role == 'admin'
+    ["admin", "technician"].include?(user.role)
   end
 
   def close_socket?
-    user.role == 'admin'
+    ["admin", "technician"].include?(user.role)
   end
 
 end
