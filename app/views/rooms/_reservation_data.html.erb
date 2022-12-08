@@ -1,0 +1,40 @@
+<%= turbo_frame_tag 'room_reservation' do %>
+  <% if @room_meetings.present? %>
+    <table class="px-2 min-w-full divide-y divide-gray-300">
+      <thead class="bg-gray-300">
+        <tr>
+          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Start_Time</th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">End_Time</th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Department</th>
+          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @room_meetings.each do |meeting| %>
+          <% if @room_meetings.index(meeting).odd? %>
+            <tr class="relative py-2 pl-4 sm:pl-6 pr-3 text-sm border-t border-grey-700 bg-gray-200">
+          <% else %>
+            <tr class="relative py-2 pl-4 sm:pl-6 pr-3 text-sm border-t border-grey-700 bg-white">
+          <% end %>
+            <td class="relative py-2 pl-4 sm:pl-6 pr-3 text-sm">
+              <div class="font-medium text-gray-900">
+                <%= meeting[0] %> - <%= @room_meetings.index(meeting).class %>
+              </div>
+            <td class="relative py-2 pl-4 sm:pl-6 pr-3 text-sm">
+              <div class="font-medium text-gray-900">
+                <%= meeting[1] %>
+              </div>
+            <td class="relative py-2 pl-4 sm:pl-6 pr-3 text-sm">
+              <div class="font-medium text-gray-900">
+                <%= meeting[2] %>
+              </div>
+            <td class="relative py-2 pl-4 sm:pl-6 pr-3 text-sm">
+              <div class="font-medium text-gray-900">
+                <%= meeting[3] %>
+              </div>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+<% end %>
