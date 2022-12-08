@@ -26,7 +26,6 @@ class WebsocketFactory
         })
 
         @wss.on :open do |event|
-          redis.set "#{@wssName}_status", "opened - #{Time.now}"
           @wss.send("{'LSARoom': {'Password': 'LSAPassword'}}")
         end
 
