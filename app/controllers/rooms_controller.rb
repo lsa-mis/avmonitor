@@ -33,11 +33,16 @@ class RoomsController < ApplicationController
     end
     @rooms = @rooms.sort_by(&:facility_id)
     @room_types = Room.all.pluck(:room_type).uniq.sort
-    unless params[:q].nil?
-      render turbo_stream: turbo_stream.replace(
-      :roomListing,
-      partial: "rooms/listing"
-    )
+    # unless params[:q].nil?
+    #   render turbo_stream: turbo_stream.replace(
+    #   :roomListing,
+    #   partial: "rooms/listing"
+    # )
+    # end
+    if turbo_frame_request?
+      render partial: "listing"
+    else
+      render "index"
     end
   end
 
