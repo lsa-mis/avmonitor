@@ -139,7 +139,7 @@ class RoomsController < ApplicationController
   def close_socket
     socket = "wss://" + @room.websocket_ip + ":" + @room.websocket_port
     wss_instance = WebsocketFactory.new(@room.facility_id, socket)
-    wss_instance.socket_close
+    wss_instance.socket_close(current_user)
     
     redirect_to room_path(@room)
   end
@@ -178,7 +178,7 @@ class RoomsController < ApplicationController
 
     socket = "wss://" + @room.websocket_ip + ":" + @room.websocket_port
     wss_instance = WebsocketFactory.new(@room.facility_id, socket)
-    wss_instance.send_message(msg)
+    wss_instance.send_message(msg, current_user)
 
     redirect_to room_path(@room)
   end

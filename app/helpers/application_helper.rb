@@ -5,10 +5,7 @@ module ApplicationHelper
     time_string = status.split(" - ").last
     status_time = time_string.to_datetime
     status_to_display = status[0...status.rindex(' ')] 
-    if status.include?("active") && (Time.now - status_time > 30)
-      status_to_display += " - too old"
-    end
-    return status_to_display
+    return status_to_display += ": " + time_ago_in_words(status_time, include_seconds: true) + " ago"
   end
 
   def svg(svg)
@@ -49,15 +46,25 @@ module ApplicationHelper
 
   def room_need_attention?(room)
     need_attention = false
-    if SocketStatus.find_by(socket_name: room.facility_id).present? 
-      if SocketStatus.find_by(socket_name: room.facility_id).status.include?("not_responding")
+    if SocketStatus.find_by(socket_name: room.facility_id).present?
+      status = SocketStatus.find_by(socket_name: room.facility_id).status
+      # status examples
+      # "not_responding - 2022-12-08 14:40:54 -0500"
+      # "closed - 2022-12-07 15:47:35 -0500"
+      # "active - 2022-12-07 08:38:04 -0500"
+      # "action received - 2022-12-07 08:48:04 -0500"
+      # "action complete; open socket to stream socket data - 2022-12-07 08:58:04 -0500"
+      if status.include?("not_responding")
         return true
       end
-      if SocketStatus.find_by(socket_name: room.facility_id).status.include?("active")
-        status = SocketStatus.find_by(socket_name: room.facility_id).status
-        time_string = status.split(" - ").last
-        status_time = time_string.to_datetime
-        if Time.now - status_time > 30
+      time_string = status.split(" - ").last
+      status_time = time_string.to_datetime
+      if (status.include?("action") || status.include?("closed")) && Time.now - status_time > 305
+        # a user stopped working with a socket 5 minutes ago
+        return true
+      else
+        if Time.now - status_time > 35
+          # a socket did not send any data (including pong) for 30 seconds
           return true
         end
       end
@@ -219,7 +226,7 @@ module ApplicationHelper
         status = SocketStatus.find_by(socket_name: room.facility_id).status
         time_string = status.split(" - ").last
         status_time = time_string.to_datetime
-        if Time.now - status_time > 30
+        if Time.now - status_time > 35
           return true
         end
       end

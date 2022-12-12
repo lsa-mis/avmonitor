@@ -26,7 +26,6 @@ class WebsocketFactory
         })
 
         @wss.on :open do |event|
-          redis.set "#{@wssName}_status", "socket_opened - #{Time.now}"
           @wss.send("{'LSARoom': {'Password': 'LSAPassword'}}")
         end
 
@@ -50,7 +49,7 @@ class WebsocketFactory
   end
 
 
-  def send_message(message)
+  def send_message(message, current_user)
       EM.run {
         redis = EM::Protocols::Redis.connect
         redis.errback do |code|
@@ -65,19 +64,19 @@ class WebsocketFactory
 
         @wss.on :message do |event|
           redis.set @wssName, event.data do |response|
-            redis.set "#{@wssName}_status", "action received - #{Time.now}"
+            redis.set "#{@wssName}_status", "action received by #{current_user.name_with_uniqname} - #{Time.now}"
           end
         end
 
         EM::Timer.new(5) do
-          redis.set "#{@wssName}_status", "action complete - open socket to stream socket data - #{Time.now}"
+          redis.set "#{@wssName}_status", "action complete by #{current_user.name_with_uniqname}; open socket to stream socket data - #{Time.now}"
           EM.stop
         end
 
       }
   end
 
-  def socket_close
+  def socket_close(current_user)
     EM.run {
         redis = EM::Protocols::Redis.connect
         redis.errback do |code|
@@ -91,7 +90,8 @@ class WebsocketFactory
         @wss.close(1000, 'want to close')
 
         wss.on :close do |event|
-          redis.set "#{@wssName}_status", "closed - #{Time.now}"
+          p current_user
+          redis.set "#{@wssName}_status", "closed by #{current_user.name_with_uniqname} - #{Time.now}"
           @wss = nil
         end
 
