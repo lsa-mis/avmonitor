@@ -45,11 +45,8 @@
           <div class="">
             <%= render 'socket_buttons' %>
           </div>
-          <div class="bg-gray-300 pl-2 py-2 m-2">
-            WebSocket status:
-            <% if @socket_status.present? %>
-              <%= show_status(@socket_status.status) %>
-            <% end %>
+          <div>
+            <%= render 'socket_status' %>
           </div>
         <div>
           <% if room_has_device_current_states?(@room) %>
