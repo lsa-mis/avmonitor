@@ -17,7 +17,7 @@
           <% end %>
             <td class="relative py-2 pl-4 sm:pl-6 pr-3 text-sm">
               <div class="font-medium text-gray-900 text-center">
-                <%= meeting[0] %> - <%= meeting[1] %>
+                <%= show_time(meeting[0]) %> - <%= show_time(meeting[1]) %>
               </div>
             <td class="relative py-2 pl-4 sm:pl-6 pr-3 text-sm">
               <div class="font-medium text-gray-900">
@@ -31,5 +31,9 @@
         <% end %>
       </tbody>
     </table>
+  <% else %>
+   <div class="text-sm ml-8 py-4">
+   There are no events on this day
+   </div>
   <% end %>
 <% end %>
