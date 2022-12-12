@@ -1,0 +1,9 @@
+<div class="flex flex-col-2">
+  <div class="bg-gray-200 pl-2 py-2 mt-2 pr-2">
+    WebSocket status:
+    <% if @socket_status.present? %>
+        <%= show_status(@socket_status.status) %>
+    <% end %>
+  </div>
+  <div class="flex-1"></div>
+</div>

@@ -1,19 +1,22 @@
-<div class="flex flex-row">
-  <div class="flex-none">
-    <% if policy(Room).refresh_room? %>
-      <%= button_to 'Reload Page', "", method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
-      <span class="ml-2 text-xs text-gray-700">(reload page)</span>
-    <% end %>
-  </div>
-  <div>
-    <% if policy(Room).send_to_room? %>
-      <%= button_to 'Open Socket', refresh_path, method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
-      <span class="ml-2 text-xs text-gray-700">(if responds - socket starts streaming data - check status)</span>
-    <% end %>
+<div class="flex flex-col-2">
+  <div class="flex flex-row bg-gray-200 pr-2">
+    <div class="flex-none">
+      <% if policy(Room).refresh_room? %>
+        <%= button_to 'Reload Page', "", method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
+        <span class="ml-2 text-xs text-gray-700">(reload page)</span>
+      <% end %>
+    </div>
+    <div>
+      <% if policy(Room).send_to_room? %>
+        <%= button_to 'Open Socket', refresh_path, method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
+        <span class="ml-2 text-xs text-gray-700">(if responds - socket starts streaming data - check status)</span>
+      <% end %>
 
-    <% if policy(Room).close_socket? %>
-      <%= button_to 'Close Socket', close_path, method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
-      <span class="ml-2 text-xs text-gray-700">(close socket before changing anything - check status)</span>
-    <% end %>
+      <% if policy(Room).close_socket? %>
+        <%= button_to 'Close Socket', close_path, method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
+        <span class="ml-2 text-xs text-gray-700">(close socket before changing anything - check status)</span>
+      <% end %>
+    </div>
   </div>
+  <div class="flex-1"></div>
 </div>
