@@ -19,46 +19,20 @@
     </div>
     <div class="flex-col w-full px-2">
       <div class="mx-auto">
-        <div class="grid grid-cols-2">
-          <div>
-            <h1 class="text-3xl mb-2">
-              <%= @room.display_name %>
-              <% if room_need_attention?(@room) %>
-                <span class="text-red-500">Needs attention</span>
-              <% end %>
-            </h1>
-            <p class="my-5">
-              <%= @room.building %>
-            </p>
-            <p class="my-5">
-              <%= @room.room_type %>
-            </p>
-            <p class="my-5">
-            <%= @room.websocket_ip %>
-            </p>
-            <p class="my-5">
-              <%= @room.websocket_port %>
-            </p>
-            <% if policy(Room).refresh_room? %>
-              <%= button_to 'Reload Page', "", method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
-              <span class="ml-2 text-xs text-gray-700">(reload page)</span>
-              <hr class="mb-2">
-            <% end %>
-
-            <% if policy(Room).send_to_room? %>
-              <%= button_to 'Open Socket', refresh_path, method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
-              <span class="ml-2 text-xs text-gray-700">(if responds - socket starts streaming data - check status)</span>
-              <hr class="mb-2">
-            <% end %>
-
-            <% if policy(Room).close_socket? %>
-              <%= button_to 'Close Socket', close_path, method: :get, class: "m-2 px-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
-              <span class="ml-2 text-xs text-gray-700">(close socket before changing anything - check status)</span>
-              <hr class="mb-2">
-            <% end %>
-          </div>
-          <div>
-            <div class="mt-4 text-blue-600 hover: underline">
+        <div class="">
+          <div class="md:flex justify-between items-center">
+            <div class="">
+              <h1 class="text-3xl">
+                <%= @room.display_name %>
+                <% if room_need_attention?(@room) %>
+                  <span class="text-red-500">Needs attention</span>
+                <% end %>
+              </h1>
+              <div class="my-2 md:ml-8 text-sm">
+                <%= @room.building %> -  <%= @room.room_type %> - <%= @room.websocket_ip %> - <%= @room.websocket_port %>
+              </div>
+            </div>
+            <div class="mr-8 item-right text-blue-600 hover: underline">
               <div>
                 <%= link_to "Lecture Capture Dashboard", "https://leccap.engin.umich.edu/leccap/dashboard", data:{"turbo-frame": "_top"}, "target": "_blank" %>
               </div>
@@ -66,14 +40,14 @@
                 <%= link_to "Room Schedule", "https://csprod.dsc.umich.edu/services/facilitycalendar?facilityid=#{@room.facility_id }", data:{"turbo-frame": "_top"}, "target": "_blank" %>
               </div>
             </div>
-            <div>
-              WebSocket status:
-              <% if @socket_status.present? %>
-                <%= show_status(@socket_status.status) %>
-              <% end %>
-            </div>
           </div>
-        </div>
+          </div>
+          <div class="">
+            <%= render 'socket_buttons' %>
+          </div>
+          <div>
+            <%= render 'socket_status' %>
+          </div>
         <div>
           <% if room_has_device_current_states?(@room) %>
             <%= render @room %>

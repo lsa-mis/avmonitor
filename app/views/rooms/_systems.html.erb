@@ -1,15 +1,13 @@
 <!-- This example requires Tailwind CSS v2.0+ -->
-<div class="px-4 sm:px-6 lg:px-8">
-  <div class="sm:flex sm:items-center">
-    <div class="sm:flex-auto">
-      <h1 class="text-xl font-semibold text-gray-900 bg-gray-300 p-2">Systems</h1>
-    </div>
+<div class="mb-4">
+  <div class="bg-gray-300">
+    <h2 class="text-xl font-semibold text-gray-900 p-2">Systems</h2>
   </div>
-  <div class="mt-4 ring-1 ring-gray-300 sm:-mx-6 md:mx-0 md:rounded-lg">
-    <table class="min-w-full divide-y divide-gray-300">
+  <div class="overflow-auto relative mt-4 ring-1 ring-gray-300 sm:-mx-6 md:mx-0 md:rounded-lg">
+    <table class="divide-y divide-gray-300 table-fixed">
       <thead>
         <tr>
-          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">Equip</th>
+          <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 md:pl-6">Equip</th>
           <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Online</th>
           <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Power</th>
           <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Source</th>
@@ -17,42 +15,42 @@
         </tr>
       </thead>
       <tbody>
-          <% get_room_asset_devices(room).each do |device| %>
-            <tr class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm border-t border-grey-200">
-              <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-                <div class="font-medium text-gray-900">
-                  <%= device.name %>
-                </div>
-              <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-                <% if device_online(device) %>
-                  <span>
-                <% else %>
-                  <span  class="text-red-500">
-                <% end %>
-                <%= device_online_string(device) %></span>
-              </td>
-              <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm" data-controller="sendtosocket">
-                <% if policy(Room).send_to_room? %>
-                  <%= check_box_tag "#{device.name}", "#{device.name}", device_power_is_on(device),
-                  "data-sendtosocket-name-value": "#{device.name}",
-                  "data-action": "change->sendtosocket#changeDeviceOnOff" %>
-                <% else %>
-                  <%= device_power_is_on_string(device) %>
-                <% end %>
-                <% if video_source_device?(device) %>
-                  <td>
-                    <%= render 'rooms/change_source', {room: room, device: device} %>
-                  </td>
-                  <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-                    <%= lamp_hour(device) %>
-                  </td>
-                <% else %>
-                  <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">-</td>
-                  <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">-</td>
-                <% end %>
-            </tr>
-          <% end %>
-          <input type="hidden" id="room_id" name="room_id" value="<%= room.id %>" data-sendtosocket-target="room">
+        <% get_room_asset_devices(room).each do |device| %>
+          <tr class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm border-t border-gray-200">
+            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
+              <div class="font-medium text-gray-900">
+                <%= device.name %>
+              </div>
+            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
+              <% if device_online(device) %>
+                <span>
+              <% else %>
+                <span  class="text-red-500">
+              <% end %>
+              <%= device_online_string(device) %></span>
+            </td>
+            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm" data-controller="sendtosocket">
+              <% if policy(Room).send_to_room? %>
+                <%= check_box_tag "#{device.name}", "#{device.name}", device_power_is_on(device),
+                "data-sendtosocket-name-value": "#{device.name}",
+                "data-action": "change->sendtosocket#changeDeviceOnOff" %>
+              <% else %>
+                <%= device_power_is_on_string(device) %>
+              <% end %>
+              <% if video_source_device?(device) %>
+                <td>
+                  <%= render 'rooms/change_source', {room: room, device: device} %>
+                </td>
+                <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
+                  <%= lamp_hour(device) %>
+                </td>
+              <% else %>
+                <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">-</td>
+                <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">-</td>
+              <% end %>
+          </tr>
+        <% end %>
+        <input type="hidden" id="room_id" name="room_id" value="<%= room.id %>" data-sendtosocket-target="room">
       </tbody>
     </table>
   </div>
