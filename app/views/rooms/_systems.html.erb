@@ -17,10 +17,13 @@
       <tbody>
         <% get_room_asset_devices(room).each do |device| %>
           <tr class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm border-t border-gray-200">
+
             <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
               <div class="font-medium text-gray-900">
                 <%= device.name %>
               </div>
+            </td>
+
             <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
               <% if device_online(device) %>
                 <span>
@@ -29,25 +32,31 @@
               <% end %>
               <%= device_online_string(device) %></span>
             </td>
-            <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm" data-controller="sendtosocket">
-              <% if policy(Room).send_to_room? %>
-                <%= check_box_tag "#{device.name}", "#{device.name}", device_power_is_on(device),
-                "data-sendtosocket-name-value": "#{device.name}",
-                "data-action": "change->sendtosocket#changeDeviceOnOff" %>
-              <% else %>
-                <%= device_power_is_on_string(device) %>
-              <% end %>
+            <% if policy(Room).send_to_room? %>
               <% if video_source_device?(device) %>
+                <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm" data-controller="sendtosocket">
+                  <%= check_box_tag "#{device.name}", "#{device.name}", device_power_is_on(device),
+                    "data-sendtosocket-name-value": "#{device.name}",
+                    "data-action": "change->sendtosocket#changeDeviceOnOff" %>
+                </td>
+
                 <td>
                   <%= render 'rooms/change_source', {room: room, device: device} %>
                 </td>
+
                 <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
                   <%= lamp_hour(device) %>
                 </td>
+
               <% else %>
-                <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">-</td>
-                <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">-</td>
+                <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm"></td>
+                <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm"></td>
+                <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm"></td>
               <% end %>
+            <% else %>
+              <%= device_power_is_on_string(device) %>
+            <% end %>
+
           </tr>
         <% end %>
         <input type="hidden" id="room_id" name="room_id" value="<%= room.id %>" data-sendtosocket-target="room">
