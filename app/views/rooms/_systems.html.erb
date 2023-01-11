@@ -9,7 +9,7 @@
         <tr>
           <th scope="col" class="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 md:pl-6">Equip</th>
           <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Online</th>
-          <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Power</th>
+          <th scope="col" class="hidden px-3 py-3.5 text-center text-sm font-semibold text-gray-900 lg:table-cell">Power</th>
           <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Source</th>
           <th scope="col" class="hidden px-3 py-3.5 text-left text-sm font-semibold text-gray-900 lg:table-cell">Time On</th>
         </tr>
@@ -32,12 +32,20 @@
               <% end %>
               <%= device_online_string(device) %></span>
             </td>
+
             <% if policy(Room).send_to_room? %>
               <% if video_source_device?(device) %>
-                <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm" data-controller="sendtosocket">
-                  <%= check_box_tag "#{device.name}", "#{device.name}", device_power_is_on(device),
-                    "data-sendtosocket-name-value": "#{device.name}",
-                    "data-action": "change->sendtosocket#changeDeviceOnOff" %>
+                <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
+                  <ol class="switches" data-controller="sendtosocket">
+                    <li>
+                      <%= check_box_tag "#{device.name}", "#{device.name}", device_power_is_on(device),
+                        "data-sendtosocket-name-value": "#{device.name}",
+                        "data-action": "change->sendtosocket#changeDeviceOnOff" %>
+                        <label for="<%= device.name.gsub(' ', '_') %>">
+                          <span></span>
+                        </label>
+                    </li>
+                  </ol>
                 </td>
 
                 <td>
@@ -45,7 +53,7 @@
                 </td>
 
                 <td class="relative py-4 pl-4 sm:pl-6 pr-3 text-sm">
-                  <%= lamp_hour(device) %>
+                  <%= "#{lamp_hour(device)}h" %>
                 </td>
 
               <% else %>
