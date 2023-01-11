@@ -15,7 +15,7 @@ class WebsocketFactory
 
   
   def create_socket
-      EM.run {
+      Thread.new{EM.run {
         redis = EM::Protocols::Redis.connect
         redis.errback do |code|
           puts "!***CREATE***! Redis Error code: #{code}"
@@ -45,12 +45,12 @@ class WebsocketFactory
             redis.set "#{@wssName}_status", "active - #{Time.now}"
           end 
         end
-      }
+      }}
   end
 
 
   def send_message(message, current_user)
-      EM.run {
+    Thread.new{EM.run {
         redis = EM::Protocols::Redis.connect
         redis.errback do |code|
           puts "!***SEND***! Redis Error code: #{code}"
@@ -73,11 +73,11 @@ class WebsocketFactory
           EM.stop
         end
 
-      }
+      }}
   end
 
   def socket_close(current_user)
-    EM.run {
+    Thread.new{EM.run {
         redis = EM::Protocols::Redis.connect
         redis.errback do |code|
           puts "!***SOCKET CLOSE***! Redis Error code: #{code}"
@@ -98,7 +98,7 @@ class WebsocketFactory
         EM::Timer.new(5) do
           EM.stop
         end
-      }
+      }}
   end
 
 end
