@@ -29,7 +29,8 @@ test:
 
 staging:
   <<: *default
-  database: lsawasstaging
+  # database: lsawasstaging
+  database: db_3bfd2217d317
   username: <%= Rails.application.credentials.mysql[:staging_user] %>
   password: <%= Rails.application.credentials.mysql[:staging_password] %>
   host: <%= Rails.application.credentials.mysql[:staging_servername] %>
