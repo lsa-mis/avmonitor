@@ -30,11 +30,11 @@ test:
 staging:
   <<: *default
   # database: lsawasstaging
-  port: 25060
   database: db_3bfd2217d317
   username: <%= Rails.application.credentials.mysql[:staging_user] %>
   password: <%= Rails.application.credentials.mysql[:staging_password] %>
   host: <%= Rails.application.credentials.mysql[:staging_servername] %>
+  port: 25060
   sslca: <%= Rails.application.credentials.mysql[:staging_sslca] %>
   # database: avm
   # username: <%= Rails.application.credentials.mysql[:staging_user_temp] %>
