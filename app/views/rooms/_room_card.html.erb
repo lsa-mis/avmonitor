@@ -5,8 +5,10 @@
       <div>
         <div class="text-xs px-2 font-bold">
           <%= link_to room.facility_id, room, class: "hover:underline", data: { "turbo-frame": "_top" } %>
-          <% if room_need_attention?(room) %>
-            <span class="text-red-500">Needs attention</span>
+          <% if show_delete_button %>
+            <% if room_need_attention?(room) %>
+              <span class="text-red-500">Needs attention</span>
+            <% end %>
           <% end %>
         </div>
         <div class="text-xs px-2 font-bold">
@@ -15,7 +17,7 @@
       </div>
       <hr>
       <% if room_is_off?(room) %>
-        <span class="text-red-500">Room Is Offline</span>
+        <span class="text-indigo-700">Room Is Offline</span>
       <% else %>
         <div id="assets" class="text-xs px-2">
           <%= render 'rooms/room_assets', { devices: get_room_asset_devices(room) } %>
