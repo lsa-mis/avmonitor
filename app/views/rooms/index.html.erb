@@ -1,0 +1,79 @@
+<div class="container px-1 mb-20 pl-4" data-controller='autosubmit'>
+  <h1 class="text-xl font-semibold text-gray-900 p-2">Rooms with Crestron devices</h1>
+  <div class="grid grid-cols-2 pb-2">
+    <div class="justify-self-end lg:hidden mr-4">
+      <!--  Mobile menu button -->
+      <button class="mobile-menu-button rounded h-10 w-10 bg-blue-900 text-white focus:outline-none focus:bg-blue-800 ">
+        <div class="mx-auto h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <%= svg("filter-solid")  %>
+        </div>
+      </button>
+    </div>
+  </div>
+  <div>
+    <%= search_form_for @q, data: { target: "autosubmit.form", action: "input->autosubmit#search" } do |form| %>
+      <div class="relative min-h-screen md:flex">
+        <div class="sidebar w-64 absolute inset-y-0 left-0 transform -translate-x-full md:relative md:translate-x-0 transition duration-200 ease-in-out" data-autosubmit-target="sidebar">
+          <div class="pl-1 bg-gray-50 shadow border text-sm">
+            <div class="px-1 pb-2">
+              <%= label_tag(:need_attention, "Rooms need attention") %>
+              <%= check_box_tag(:need_attention) %>
+            </div>
+            <hr>
+            <div class="px-1">
+              <label for="building">Search Building Names</label>
+              <%= form.text_field :building_cont, class: "block rounded-none rounded-l-md sm:text-sm border-gray-300", :placeholder => 'ex. "East Hall"', :"data-action" => "input->autosubmit#search", :"data-autosubmit-target" => "building_name" %>
+            </div>
+            <br>
+            <hr>
+            <div class="px-1 pb-2">
+              <label for="room_name">Search Room Name</label>
+              <%= form.text_field :facility_id_cont, class: 'block rounded-none rounded-l-md sm:text-sm border-gray-300', data: { action: "input->autosubmit#search" }, :placeholder => 'ex. "USB4153"' %>
+            </div>
+            <br>
+            <hr>
+            <label>Lamp Hour</label>
+            <div class="flex mt-2 mb-2">
+              <div class="w-1/2 ml-2 mr-2">
+                <label class="block text-sm font-medium text-gray-700" for="min_lamp_hour">Min</label>
+                <%= number_field_tag 'min_lamp_hour', nil, min: MIN_LAMP_HOURS, value: MIN_LAMP_HOURS, :"data-autosubmit-target" => "min_lamp_hour", class: 'w-full block rounded sm:text-sm border-gray-300' %>
+              </div>
+              <div class="ml-1 mr-2 w-1/2">
+                <label class="block text-sm font-medium text-gray-700" for="max_lamp_hour">Max</label>
+                  <%= number_field_tag 'max_lamp_hour', nil, max: MAX_LAMP_HOURS, value: MAX_LAMP_HOURS, :"data-autosubmit-target" => "max_lamp_hour", class: 'w-full block rounded sm:text-sm border-gray-300' %>
+              </div>
+            </div>
+            <span class="lamp_hour-error--hide text-red-700 text-sm mt-2 -mb-2" data-autosubmit-target="lamp_hour_error"></span>
+            <hr>
+            <div class="px-1 pb-2">
+              <label for="room_type">Search Room Type</label>
+              <div>
+                <% @room_types.each do |room_type| %>
+                  <%= room_type %>
+                  <%#= check_box_tag 'q[room_type]', room_type, nil, data: { action: "input->autosubmit#search" } %>
+                  <%= form.check_box(:room_type_in, {multiple: true}, room_type, nil) %>
+                  <br>
+                <% end %>
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="flex-1 mx-2">
+            <div class="grid grid-cols-3">
+              <div class="mb-2">
+                <button type="button" class="px-2 rounded-md shadow-sm bg-gray-100 text-sm text-black text-center ring-1 ring-black ring-opacity-5 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:bg-gray-400"
+                  data-action='click->autosubmit#clearFilters'>
+                  Clear
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <%= render 'listing' %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+<%= javascript_include_tag 'mobile_menu', async: true %>

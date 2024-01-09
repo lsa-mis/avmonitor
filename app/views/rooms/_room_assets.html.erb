@@ -1,0 +1,17 @@
+<div class="text-xs px-2">
+  <% devices.all.each do |device| %>
+    <div class="font-bold"><%= device.name %></div>
+    <% get_current_states_for_device(device).each do |state| %>
+      <% if state_need_attention?(state) %>
+        <div class="text-red-500 pl-2">
+          <%= "#{state.key} - #{state.value}" %>
+        </div>
+      <% else %>
+        <div class="pl-2">
+          <%= "#{state.key} - #{state.value}" unless state.key == "Error State" %>
+        </div>
+      <% end %>
+    <% end %>
+    <hr>
+  <% end %>
+<div>

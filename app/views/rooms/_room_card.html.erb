@@ -1,0 +1,33 @@
+<%= turbo_frame_tag dom_id(room) do  %>
+  <li class="col-span-1 bg-white rounded-lg shadow-md divide-y divide-gray-400 px-2 grid place-items-stretch bg-white border border-gray-300 rounded-lg">
+    <h2 class="sr-only">room</h2>
+    <div id="room" class="mt-2 mb-3 px-2 sm:px-0">
+      <div>
+        <div class="text-xs px-2 font-bold">
+          <%= link_to room.facility_id, room, class: "hover:underline", data: { "turbo-frame": "_top" } %>
+          <% if show_delete_button %>
+            <% if room_need_attention?(room) %>
+              <span class="text-red-500">Needs attention</span>
+            <% end %>
+          <% end %>
+        </div>
+        <div class="text-xs px-2 font-bold">
+          <%= room.building %>
+        </div>
+      </div>
+      <hr>
+      <% if room_is_off?(room) %>
+        <span class="text-indigo-700">Room Is Offline</span>
+      <% else %>
+        <div id="assets" class="text-xs px-2">
+          <%= render 'rooms/room_assets', { devices: get_room_asset_devices(room) } %>
+        </div>
+        <hr>
+      <% end %>
+      <% if show_delete_button %>
+        <hr>
+        <%= link_to "[Delete Room]", room_path(room), data: { turbo_method: :delete, turbo_confirm: "Are you sure?" }, class: "text-red-600" %>
+      <% end %>
+    </div>
+  </li>
+<% end %>

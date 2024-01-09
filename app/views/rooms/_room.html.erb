@@ -1,0 +1,10 @@
+<div id="<%= dom_id room %>">
+  <div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-2 my-4">
+    <div>
+      <%= render 'systems', { room: room } %>
+    </div>
+    <div>
+      <%= render 'audio', { room: room } %>
+    </div>
+  </div>
+</div>

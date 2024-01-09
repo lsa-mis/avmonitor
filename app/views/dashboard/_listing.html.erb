@@ -1,0 +1,8 @@
+<%= turbo_stream_from :dashboard %>
+<div id="dashboard_listing">
+  <ul role="list" class="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4 m-4">
+      <% @rooms.each do |room| %>
+        <%= render 'rooms/room_card', {room: room } %>
+      <% end %>
+  </ul>
+</div>

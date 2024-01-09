@@ -1,0 +1,11 @@
+<div class="container px-1 mb-20 pl-4">
+  <h1 class="text-xl font-semibold text-gray-900 p-2">Dashboard - Rooms that need attention</h1>
+  <div class="mb-2">
+    <%= form_tag('/dashboard') do %>
+      <%= submit_tag "Refresh", class: "px-2 rounded-md shadow-sm bg-gray-100 text-sm text-black text-center ring-1 ring-black ring-opacity-5 focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 hover:bg-gray-400" %>
+      <div>
+        <%= render 'listing' %>
+      </div>
+    <% end %>
+  </div>
+</div>

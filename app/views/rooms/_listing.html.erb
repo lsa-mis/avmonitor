@@ -1,0 +1,16 @@
+<%= turbo_stream_from :room %>
+<div class="mb-10" id="roomListing">
+  <div class="justify-end pr-2">
+    <span class="text-muted" data-autosubmit-target="status"></span>
+  </div>
+  <div class="pl-2 font-semibold">
+    All rooms
+  </div>
+  <div>
+    <ul role="list" class="grid grid-cols-2 gap-4 sm:grid-cols-2 lg:grid-cols-4 m-4">
+      <% @rooms.each do |room| %>     
+          <%= render 'room_card', {room: room } %>
+      <% end %>
+    </ul>
+  </div>
+</div>

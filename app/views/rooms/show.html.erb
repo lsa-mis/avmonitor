@@ -1,0 +1,79 @@
+<div class="rounded-lg shadow-lg px-auto pl-2">
+  <%= turbo_frame_tag "room" do  %>
+    <div class="flex items-center gap-4 mb-4">
+      <div class="">
+        <%= link_to request.referer, data: { "turbo-frame": "_top" } do %>
+          <div class="flex items-center gap-1 text-sm text-blue-umblue hover:underline">
+            <%= svg("left-arrow-svgrepo-com")  %>
+            <span>Back to search</span>
+          </div>
+        <% end %>
+      </div>
+      <div>
+        <% if current_user.role == "admin" %>
+          <div>
+            <%= link_to 'Edit this room', edit_room_path(@room), class: "my-2 px-2 py-1 rounded-md shadow-sm bg-blue-umblue text-sm text-gray-100 text-center hover:underline" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class="flex-col w-full px-2">
+      <div class="mx-auto">
+        <div class="">
+          <div class="md:flex justify-between items-center">
+            <div class="">
+              <h1 class="text-3xl">
+                <%= @room.display_name %>
+                <% if show_delete_button %>
+                  <% if room_need_attention?(@room) %>
+                    <span class="text-red-500">Needs attention</span>
+                  <% end %>
+                <% end %>
+              </h1>
+              <div class="my-2 md:ml-8 text-sm">
+                <%= @room.building %> -  <%= @room.room_type %> - <%= @room.websocket_ip %> - <%= @room.websocket_port %>
+              </div>
+            </div>
+            <div class="mr-8 item-right text-blue-600 hover: underline">
+              <div>
+                <%= link_to "Lecture Capture Dashboard", "https://leccap.engin.umich.edu/leccap/dashboard", data:{"turbo-frame": "_top"}, "target": "_blank" %>
+              </div>
+              <div>
+                <%= link_to "Room Schedule", "https://csprod.dsc.umich.edu/services/facilitycalendar?facilityid=#{@room.facility_id }", data:{"turbo-frame": "_top"}, "target": "_blank" %>
+              </div>
+            </div>
+          </div>
+          </div>
+          <div class="">
+            <%= render 'socket_buttons' %>
+          </div>
+          <div>
+            <%= render 'socket_status' %>
+          </div>
+        <div>
+          <% if room_has_device_current_states?(@room) %>
+            <%= render @room %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<div class="container p-2 rounded-lg shadow-lg text-xl mb-20 bg-gray-50">
+  <div class="mb-10">
+    <%= render 'reservations', { room: @room } %> 
+  </div>
+</div>
+
+<div class="container p-2 rounded-lg shadow-lg text-xl mb-20 bg-gray-50">
+  <div class="mb-20">Notes:
+    <% if ["admin", "technician"].include?(session[:user_role]) %>
+      <%= render partial: "notes/form", locals: { note: Note.new, noteable: @room } %>
+    <% end %>
+    <%= turbo_stream_from @room, :notes %>
+    <%= tag.div id: "#{dom_id(@room)}_notes" do %>
+      <%= render @room.notes %> 
+    <% end %>
+  </div>
+</div>

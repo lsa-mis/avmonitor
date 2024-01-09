@@ -1,0 +1,28 @@
+<div class="px-4 sm:px-6 lg:px-8" data-controller="sendtosocket">
+  <div class="sm:flex sm:items-center">
+    <div class="sm:flex-auto">
+      <h1 class="text-xl font-semibold text-gray-900 bg-gray-300 p-2">Audio / Microphones</h1>
+    </div>
+  </div>
+  <div class="mt-4 pl-4 pr-2 py-2 ring-1 ring-gray-300 sm:-mx-6 md:mx-0 md:rounded-lg">
+    <div>
+      Ceiling Mic - <%= ceiling_mic(room) %>
+    </div>
+    <div>
+      WL Mic - <%= wl_mic(room) %>
+    </div>
+    <div class="relative pt-1">
+      <div>
+        <label for="wl_mic_volume">WL Mic Volume - <%= wl_mic_volume(room) %></label>
+        <%= render 'change_volume', { volume: wl_mic_volume(room), id: 'wl_mic_volume', action: 'changeMicVolume' } %>
+      </div>
+    </div>
+    <div class="relative pt-1">
+      <div>
+        <label for="source_vol">Source Volume - <%= source_volume(room) %></label>
+        <%= render 'change_volume', { volume: source_volume(room), id: 'source_vol', action: 'changeSourceVolume' } %>
+      </div>
+    </div>
+  </div>
+  <input type="hidden" id="room_id" name="room_id" value="<%= room.id %>" data-sendtosocket-target="room">
+</div>
